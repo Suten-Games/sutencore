@@ -32,14 +32,14 @@ fi
 
 echo "Copying components from ${fromdir} to ${todir}"
 if [[ -d ${rootdir}/${todir}/src/components ]];then
-  cp -n ${rootdir}/${fromdir}/src/components ${rootdir}/${todir}
+  cp -Rn ${rootdir}/${fromdir}/src/components ${rootdir}/${todir}
 else
   cp -Rp ${rootdir}/${fromdir}/src/components ${rootdir}/${todir}/src/components
 fi
 
 echo "Copying gameObjects from ${fromdir} to ${todir}"
 if [[ -d ${rootdir}/${todir}/src/gameObjects ]];then
-  cp -n ${rootdir}/${fromdir}/src/gameObjects ${rootdir}/${todir}
+  cp -Rn ${rootdir}/${fromdir}/src/gameObjects ${rootdir}/${todir}
 else
   cp -Rp ${rootdir}/${fromdir}/src/gameObjects ${rootdir}/${todir}/src/gameObjects
 fi
@@ -87,34 +87,22 @@ else
 fi
 
 echo "Copying resources from ${fromdir} to ${todir}"
-#cp -Rp ${rootdir}/${fromdir}/src/resources.ts ${rootdir}/${todir}/src/resources.ts
-echo "Resources Diff"
-diff ${rootdir}/${fromdir}/src/resources.ts ${rootdir}/${todir}/src/resources.ts
+cp -Rp ${rootdir}/${fromdir}/src/resources.ts ${rootdir}/${todir}/src/resources.ts
 
 echo "Game.ts purity check"
 grep 'entity.setParent(_scene)' ${rootdir}/${todir}/src/game.ts
 rc=$?
 if [[ ${rc} == 0 ]];then
   echo "Game.ts is from builder, copy contents to basescene"
-  rm ${rootdir}/${todir}/src/gameObjects/baseScene.ts
-  cp -Rp ${rootdir}/${todir}/src/gameObjects/emptybaseScene.ts ${rootdir}/${todir}/src/gameObjects/baseScene.ts
-  echo " " >> ${rootdir}/${todir}/src/gameObjects/baseScene.ts
-  echo " COPIED FROM ORIGINAL game.ts" >> ${rootdir}/${todir}/src/gameObjects/baseScene.ts
-  echo " " >> ${rootdir}/${todir}/src/gameObjects/baseScene.ts
-  cat ${rootdir}/${todir}/src/game.ts >> ${rootdir}/${todir}/src/gameObjects/baseScene.ts
+  cp -Rp ${rootdir}/${todir}/src/gameObjects/emptybaseScene.ts ${rootdir}/${todir}/src/baseScene.ts
+  echo " " >> ${rootdir}/${todir}/src/baseScene.ts
+  echo " COPIED FROM ORIGINAL game.ts" >> ${rootdir}/${todir}/src/baseScene.ts
+  echo " " >> ${rootdir}/${todir}/src/baseScene.ts
+  cat ${rootdir}/${todir}/src/game.ts >> ${rootdir}/${todir}/src/baseScene.ts
   echo "Copying game.ts"
   cp -Rp ${rootdir}/${fromdir}/src/game.ts ${rootdir}/${todir}/src/game.ts
   echo "MANUAL FIX!!!! Go to ${rootdir}/${todir}/src/gameObjects and fix baseScene.ts"
 else
-  #echo "Updating game.ts"
-  #cp -Rp ${rootdir}/${fromdir}/src/game.ts ${rootdir}/${todir}/src/game.ts
-  echo "Game.ts diff"
-  diff ${rootdir}/${fromdir}/src/game.ts ${rootdir}/${todir}/src/game.ts
+  echo "Updating game.ts"
+  cp -Rp ${rootdir}/${fromdir}/src/game.ts ${rootdir}/${todir}/src/game.ts
 fi
-
-
-#echo "From dir ls"
-#ls -l ${rootdir}/${fromdir}
-#echo "Destination dir ls"
-#ls -l ${rootdir}/${todir}
-#ls -l ${rootdir}/${todir}/src
