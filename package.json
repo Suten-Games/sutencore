@@ -1,0 +1,24 @@
+{
+  "name": "@sutenquest/core",
+  "version": "0.2.0",
+  "description": "SutenQuest Core Libraries",
+  "main": "index.js",
+  "scripts": {
+    "install": "./scripts/configure.ksh"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Suten-Games/suten.git"
+  },
+  "keywords": [
+    "Decentraland, SutenQuest"
+  ],
+  "author": "Suten Games",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Suten-Games/suten/issues"
+  },
+  "homepage": "https://github.com/Suten-Games/suten#readme",
+  "dependencies": {
+  }
+}
