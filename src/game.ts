@@ -1,25 +1,25 @@
+import { getUserAccount } from "@decentraland/EthereumController";
+import { getUserData } from "@decentraland/Identity";
+import { movePlayerTo } from "@decentraland/RestrictedActions";
+
 import resources from "./resources";
 import { CombatLog } from "./gameUI/combatLog";
 import { ActionBar } from "./gameUI/actionBar";
 import { BackPack } from "./gameUI/backPack";
+import { Khepra } from "./gameUI/khepra";
+import { TradeWindow } from "./gameUI/tradeWindow";
+import { Player } from "./gameObjects/player";
 
-//import { Player } from "./gameObjects/player";
-// import { Khepra } from "./gameObjects/khepra";
-//import { TradeWindow } from "./gameObjects/tradeWindow";
+import { Singleton } from "./gameUtils/playerDetail";
 
 // import { reloadGame } from "./components/reloadGame";
-// import { getUserAccount } from "@decentraland/EthereumController";
-// import { getUserData } from "@decentraland/Identity";
 // import { loadDeath } from "./components/loadDeath";
 // import { NoEthScene } from "./noEthScene";
 // import { matic } from '@dcl/l2-scene-utils'
 // import { joinSocketsServer } from "./components/wsConnection";
-// import { Singleton } from "./components/playerDetail";
-// import { movePlayerTo } from "@decentraland/RestrictedActions";
 // import * as crypto from '@dcl/crypto-scene-utils'
 // import { BuilderHUD } from "./modules/BuilderHUD";
 // import { spawnNpcs } from "./gameObjects/spawnNpcs";
-// import { Item } from "./gameObjects/item";
 
 const local: boolean = false;
 
@@ -33,41 +33,41 @@ const combatLog = new CombatLog(gameCanvas);
 // //SETUP UI
 const actionBar = new ActionBar(gameCanvas, resources.interface.blueActionBar);
 const backPack = new BackPack(gameCanvas, resources.interface.blueBackpack);
-// let lowerCaseAddress: string;
+const khepra = new Khepra(gameCanvas, resources.interface.khepra, backPack);
+let lowerCaseAddress: string;
 
-// let player = new Player(
-//   lowerCaseAddress,
-//   42,
-//   gameCanvas,
-//   combatLog,
-//   actionBar,
-//   backPack
-// );
+let player = new Player(
+  lowerCaseAddress,
+  42,
+  gameCanvas,
+  combatLog,
+  actionBar,
+  backPack
+);
 
-// let failedstart = false;
-// let registered = false;
-// let _buybutton;
+let failedstart = false;
+let registered = false;
+let _buybutton;
 
-// const tradeWindow = new TradeWindow(
-//   gameCanvas,
-//   resources.interface.blueMerchantInterface,
-//   actionBar,
-//   backPack,
-//   player,
-//   combatLog
-// );
+const tradeWindow = new TradeWindow(
+  gameCanvas,
+  resources.interface.blueMerchantInterface,
+  actionBar,
+  backPack,
+  player,
+  combatLog
+);
 
-//const khepra = new Khepra(gameCanvas, resources.interface.khepra, backPack);
 //END SETUP UI
 
-// function startGame() {
-//   executeTask(async () => {
-//     if (!failedstart) {
-//       //log('running registerPlayer()')
-//       registered = await !registerPlayer();
-//     }
-//   });
-// }
+function startGame() {
+  executeTask(async () => {
+    if (!failedstart) {
+      log('running registerPlayer()')
+      //registered = await !registerPlayer();
+    }
+  });
+}
 
 // async function registerPlayer() {
 //   executeTask(async () => {
@@ -316,12 +316,6 @@ const backPack = new BackPack(gameCanvas, resources.interface.blueBackpack);
 
 //           obj.manal1 = balance.l1
 
-//           // // const testArray = [
-//           // //   { image: "src/images/looticons/greenHealthPotion.png", slot: 1 },
-//           // //   { image: "src/images/looticons/rustyaxe.png", slot: 2 },
-//           // //   { image: "src/images/looticons/redHealthPotion.png", slot: 3 }
-//           // // ]
-
 //           const testArray = [
 //             { image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: null, price: 20, itemtype: "weapon", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
 //             { image: "src/images/looticons/manavial.png", slot: 2, srcw: 1219, srch: 2154, desc: "Mana Vial", type: null, price: 50, itemtype: null, spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
@@ -334,13 +328,11 @@ const backPack = new BackPack(gameCanvas, resources.interface.blueBackpack);
 //             { image: "src/images/looticons/redHealthPotion.png", slot: 9, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
 //           ]
 
-//           //log('testArray ', testArray)
 //           log('json.actionbar ', json.actionbar)
 //           log('json.backpack ', json.backpack)
 
 //           backPack.bootLoadBackPack(json.backpack);
 //           actionBar.bootLoadActionBar(json.actionbar);
-//           //actionBar.bootLoadActionBar(testArray);
 //           obj.actionbar = actionBar;
 //           obj.backpack = backPack
 //         }
@@ -362,37 +354,35 @@ const backPack = new BackPack(gameCanvas, resources.interface.blueBackpack);
 //   });
 // }
 
-// startGame();
+startGame();
 // new spawnNpcs()
-
 
 // // Uncomment the below model and BuilderHUD to find positions to use in the scene code
 // // User the BuilderHUD to move the model to the desired position/rotaion
 // // The positions show up in the Dev console
 
-// let orc1 = new Entity("orc1");
-// //orc1.addComponent(new GLTFShape("models/archer1.glb"));
-// orc1.addComponent(new GLTFShape("models/remetchmagician4.glb"));
-// orc1.addComponent(
-//   new Transform({
-//     position: new Vector3(10,1,11),
-//     rotation: new Quaternion(0, 0, 0, 1),
-//     scale: new Vector3(.01, .01, .01),
-//   })
-// );
-// orc1.addComponentOrReplace(
-//     new OnPointerDown(
-//         (e) => {
-//           orc1.getComponent(OnPointerDown).showFeedback = true;
-//      },
-//      {
-//        button: ActionButton.PRIMARY,
-//        showFeedback: true,
-//        hoverText: "Punch",
-//      }
-//    )
-// );
+let orc1 = new Entity("orc1");
+orc1.addComponent(new GLTFShape("models/remetch-warrior14.glb"));
+orc1.addComponent(
+  new Transform({
+    position: new Vector3(7,0,7),
+    rotation: new Quaternion(0, 0, 0, 1),
+    scale: new Vector3(.1, .1, .1),
+  })
+);
+orc1.addComponentOrReplace(
+    new OnPointerDown(
+        (e) => {
+          orc1.getComponent(OnPointerDown).showFeedback = true;
+     },
+     {
+       button: ActionButton.PRIMARY,
+       showFeedback: true,
+       hoverText: "Punch",
+     }
+   )
+);
 
-// engine.addEntity(orc1);
+engine.addEntity(orc1);
 // // const hud: BuilderHUD = new BuilderHUD();
 // // hud.attachToEntity(orc1);
