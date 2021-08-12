@@ -1,0 +1,1 @@
+export var sutenBase = '-120,106';

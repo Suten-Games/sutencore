@@ -6,11 +6,13 @@ import { Player } from "../gameObjects/player";
 import { LifeItem } from "../components/lifeItemComponent";
 import { MobState } from "../components/mobStateComponent";
 import { SoundBox } from "./soundbox";
+import { Item } from "../gameObjects/item";
+import { closeSocket } from "../gameFunctions/wsConnection";
 
 export class Singleton {
-     private static instance: Singleton;
-//     //Assign "new Singleton()" here to avoid lazy initialisation
-    private _playerhp:number = 0;
+    private static instance: Singleton;
+    //     //Assign "new Singleton()" here to avoid lazy initialisation
+    private _playerhp: number = 0;
     private _playerclass: string = "Adventurer";
     private _playeraddress: string = "123123";
     private _playername: string = "Adventurer";
@@ -23,7 +25,7 @@ export class Singleton {
     private _playerarmor: number = 0;
     private _weapon: string = "";
     private _playerbackpack: Array<object> = [];
-    private _playeractionbar: Array<object> = [];
+    private _playeractionbar: Array<Item> = [];
     private _playerquestlog: Array<object> = [];
     private _gameover: boolean = false;
     private _winner: string = "";
@@ -31,24 +33,24 @@ export class Singleton {
     private _balance: number = 0;
     private _manal1: number = 0
     private _battlehymns: Array<SoundBox> = []
-    private soundbox1: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish1,false)
-    private soundbox2: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish2,false)
-    private soundbox3: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish3,false)
-    private soundbox4: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish4,false)
-    private soundbox5: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish5,false)
-    private soundbox6: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish6,false)
-    private soundbox7: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish7,false)
-    private soundbox8: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish8,false)
-    private soundbox9: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish9,false)
-    private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32,10,14)}),resources.sounds.orkish10,false)
-    private _canvas:UICanvas
-    private _actionbar:ActionBar
-    private _backPack:BackPack
-    private _player:Player
-    private _tradewindow:TradeWindow
+    private soundbox1: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish1, false)
+    private soundbox2: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish2, false)
+    private soundbox3: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish3, false)
+    private soundbox4: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish4, false)
+    private soundbox5: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish5, false)
+    private soundbox6: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish6, false)
+    private soundbox7: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish7, false)
+    private soundbox8: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish8, false)
+    private soundbox9: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish9, false)
+    private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
+    private _canvas: UICanvas
+    private _actionbar: ActionBar
+    private _backPack: BackPack
+    private _player: Player
+    private _tradewindow: TradeWindow
     private _socketclass
     private _inDuat: boolean = false;
- 
+
     constructor(balance = 0) {
         if (Singleton.instance) {
             throw new Error("Error - use Singleton.getInstance()");
@@ -77,7 +79,7 @@ export class Singleton {
         this._battlehymns.push(this.soundbox9)
         this._battlehymns.push(this.soundbox10)
     }
-    
+
     set canvas(val) {
         this._canvas = val;
     }
@@ -182,7 +184,7 @@ export class Singleton {
         return this._weapon;
     }
 
-    set closesock(sockclose) {
+    set closesock(sockclose: closeSocket) {
         //log('Setting sockclose in obj')
         this._socketclass = sockclose
     }
@@ -222,7 +224,7 @@ export class Singleton {
         return this._tradewindow
     }
 
-    set manal1(val:number) {
+    set manal1(val: number) {
         this._manal1 = val
     }
 
@@ -230,11 +232,11 @@ export class Singleton {
         return this._manal1
     }
 
-    set maticbalance(val: number){
+    set maticbalance(val: number) {
         this._balance = val;
     }
 
-    get maticbalance(){
+    get maticbalance() {
         return this._balance;
     }
 
@@ -254,7 +256,7 @@ export class Singleton {
         return this._playername;
     }
 
-    set playeraddress(val: string){
+    set playeraddress(val: string) {
         this._playeraddress = val;
     }
 
@@ -305,9 +307,9 @@ export class Singleton {
     }
 
     playRandom() {
-     return this._battlehymns[Math.floor(Math.random() * this._battlehymns.length)];
+        return this._battlehymns[Math.floor(Math.random() * this._battlehymns.length)];
     }
 
     member: number;
-    balance: number;
+    balance!: number;
 }

@@ -1,17 +1,14 @@
 import resources from "../resources";
-import { Npc } from "./npc";
+import { SutenNpc } from "./sutennpc";
 import { LifeItem } from "../components/lifeItemComponent";
 //import * as ui from "../../node_modules/@dcl/ui-utils/index";
-import { Singleton } from "../gameClasses/playerDetail";
-import { SoundBox } from "../gameClasses/soundbox";
-//import { BuilderHUD } from "../modules/BuilderHUD";
+import { Singleton } from "../gameUtils/playerDetail";
+import { SoundBox } from "../gameUtils/soundbox";
+import { CombatLog } from "../gameUI/combatLog";
+import { TradeWindow } from "../gameUI/tradeWindow";
 
 export class LoadShopKeeper {
-  private gameCanvas;
-  private tradeWindow;
   private shopkeeper;
-  private _address;
-  private _balance;
   private _cl;
 
   private shopping = new SoundBox(
@@ -20,16 +17,15 @@ export class LoadShopKeeper {
     false
   );
 
-  constructor(gameCanvas, tradeWindow, combatLog) {
+  constructor(gameCanvas: UICanvas, tradeWindow: TradeWindow, combatLog: CombatLog) {
     this._cl = combatLog;
 
-    this.shopkeeper = new Npc(
+    this.shopkeeper = new SutenNpc(
       resources.sounds.peasantunlock,
       resources.models.peasant,
       22,
       new Vector3(-12.8, 1.2, -11.6),
       Quaternion.Euler(0, 90, 0),
-      gameCanvas
     );
 
     this.shopkeeper.addComponent(
@@ -60,11 +56,4 @@ export class LoadShopKeeper {
     this.shopkeeper.hide();
   }
 
-  balance(val) {
-    this._balance = val;
-  }
-
-  address(val) {
-    this._address = val;
-  }
 }

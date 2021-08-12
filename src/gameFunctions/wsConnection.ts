@@ -11,10 +11,17 @@ import { SoundBox } from "../gameUtils/soundbox";
 import resources from "../resources";
 //import * as ui from '../../node_modules/@dcl/ui-utils/index'
 import { spawnNpcs } from "../gameFunctions/spawnNpcs";
+import { sutenBase } from "../../suten"
+import { Player } from "../gameObjects/player";
+import { ActionBar } from "../gameUI/actionBar";
+import { BackPack } from "../gameUI/backPack";
+import { CombatLog } from "../gameUI/combatLog";
+import { Item } from "../gameObjects/item";
+
 
 const updateInterval = 5; //10
 
-const local: boolean = false; 
+const local: boolean = false;
 const PUNCH_TIME = 2.2;
 let clicked = false;
 
@@ -38,11 +45,11 @@ const server = local
   : "wss://sutenquestapi.azurewebsites.net/";
 
 export async function joinSocketsServer(
-  gameCanvas,
-  actionBar,
-  backPack,
-  player,
-  combatLog
+  gameCanvas: UICanvas,
+  actionBar: ActionBar,
+  backPack: BackPack,
+  player: Player,
+  combatLog: CombatLog
 ) {
 
   // keep players in different realms in separate rooms for the ws server
@@ -53,7 +60,7 @@ export async function joinSocketsServer(
 
   //    log(`You are in the realm: `, realm.displayName);
   // connect to websockets server
-  const socket = await new WebSocket(server + realm.displayName + "-rivers");
+  const socket = new WebSocket(server + realm.displayName + "-rivers");
   //log("socket connection to: ", server + realm.displayName + "-rivers");
 
   socket.onopen = async function (e) {
@@ -69,8 +76,8 @@ export async function joinSocketsServer(
       log("in wsConnection - msg: ", msg);
 
       if (mobs.entities.length == 0) {
-        msg.forEach((element) => {
-          if(element.gameover) {
+        msg.forEach((element: { gameover: any; winnerslist: any[]; path: string | any[]; id: string; name: string; xp: number; mobdead: boolean; damage: number; sound: string; shape: string; hp: number; percentage: number; spawnloc: (number)[]; spawnrot: number[]; }) => {
+          if (element.gameover) {
             obj.gameover = true;
             obj.winner = element.winnerslist[0]
             //log(`topside socket close`)
@@ -124,7 +131,7 @@ export async function joinSocketsServer(
                 backPack,
                 player
               );
-  
+
               engine.addSystem(
                 new OrcFSM(
                   gameCanvas,
@@ -199,12 +206,12 @@ export async function joinSocketsServer(
                 )
               );
               mob.name = element.name;
-            }            
+            }
           }
         });
       } else {
         for (let item in msg) {
-          if(msg[item].gameover) {
+          if (msg[item].gameover) {
             obj.gameover = true;
             obj.winner = msg[item].winnerslist[0]
             //log(`bottomside socket close`)
@@ -221,14 +228,14 @@ export async function joinSocketsServer(
                 if (msg[item].mosthated == null || msg[item].mosthated == obj.playeraddress) {
                   mobstate.anotherplayer = false;
                   //log(`${msg[item].id} Manage updates of this mob: ${msg[item].id} locally`);
-                  if(obj.localmobstate.length > 0) {
+                  if (obj.localmobstate.length > 0) {
                     let exists = obj.localmobstate.map(x => x.id).indexOf(msg[item].id)
-                    if(exists > -1) {
+                    if (exists > -1) {
                       log(`${msg[item].id} Deleting ${exists} from ${obj.localmobstate} now.`)
-                      obj.localmobstate.splice(exists,1)
+                      obj.localmobstate.splice(exists, 1)
                     }
                   }
-                  if(msg[item].mobdead == false && mobstate.mobdead == true && mobstate.orcdead == false) {
+                  if (msg[item].mobdead == false && mobstate.mobdead == true && mobstate.orcdead == false) {
                     log(`${msg[item].id} Setting MobDead to False`)
                     mobstate.mobdead = msg[item].mobdead
                     log(`${msg[item].id} Setting MobRespawned to True`)
@@ -236,13 +243,13 @@ export async function joinSocketsServer(
                   } else if (msg[item].mobdead == false && mobstate.mobdead == true && mobstate.orcdead == true) {
                     //Added to Give the loop another tick to keep the orc from respawning too soon
                     mobstate.orcdead = false
-                  } 
+                  }
                 } else {
                   mobstate.anotherplayer = true;
                   //This mob is unengagable due to another player
                   let mobid = msg[item].id;
                   //log(`${mobid} in the else block since someone else is engaged`)
-  
+
                   if (msg[item].mobdead == true) {
                     log(`Setting mobdead for ${mobid} to ${msg[item].mobdead}`);
                     mob.getComponent(MobState).mobdead = msg[item].mobdead;
@@ -253,14 +260,14 @@ export async function joinSocketsServer(
                     mob.getComponent(MobState).battle = false;
                     mob.getComponent(MobState).trackplayer = msg[item].trackplayer;
                     mob.getComponent(MobState).playerpos = msg[item].playerpos;
-  
+
                     if (msg[item].currentloc == 3) {
                       //log(`${mobid} wsConnection.ts -> currentloc: ${msg[item].currentloc}`);
                       mobstate.position = msg[item].currentloc;
                       //log`${mobid} wsConnection.ts -> currentrot: ${msg[item].currentrot}`);
                       mobstate.rotation = msg[item].currentrot;
                     }
-  
+
                     let exists = obj.localmobstate
                       .map((x) => x.id)
                       .indexOf(mobid);
@@ -269,7 +276,7 @@ export async function joinSocketsServer(
                     } else {
                       obj.localmobstate.push(mobstate);
                     }
-  
+
                   } else {
                     //log(`mobdead is currently false ${mobid} Item : ${JSON.stringify(msg[item])}`)
                     //log(`${mobid} someone else is engaged and mob is not dead.. update position: ${msg[item].currentloc} and battle: ${msg[item].battle}`)
@@ -277,7 +284,7 @@ export async function joinSocketsServer(
                     mobstate.battle = msg[item].battle
                     //log(`${mobid} set battle to ${msg[item].battle}`)
                     //mobstate.battle = true;
-  
+
                     if (msg[item].currentloc.length == 3) {
                       //log(`${mobid} wsConnection.ts -> currentloc: ${msg[item].currentloc}`);
                       mobstate.position = msg[item].currentloc;
@@ -292,11 +299,11 @@ export async function joinSocketsServer(
             }
           }
           //log(`Item : ${JSON.stringify(msg[item])}`)
-          
+
         }
       }
 
-     
+
     } catch (error) {
       log("ws error ", error);
     }
@@ -308,7 +315,7 @@ export async function joinSocketsServer(
 
   socket.onclose = (res) => {
     log("DISCONNECTED FROM SERVER", socket.readyState);
-    if(obj.gameover) {
+    if (obj.gameover) {
       //log(`Calling unloadVictory from wsConnection`)
       unloadVictory()
     } else if (obj.inDuat) {
@@ -321,7 +328,7 @@ export async function joinSocketsServer(
       //   player,
       //   combatLog)
       //joinSocketsServer()
-      combatLog.text =  `The socket has disconnected`
+      combatLog.text = `The socket has disconnected`
       unloadLife()
       //new NoEthScene(); 
     }
@@ -335,7 +342,7 @@ export async function joinSocketsServer(
   return socket;
 }
 
-function intialize() {}
+function intialize() { }
 
 
 export class closeSocket {
@@ -363,7 +370,7 @@ class pingSystem implements ISystem {
     this.npctimer += dt;
     this.timer += dt;
 
-    if(this.npctimer >= 60) {
+    if (this.npctimer >= 60) {
       this.npctimer = 0;
       log('Quest NPC Check')
       new spawnNpcs()
@@ -372,7 +379,7 @@ class pingSystem implements ISystem {
     if (this.timer >= 10) {
       this.timer = 0;
 
-      let m3 = obj.playerbackpack.map((lootitem) => {
+      let m3 = obj.playerbackpack.map((lootitem: Item) => {
         //return { image: lootitem.image().src, slot: lootitem.slot() };
         return {
           image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
@@ -384,11 +391,12 @@ class pingSystem implements ISystem {
 
       let m4 = obj.playeractionbar.map((lootitem) => {
         //return { image: lootitem.image().src, slot: lootitem.slot() };
-        return { 
-          image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth() , srch: lootitem.lootheight(),
-          desc: lootitem.lootdesc() , type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(), 
-          spellshape: lootitem.spellshape() , spellstart: lootitem.spellstart(), 
-          spellend: lootitem.spellend(), sound: lootitem.sound() }
+        return {
+          image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+          desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(),
+          spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+          spellend: lootitem.spellend(), sound: lootitem.sound()
+        }
       });
 
       log('m3 ', m3)
@@ -400,7 +408,7 @@ class pingSystem implements ISystem {
         JSON.stringify({
           event: "events",
           data: {
-            type: "-148,-124",
+            type: sutenBase,
             hp: obj.playerhp,
             address: obj.playeraddress,
             backpack: m3,
@@ -425,14 +433,14 @@ class updateSystem implements ISystem {
     this.interval -= dt;
     if (this.interval < 0) {
       let obj = Singleton.getInstance();
-      if(obj.localmobstate && obj.localmobstate.length > 0) {
+      if (obj.localmobstate && obj.localmobstate.length > 0) {
         //Only send a sync if there is something in localmobstate to send
         log(`sending an updateSystem call to the server`)
         log(`sending obj.localmobstate ${JSON.stringify(obj.localmobstate)}`)
 
         this.interval = updateInterval;
         //log('sending  ', JSON.stringify(obj.localmobstate))
-  
+
         this.socket.send(
           JSON.stringify({
             event: "battle",
@@ -445,11 +453,11 @@ class updateSystem implements ISystem {
           })
         );
 
-        if(obj.localmobstate.length > 0) {
+        if (obj.localmobstate.length > 0) {
           let exists = obj.localmobstate.map(x => x.mobdead).indexOf(true)
-          if(exists > -1) {
+          if (exists > -1) {
             //log(`Sent death update. Deleting ${exists} from ${JSON.stringify(obj.localmobstate)} now.`)
-            obj.localmobstate.splice(exists,1)
+            obj.localmobstate.splice(exists, 1)
           }
         }
 

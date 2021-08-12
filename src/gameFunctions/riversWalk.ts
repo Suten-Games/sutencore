@@ -1,4 +1,4 @@
-import { Npc } from "../gameObjects/npc";
+import { SutenNpc } from "../gameObjects/sutennpc";
 import { TimeOut } from "../components/timeOutComponent";
 import { DerpData } from "../components/lerpDataComponent";
 import { SecondaryTimeOut } from "../components/secondaryTimeOutComponent";
@@ -6,12 +6,12 @@ import { Orc } from "../gameObjects/orc";
 import { MobState } from "../components/mobStateComponent";
 
 export class Walk {
-  private _npc: Npc | Orc;
+  private _npc: SutenNpc | Orc;
   private _turntime: number;
   private _walk: AnimationState;
   private _turn: AnimationState;
 
-  constructor(npc: Npc | Orc, turntime: number) {
+  constructor(npc: SutenNpc | Orc, turntime: number) {
     this._npc = npc;
     this._turntime = turntime;
     // let animator = npc.getComponent(Animator);

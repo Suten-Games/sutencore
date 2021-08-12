@@ -26,12 +26,12 @@ export class Item {
     private _lw: LootWindow;
     private _potiontype;
     private _potionprice;
-    private _slot;
+    private _slot: number;
     private _spellshape;
     private _spellstart;
     private _spellend;
     private _sound;
-    private _npc;
+    private _npc: { hideOrc: () => void; } | null;
     private _tradewindow;
     private _itemtype;
 
@@ -55,11 +55,11 @@ export class Item {
     );
 
     constructor(
-        image: Texture, slot: number, srcw: number = null, srch: number = null, desc: string = null, 
-        type: string = null, price: number = null, itemtype: string = null, spellshape: string = null, 
-        spellstart: number = null, spellend: number = null, sound: AudioClip = null, lootwindow = null, npc = null,
-        tradewindow:TradeWindow = null
-        ) {
+        image: Texture, slot: number, srcw: number | null = null, srch: number | null = null, desc: string | null = null,
+        type: string | null = null, price: number | null = null, itemtype: string | null = null, spellshape: string | null = null,
+        spellstart: number | null = null, spellend: number | null = null, sound: AudioClip | null = null, lootwindow = null, npc = null,
+        tradewindow: TradeWindow | null = null
+    ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
         this._image = image;
@@ -68,12 +68,12 @@ export class Item {
         //log(`srcw: ${srcw} srch: ${srch} desc: ${desc} slot: ${slot} type: ${type} price: ${price} itemtype: ${itemtype}, shape: ${spellshape}`);
         this._lootimage = new UIImage(this._canvas, this._image);
 
-        if(tradewindow) {
+        if (tradewindow) {
             log('setting up tradewindow')
             this._tradewindow = tradewindow
         }
 
-        if(desc) {
+        if (desc) {
             this._desc = new UIText(this._canvas);
             //log('setting values for desc')
             this._desc.value = desc
@@ -81,7 +81,7 @@ export class Item {
             this._potiontype = desc
         }
 
-        if(price) {
+        if (price) {
             this._potionprice = price
         }
         this._spellstart = spellstart;
@@ -108,9 +108,9 @@ export class Item {
 
         switch (itemtype) {
             case "questloot":
-                this._isquestloot = true; 
+                this._isquestloot = true;
                 break;
-            
+
             case "consumable":
                 this._isconsumable = true;
                 break;
@@ -122,11 +122,11 @@ export class Item {
             case "spell":
                 this._isspell = true;
                 break;
-            
+
             case "ability":
                 this._isability = true;
                 break;
-        
+
             default:
                 break;
         }
@@ -144,19 +144,19 @@ export class Item {
         this._lootimage.vAlign = slotposition.va
         this._lootimage.width = slotposition.w
         this._lootimage.height = slotposition.h
-        this._lootimage.positionY =  slotposition.y
-        this._lootimage.positionX =  slotposition.x
+        this._lootimage.positionY = slotposition.y
+        this._lootimage.positionX = slotposition.x
         this._desc.fontSize = slotposition.fs;
-        this._desc.width =  slotposition.fw;
-        this._desc.height =  slotposition.fh;
-        this._desc.hAlign =  slotposition.fha;
-        this._desc.vAlign =  slotposition.fva;
+        this._desc.width = slotposition.fw;
+        this._desc.height = slotposition.fh;
+        this._desc.hAlign = slotposition.fha;
+        this._desc.vAlign = slotposition.fva;
         this._desc.positionY = slotposition.fy;
-        this._desc.positionX =  slotposition.fx;
+        this._desc.positionX = slotposition.fx;
 
         this._lootimage.visible = false;
         this._desc.visible = false;
-        
+
 
         if (this.isMerchant) {
             this._lootimage.onClick = new OnClick(() => {
@@ -185,7 +185,7 @@ export class Item {
 
     public show() {
         log('in  item show')
-        if(this.isLootWindow) {
+        if (this.isLootWindow) {
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this.isMerchant) {
@@ -225,7 +225,7 @@ export class Item {
     }
 
     public spellshape() {
-        if(typeof this._spellshape == "object") {
+        if (typeof this._spellshape == "object") {
             return "BoxShape"
         }
         return this._spellshape
@@ -248,7 +248,7 @@ export class Item {
     }
 
     public sound() {
-        if(this._sound) {
+        if (this._sound) {
             return this._sound.url
         } else {
             return this._sound
@@ -301,11 +301,11 @@ export class Item {
         log('in updateLoc')
         let ps
         this._lootimage.visible = true;
-        if(this._spellshape) {
+        if (this._spellshape) {
             ps = new ParticleSystem(2, 2, this._spellshape, this._sound)
             engine.addSystem(ps)
         }
-        
+
 
         this._lootimage.onClick = new OnClick(() => {
             log("clicked the item in slot ", slot);
@@ -315,14 +315,14 @@ export class Item {
                 return
             }
 
-            
+
             if (this._isspell) {
                 log("Cast a spell")
                 ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
                 return
             }
 
-            if(this._isweapon) {
+            if (this._isweapon) {
                 if (this._image.src.split('/')[3] == 'rustysword.png') {
                     this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
                 } else if (this._image.src.split('/')[3] == 'rustydagger.png') {
@@ -334,7 +334,7 @@ export class Item {
                 return
             }
 
-            if(this._isconsumable) {
+            if (this._isconsumable) {
                 if (this._image.src.split("/")[3] == "redHealthPotion.png") {
                     this._isconsumable = true;
                     this.potionsound.play()
@@ -459,7 +459,7 @@ export class Item {
 
         let slot = this._actionBar.selectSlot(this);
         //this.isActionBar = true;
-        
+
         this._slot = slot
 
         log('slot ', slot)
