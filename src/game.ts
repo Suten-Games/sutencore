@@ -3,23 +3,26 @@ import { getUserData } from "@decentraland/Identity";
 import { movePlayerTo } from "@decentraland/RestrictedActions";
 
 import resources from "./resources";
+
 import { CombatLog } from "./gameUI/combatLog";
 import { ActionBar } from "./gameUI/actionBar";
 import { BackPack } from "./gameUI/backPack";
 import { Khepra } from "./gameUI/khepra";
 import { TradeWindow } from "./gameUI/tradeWindow";
+
 import { Player } from "./gameObjects/player";
 
 import { Singleton } from "./gameUtils/playerDetail";
 
-// import { reloadGame } from "./components/reloadGame";
+import { spawnNpcs } from "./gameFunctions/spawnNpcs";
+import { reloadGame } from "./gameFunctions/reloadGame";
 // import { loadDeath } from "./components/loadDeath";
 // import { NoEthScene } from "./noEthScene";
-// import { matic } from '@dcl/l2-scene-utils'
-// import { joinSocketsServer } from "./components/wsConnection";
-// import * as crypto from '@dcl/crypto-scene-utils'
+import { matic } from "../node_modules/@sutenquest/l2-scene-utils/dist/index"
+import { joinSocketsServer } from "./gameFunctions/wsConnection";
+import * as crypto from "../node_modules/@sutenquest/crypto-scene-utils/dist/index"
 // import { BuilderHUD } from "./modules/BuilderHUD";
-// import { spawnNpcs } from "./gameObjects/spawnNpcs";
+
 
 const local: boolean = false;
 
@@ -34,7 +37,7 @@ const combatLog = new CombatLog(gameCanvas);
 const actionBar = new ActionBar(gameCanvas, resources.interface.blueActionBar);
 const backPack = new BackPack(gameCanvas, resources.interface.blueBackpack);
 const khepra = new Khepra(gameCanvas, resources.interface.khepra, backPack);
-let lowerCaseAddress: string;
+let lowerCaseAddress: string = "";
 
 let player = new Player(
   lowerCaseAddress,
@@ -69,47 +72,49 @@ function startGame() {
   });
 }
 
-// async function registerPlayer() {
-//   executeTask(async () => {
-//     try {
-//       //log('calling getUserAccount()')
-//       let address = await getUserAccount();
-//       let userdata = await getUserData();
-//       if (userdata == null) {
-//         combatLog.text = `Welcome to SutenQuest!`;
-//         combatLog.text = `:(  Userdata failed to load  :(`;
-//         combatLog.text = `Please refresh/reload the scene`;
-//         new NoEthScene();
-//         failedstart = true;
+ async function registerPlayer() {
+   executeTask(async () => {
+     try {
+       //log('calling getUserAccount()')
+       let address = await getUserAccount();
+       let userdata = await getUserData();
+      if (userdata == null) {
+        combatLog.text = `Welcome to SutenQuest!`;
+        combatLog.text = `:(  Userdata failed to load  :(`;
+        combatLog.text = `Please refresh/reload the scene`;
+        //new NoEthScene();
+        failedstart = true;
 
-//         return;
-//       } else if (!userdata.hasConnectedWeb3) {
-//         combatLog.text = `Welcome to SutenQuest!`;
-//         combatLog.text = `Web3 Must be connected to play`;
-//         combatLog.text = `Please add '&ENABLE_WEB3' to URL`;
-//         new NoEthScene();
-//         failedstart = true;
+        return;
+      } else if (!userdata.hasConnectedWeb3) {
+        combatLog.text = `Welcome to SutenQuest!`;
+        combatLog.text = `Web3 Must be connected to play`;
+        combatLog.text = `Please add '&ENABLE_WEB3' to URL`;
+        //new NoEthScene();
+        failedstart = true;
 
-//         return;
-//       }
-//       const balance = await matic.balance(address)
-//       var obj = Singleton.getInstance();
-//       obj.maticbalance = balance.l2
-//       if (address) {
-//         lowerCaseAddress = address.toLowerCase();
-//       } else {
-//         lowerCaseAddress = userdata.userId.toLowerCase();
-//         address = lowerCaseAddress;
-//       }
+        return;
+      }
+      // const balance = await matic.balance(address)
+      // //const balance = 0
+      // var obj = Singleton.getInstance();
+      // obj.maticbalance = balance.l2
+      // //obj.maticbalance = 0
+      // if (address) {
+      //   lowerCaseAddress = address.toLowerCase();
+      // } else {
+      //   lowerCaseAddress = userdata.userId.toLowerCase();
+      //   address = lowerCaseAddress;
+      // }
 
-//       let playerName = userdata.displayName;
-//       player.address = address;
-//       player.name = playerName;
-//       obj.playeraddress = address;
-//       obj.playername = player.name;
-//       obj.player = player;
-//       obj.actionbar = actionBar;
-//       obj.backpack = backPack;
+      // let playerName = userdata.displayName;
+      // player.address = address;
+      // player.name = playerName;
+      // obj.playeraddress = address;
+      // obj.playername = player.name;
+      // obj.player = player;
+      // obj.actionbar = actionBar;
+      // obj.backpack = backPack;
 
 //       try {
 //         let response = await fetch(apiUrl + "/" + lowerCaseAddress);
@@ -122,7 +127,7 @@ function startGame() {
 //             combatLog.text = `Welcome to SutenQuest!`;
 //             combatLog.text = `:(  Game failed to complete setup  :(`;
 //             combatLog.text = `Please refresh/reload the scene`;
-//             new NoEthScene();
+//             //new NoEthScene();
 //             failedstart = true;
 //             return;
 //           }
@@ -139,7 +144,7 @@ function startGame() {
 //             combatLog.text = `Welcome to SutenQuest!`;
 //             combatLog.text = `:(  Game socket failed to load  :(`;
 //             combatLog.text = `Please refresh/reload the scene`;
-//             new NoEthScene();
+//             //new NoEthScene();
 //             failedstart = true;
 
 //             return;
@@ -148,8 +153,8 @@ function startGame() {
 //           combatLog.text = `Welcome to SutenQuest!`;
 //           combatLog.text = `You are a level 1 Adventurer`;
 //           combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
-//           combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
-//           combatLog.text = `Matic Balance: ${JSON.stringify(balance.l2)}`
+//           //combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
+//           //combatLog.text = `Matic Balance: ${JSON.stringify(balance.l2)}`
 //           // combatLog.text = `Have fun and try not to die!`;
 
 //           obj.playerhp = 43;
@@ -223,7 +228,7 @@ function startGame() {
 //             combatLog.text = `Welcome to SutenQuest!`;
 //             combatLog.text = `:(  Game socket failed to load  :(`;
 //             combatLog.text = `Please refresh/reload the scene`;
-//             new NoEthScene();
+//             //new NoEthScene();
 //             failedstart = true;
 
 //             return;
@@ -253,7 +258,7 @@ function startGame() {
 //             player.name = json.name;
 //             player.alive = false;
 //             backPack.bootLoadBackPack(json.backpack);
-//             actionBar.bootLoadActionBar(json.actionbar);
+//             //actionBar.bootLoadActionBar(json.actionbar);
 //             if (json.characterclass == undefined) {
 //               obj.playerclass = "Adventurer";
 //             } else {
@@ -261,14 +266,14 @@ function startGame() {
 //             }
 //             obj.playerhp = 0;
 //             backPack.playerclass = obj.playerclass
-//             loadDeath(gameCanvas, player, combatLog, actionBar, backPack, tradeWindow)
+//             //loadDeath(gameCanvas, player, combatLog, actionBar, backPack, tradeWindow)
 //             //movePlayerTo({ x: 53, y: 0.1, z: 20 });
 //           } else {
 //             //log(`json.hp: ${json.hp} is greater than 0`)
 //             combatLog.text = `Welcome back!`;
 //             combatLog.text = `You are a level ${json.level} ${json.characterclass}`;
-//             combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
-//             combatLog.text = `Matic Mana Balance: ${JSON.stringify(balance.l2)}`
+//             //combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
+//             //combatLog.text = `Matic Mana Balance: ${JSON.stringify(balance.l2)}`
 //             combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
 //             //combatLog.text = `Have fun and try not to die!`;
 //             if (json.percentage == 100 && json.hp == undefined) {
@@ -291,13 +296,13 @@ function startGame() {
 //             player.level = json.level;
 //             player.basedamage = json.basedamage;
 
-//             player.initialhp(json.percentage / 100);
+//             //player.initialhp(json.percentage / 100);
 //             player.hp = json.hp;
 //             player.startinghp = json.hp;
 //             player.maxhp = json.maxhp;
 //             player.currentxp = json.currentxp;
 //             player.levelmax = json.levelmax;
-//             player.xpcheck();
+//             //player.xpcheck();
 //             reloadGame(gameCanvas, actionBar, backPack, player, combatLog, tradeWindow);
 //           }
 
@@ -314,7 +319,8 @@ function startGame() {
 //           log('calling backpack resetCharWindow')
 //           backPack.resetCharWindow()
 
-//           obj.manal1 = balance.l1
+//           //obj.manal1 = balance.l1
+//           obj.manal1 = 0
 
 //           const testArray = [
 //             { image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: null, price: 20, itemtype: "weapon", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
@@ -332,40 +338,40 @@ function startGame() {
 //           log('json.backpack ', json.backpack)
 
 //           backPack.bootLoadBackPack(json.backpack);
-//           actionBar.bootLoadActionBar(json.actionbar);
+//           //actionBar.bootLoadActionBar(json.actionbar);
 //           obj.actionbar = actionBar;
 //           obj.backpack = backPack
 //         }
 //       } catch (error) {
 //         log("game.ts: Player search by ether address failed ", error);
 //       }
-//     } catch (error) {
-//       if (error.toString().includes("Could not access eth_accounts")) {
-//         //log('Could not access ETH Accounts 2')
-//         combatLog.text = `Welcome to SutenQuest!`;
-//         combatLog.text = `Unable to access ETH Accounts!`;
-//         combatLog.text = `Web3 Must be connected to play`;
-//         combatLog.text = `Please add '&ENABLE_WEB3' to URL`;
-//         new NoEthScene();
-//       } else {
-//         log("error: ", error.toString());
-//       }
-//     }
-//   });
-// }
+     } catch (error) {
+      if (error.toString().includes("Could not access eth_accounts")) {
+        //log('Could not access ETH Accounts 2')
+        combatLog.text = `Welcome to SutenQuest!`;
+        combatLog.text = `Unable to access ETH Accounts!`;
+        combatLog.text = `Web3 Must be connected to play`;
+        combatLog.text = `Please add '&ENABLE_WEB3' to URL`;
+        //new NoEthScene();
+      } else {
+        log("error: ", error.toString());
+      }
+     }
+   });
+}
 
 startGame();
-// new spawnNpcs()
+new spawnNpcs()
 
 // // Uncomment the below model and BuilderHUD to find positions to use in the scene code
 // // User the BuilderHUD to move the model to the desired position/rotaion
 // // The positions show up in the Dev console
 
 let orc1 = new Entity("orc1");
-orc1.addComponent(new GLTFShape("models/remetch-warrior14.glb"));
+orc1.addComponent(new GLTFShape("models/remetch-warrior10.glb"));
 orc1.addComponent(
   new Transform({
-    position: new Vector3(7,0,7),
+    position: new Vector3(5,0,5),
     rotation: new Quaternion(0, 0, 0, 1),
     scale: new Vector3(.1, .1, .1),
   })

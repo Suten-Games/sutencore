@@ -1,6 +1,6 @@
 import resources from "../resources";
 import { CombatLog } from "../gameUI/combatLog";
-//import { unloadLife, loadDeath } from "../components/loadDeath";
+//import { unloadLife, loadDeath } from "../gameFunctions/loadDeath";
 import { BackPack } from "../gameUI/backPack";
 import { ActionBar } from "../gameUI/actionBar";
 import { SoundBox } from "../gameUtils/soundbox";

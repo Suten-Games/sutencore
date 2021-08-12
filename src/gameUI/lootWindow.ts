@@ -1,13 +1,12 @@
 import resources from "../resources";
 import { Orc } from "../gameObjects/orc";
-// import { LifeItem } from "../itemflags/deathItem";
+import { LifeItem } from "../components/lifeItemComponent";
 import { Item } from "../gameObjects/item";
 
 export class LootWindow extends Entity {
     private _canvas;
     private _image;
     private _loot;
-    //private _potion1;
     private _actionbar;
     private _backpack;
     private _player;
@@ -220,7 +219,6 @@ export class LootWindow extends Entity {
         this.getloot()
       }
       
-      //this._potion1.show()
     }
   
     public hide() {

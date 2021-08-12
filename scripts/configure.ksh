@@ -36,3 +36,13 @@ else
     cp -R src/game.ts $INIT_CWD/src/game.ts
   fi
 fi
+
+# cp tsconfig.json $INIT_CWD
+
+#cd $INIT_CWD
+# npm i @dcl/ecs-scene-utils -B
+# npm i @dcl/ui-scene-utils -B
+# npm i @dcl/npc-scene-utils -B
+# npm i @dcl/crypto-scene-utils  @dcl/ecs-scene-utils eth-connect -B
+# npm i @dcl/l2-scene-utils @dcl/ecs-scene-utils eth-connect -B
+# npm i @dcl/noise-utils -B

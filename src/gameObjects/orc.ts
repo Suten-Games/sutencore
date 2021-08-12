@@ -3,7 +3,7 @@ import { MobState } from "../components/mobStateComponent";
 //import { followData } from "../components/followSystem";
 import { LootWindow } from "../gameUI/lootWindow";
 //import * as ui from "../../node_modules/@dcl/ui-utils/index";
-//import { FollowsPlayer } from "./followsPlayer";
+//import { FollowsPlayer } from "../gameFunctions/followsPlayer";
 //import { LifeItem, VictoryItem } from "../itemflags/deathItem";
 //import { BarStyles } from "../../node_modules/@dcl/ui-utils/utils/types";
 import { Singleton } from "../gameUtils/playerDetail";

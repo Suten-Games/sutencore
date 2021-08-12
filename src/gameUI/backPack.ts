@@ -1,9 +1,11 @@
+// import * as ui from "../../node_modules/@dcl/ui-utils/index";
+
 import { Item } from "../gameObjects/item";
 import resources from "../resources";
 import { SoundBox } from "../gameUtils/soundbox";
 import { Singleton } from "../gameUtils/playerDetail";
 import { CharWindow } from "./charWindow";
-// import * as ui from "../../node_modules/@dcl/ui-utils/index";
+
 
 export class BackPack {
     private _canvas;
