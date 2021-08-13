@@ -1,6 +1,6 @@
 import resources from "../resources";
 import { MobState } from "../components/mobStateComponent";
-//import { followData } from "../components/followSystem";
+import { followData } from "../gameSystems/followSystem";
 import { LootWindow } from "../gameUI/lootWindow";
 //import * as ui from "../../node_modules/@dcl/ui-utils/index";
 //import { FollowsPlayer } from "../gameFunctions/followsPlayer";
@@ -77,7 +77,7 @@ export class Orc extends Entity {
           scale: new Vector3(2, 2, 2),
         })
       );
-      
+
     } else {
       this.addComponent(
         new Transform({
@@ -91,7 +91,7 @@ export class Orc extends Entity {
     this._canvas = canvas;
     this.addComponent(new AudioSource(sound));
     this.addComponent(new MobState());
-    //this.addComponent(new followData());
+    this.addComponent(new followData());
     this.getComponent(MobState).array = path;
     this._id = id;
     this.getComponent(MobState).id = this._id;
@@ -103,11 +103,11 @@ export class Orc extends Entity {
     this._hp = startingHp;
     this._startinghp = startingHp;
 
-    if(name == undefined) {
+    if (name == undefined) {
       log(`Unable to set name for orc: ${this._id}`)
     }
 
-    if(dead){
+    if (dead) {
       log(`In ${this._id} Orc Creation, setting mobdead to true`)
       this.getComponent(MobState).mobdead = true;
     }
@@ -132,7 +132,7 @@ export class Orc extends Entity {
     npcAnimator.addClip(this.idle);
     npcAnimator.addClip(this.idle_)
 
-    this.boxing = new AnimationState("c-punch"); 
+    this.boxing = new AnimationState("c-punch");
     this.boxing_ = new AnimationState("punch");
     npcAnimator.addClip(this.boxing);
     npcAnimator.addClip(this.boxing_)
@@ -142,27 +142,27 @@ export class Orc extends Entity {
     npcAnimator.addClip(this.kick);
     npcAnimator.addClip(this.kick_)
 
-    this.hit1 = new AnimationState("e-hitInHead"); 
+    this.hit1 = new AnimationState("e-hitInHead");
     this.hit1_ = new AnimationState("hitInHead")
     npcAnimator.addClip(this.hit1);
     npcAnimator.addClip(this.hit1_)
 
-    this.hit2 = new AnimationState("f-hitInKidney"); 
+    this.hit2 = new AnimationState("f-hitInKidney");
     this.hit2_ = new AnimationState("hitInKidney")
     npcAnimator.addClip(this.hit2);
     npcAnimator.addClip(this.hit2_)
 
-    this.turnAround = new AnimationState("g-turnAround"); 
+    this.turnAround = new AnimationState("g-turnAround");
     this.turnAround_ = new AnimationState("turnAround")
     npcAnimator.addClip(this.turnAround);
     npcAnimator.addClip(this.turnAround_)
 
-    this.death1 = new AnimationState("h-death1"); 
+    this.death1 = new AnimationState("h-death1");
     this.death1_ = new AnimationState("death1")
     npcAnimator.addClip(this.death1);
     npcAnimator.addClip(this.death1_)
 
-    this.death2 = new AnimationState("i-death2"); 
+    this.death2 = new AnimationState("i-death2");
     this.death2_ = new AnimationState("death2")
     npcAnimator.addClip(this.death2);
     npcAnimator.addClip(this.death2_)
@@ -241,10 +241,10 @@ export class Orc extends Entity {
 
     //Set Transform to Initial Spawn Point
     mobstate.position = mobstate.array[mobstate.origin]
-    mobstate.rotation = new Quaternion(0,1,0)
+    mobstate.rotation = new Quaternion(0, 1, 0)
 
     this.getComponent(GLTFShape).visible = true
-  
+
     this.addComponentOrReplace(
       new OnPointerDown(
         (e) => {
@@ -256,7 +256,7 @@ export class Orc extends Entity {
           mobstate.timeout = false;
           mobstate.trackplayer = false;
           mobstate.respawned = false;
-          
+
         },
         {
           button: ActionButton.PRIMARY,
@@ -269,33 +269,33 @@ export class Orc extends Entity {
 
   initialhp(val) {
     log('in orc initialhp')
-    if(this.update2) {
-      if(this.hpbar2) {
+    if (this.update2) {
+      if (this.hpbar2) {
         if (val > 0) {
           this.hpbar2.set(val)
-        } 
+        }
       }
     } else {
-      if(this.hpbar) {
+      if (this.hpbar) {
         if (val > 0) {
           this.hpbar.set(val)
-        } 
+        }
       }
     }
-    
+
   }
 
   healthcheck(val) {
-    if(this.update2) {
+    if (this.update2) {
       if (val > 0) {
         this.hpbar2.set(val)
-      } 
+      }
     } else {
       if (val > 0) {
         this.hpbar.set(val)
-      } 
+      }
     }
-    
+
   }
 
   addlootclick() {
@@ -343,32 +343,32 @@ export class Orc extends Entity {
   hidehpbar() {
     this.hpbar.set(0)
     this.hpbar = null
-    if(this.hpbar2 != null) {
+    if (this.hpbar2 != null) {
       this.hpbar2.set(0)
       this.hpbar2 = null
     }
-    
+
   }
 
   heal(amount: number) {
     let url = this.npcUrl + "/" + this._id;
 
-    if(amount > 0) {
-      if(this.hp < this._startinghp) {
-          if(this.hp + amount < this._startinghp) {
-              //log(`Adding health ${amount}  ${this.name}`)
-              this.hp += amount
-          } else {
-            //log(`setting hp: ${this.hp} to maxhp: ${this._startinghp}`)
-            this.hp = this._startinghp
-            //log(`set hp: ${this.hp} to maxhp: ${this._startinghp}`) 
-          }
+    if (amount > 0) {
+      if (this.hp < this._startinghp) {
+        if (this.hp + amount < this._startinghp) {
+          //log(`Adding health ${amount}  ${this.name}`)
+          this.hp += amount
+        } else {
+          //log(`setting hp: ${this.hp} to maxhp: ${this._startinghp}`)
+          this.hp = this._startinghp
+          //log(`set hp: ${this.hp} to maxhp: ${this._startinghp}`) 
+        }
       }
     }
 
     let percentage = ((this.hp / this._startinghp) * 100).toFixed(0)
     this.initialhp(Number(percentage) / 100)
-    
+
   }
 
   takedamage(amount: number, loc, rot) {
@@ -378,13 +378,13 @@ export class Orc extends Entity {
     mobstate.rotation = rot
     mobstate.position = loc
 
-    if(this.hp > 0) {
-      if(this.hp - amount > 0) {
-          this.hp -= amount
+    if (this.hp > 0) {
+      if (this.hp - amount > 0) {
+        this.hp -= amount
       } else {
-          this.hp = 0
+        this.hp = 0
       }
-    } 
+    }
 
     //log(`this.hp ${this.hp} / this.maxhp ${this._startinghp} * 100 gives percentage of ${(this.hp / this._startinghp) * 100}`)
     let percentage = ((this.hp / this._startinghp) * 100).toFixed(0)
@@ -397,15 +397,15 @@ export class Orc extends Entity {
 
     //log('1 updating mobstate ', JSON.stringify(mobstate))
 
-    if(exists > -1) {
+    if (exists > -1) {
       //log(`id: ${this._id} exists 4: ${exists}`)
-      obj.localmobstate.splice(exists,1,mobstate)
+      obj.localmobstate.splice(exists, 1, mobstate)
       //log(`localmobstate: ${obj.localmobstate}`)
     } else {
       obj.localmobstate.push(mobstate)
     }
 
-   
+
     return this.hp
   }
 

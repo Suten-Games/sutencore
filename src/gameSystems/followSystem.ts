@@ -24,13 +24,13 @@ export class FollowSystem implements ISystem {
       let newTarget = this.camera.feetPosition.clone();
       //newTarget.y = newTarget.y - 1.75;
       newTarget.x = newTarget.x + 1;
-      if(newTarget.x >= 79) {
+      if (newTarget.x >= 79) {
         //log('resetting to x border')
         newTarget.x = 79
       }
 
       newTarget.z = newTarget.z + 1;
-      if(newTarget.z >= 79) {
+      if (newTarget.z >= 79) {
         //log('resetting to z border')
         newTarget.z = 79
       }

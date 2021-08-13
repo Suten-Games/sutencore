@@ -370,7 +370,7 @@ class pingSystem implements ISystem {
     this.npctimer += dt;
     this.timer += dt;
 
-    if (this.npctimer >= 60) {
+    if (this.npctimer >= 20) {
       this.npctimer = 0;
       log('Quest NPC Check')
       new spawnNpcs()

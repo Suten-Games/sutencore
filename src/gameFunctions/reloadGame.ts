@@ -12,7 +12,7 @@ let mss: MobStateSystem;
 let ws: WaitSystem
 let shopkeeper
 
-export function reloadGame(gamecanvas:UICanvas, actionbar:ActionBar,backpack:BackPack, player:Player, combatlog:CombatLog, tradewindow:TradeWindow) {
+export function reloadGame(gamecanvas: UICanvas, actionbar: ActionBar, backpack: BackPack, player: Player, combatlog: CombatLog, tradewindow: TradeWindow) {
   executeTask(async () => {
     try {
       //new BaseScene();
@@ -22,9 +22,9 @@ export function reloadGame(gamecanvas:UICanvas, actionbar:ActionBar,backpack:Bac
 
       engine.addSystem(mss);
       engine.addSystem(ws)
-      
-      shopkeeper = new LoadShopKeeper(gamecanvas, tradewindow, combatlog)
-      engine.addEntity(shopkeeper)
+
+      // shopkeeper = new LoadShopKeeper(gamecanvas, tradewindow, combatlog)
+      // engine.addEntity(shopkeeper)
     } catch (e) {
       log("error ", e);
     }
