@@ -303,26 +303,27 @@ async function registerPlayer() {
          log('calling backpack resetCharWindow')
          backPack.resetCharWindow()
 
-         //           //obj.manal1 = balance.l1
+         // obj.manal1 = balance.l1
          obj.manal1 = 0
 
          const testArray = [
-           { image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: null, price: 20, itemtype: "weapon", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
-           { image: "src/images/looticons/manavial.png", slot: 2, srcw: 1219, srch: 2154, desc: "Mana Vial", type: null, price: 50, itemtype: null, spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
-           { image: "src/images/spells/painterly-spell-icons-3/explosion-magenta-1.png", slot: 3, srcw: 256, srch: 256, desc: "Minor Shielding", type: null, price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
-           { image: "src/images/spells/painterly-spell-icons-1/protect-royal-1.png", slot: 4, srcw: 256, srch: 256, desc: "Spike Shield", type: null, price: 10, itemtype: "spell", spellshape: "BoxShape", spellstart: 1, spellend: 50, sound: resources.sounds.elementalspell, lootwindow: null, npc: null },
-           { image: "src/images/looticons/redHealthPotion.png", slot: 5, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
-           { image: "src/images/looticons/blueHealthPotion.png", slot: 6, srcw: 1219, srch: 2154, desc: "Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
-           { image: "src/images/spells/painterly-spell-icons-1/enchant-acid-2.png", slot: 7, srcw: 256, srch: 256, desc: "Spike Shield", type: null, price: 10, itemtype: "spell", spellshape: "BoxShape", spellstart: -20, spellend: 15, sound: resources.sounds.levelup, lootwindow: null, npc: null },
-           { image: "src/images/looticons/redHealthPotion.png", slot: 8, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
-           { image: "src/images/looticons/redHealthPotion.png", slot: 9, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
+           { image: "images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: null, price: 20, itemtype: "weapon", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
+           { image: "images/looticons/manavial.png", slot: 2, srcw: 1219, srch: 2154, desc: "Mana Vial", type: null, price: 50, itemtype: null, spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
+           { image: "images/spells/painterly-spell-icons-3/explosion-magenta-1.png", slot: 3, srcw: 256, srch: 256, desc: "Minor Shielding", type: null, price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell, lootwindow: null, npc: null },
+           { image: "images/spells/painterly-spell-icons-1/protect-royal-1.png", slot: 4, srcw: 256, srch: 256, desc: "Spike Shield", type: null, price: 10, itemtype: "spell", spellshape: "BoxShape", spellstart: 1, spellend: 50, sound: resources.sounds.elementalspell, lootwindow: null, npc: null },
+           { image: "images/looticons/redHealthPotion.png", slot: 5, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
+           { image: "images/looticons/blueHealthPotion.png", slot: 6, srcw: 1219, srch: 2154, desc: "Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
+           { image: "images/spells/painterly-spell-icons-1/enchant-acid-2.png", slot: 7, srcw: 256, srch: 256, desc: "Spike Shield", type: null, price: 10, itemtype: "spell", spellshape: "BoxShape", spellstart: -20, spellend: 15, sound: resources.sounds.levelup, lootwindow: null, npc: null },
+           { image: "images/looticons/redHealthPotion.png", slot: 8, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
+           { image: "images/looticons/redHealthPotion.png", slot: 9, srcw: 1219, srch: 2154, desc: "Minor Heal", type: null, price: 50, itemtype: "consumable", spellshape: null, spellstart: null, spellend: null, sound: null, lootwindow: null, npc: null },
          ]
 
          log('json.actionbar ', json.actionbar)
          log('json.backpack ', json.backpack)
 
          backPack.bootLoadBackPack(json.backpack);
-         actionBar.bootLoadActionBar(json.actionbar);
+         //actionBar.bootLoadActionBar(json.actionbar);
+         actionBar.bootLoadActionBar(testArray);
          obj.actionbar = actionBar;
          obj.backpack = backPack
        }

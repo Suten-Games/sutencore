@@ -17,6 +17,7 @@ cp -R src/gameObjects $INIT_CWD/src
 cp -R src/gameSystems $INIT_CWD/src
 cp -R src/gameUI $INIT_CWD/src
 cp -R src/gameUtils $INIT_CWD/src
+cp -R src/modules $INIT_CWD/src
 
 grep 'entity.setParent(_scene)' $INIT_CWD/src/game.ts
 rc=$?

@@ -1,4 +1,4 @@
-//import { BaseScene } from "../baseScene";
+import { BaseScene } from "../baseScene";
 import { MobStateSystem } from "../gameSystems/mobStateSystem";
 import { Player } from "../gameObjects/player";
 import { CombatLog } from "../gameUI/combatLog";
@@ -15,7 +15,7 @@ let shopkeeper
 export function reloadGame(gamecanvas: UICanvas, actionbar: ActionBar, backpack: BackPack, player: Player, combatlog: CombatLog, tradewindow: TradeWindow) {
   executeTask(async () => {
     try {
-      //new BaseScene();
+      new BaseScene();
 
       mss = new MobStateSystem();
       ws = new WaitSystem();

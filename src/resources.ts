@@ -78,7 +78,8 @@ export default {
         bonemound: new GLTFShape("models/death/mounds_bones_glb.glb"),
         walldivider: new GLTFShape("models/death/wall_diviver_glb.glb"),
         pyramid: new GLTFShape("models/mediumpyramid.glb"),
-        largepyramid: new GLTFShape("models/largepyramid.glb")
+        largepyramid: new GLTFShape("models/largepyramid.glb"),
+        merchantshop: new GLTFShape("models/merchantbuilding.glb")
     },
     loot: {
         greekSword: new Texture("images/looticons/greeksword.png"),
