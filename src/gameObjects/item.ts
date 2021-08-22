@@ -323,11 +323,11 @@ export class Item {
             }
 
             if (this._isweapon) {
-                if (this._image.src.split('/')[3] == 'rustysword.png') {
+                if (this._image.src.split('/')[2] == 'rustysword.png') {
                     this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
-                } else if (this._image.src.split('/')[3] == 'rustydagger.png') {
+                } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
                     this._player.weapon(resources.loot.rustydagger, "Rusty Dagger", this._actionBar, this._backPack, this, slot)
-                } else if (this._image.src.split('/')[3] == 'rustyaxe.png') {
+                } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
                     log('Sending the call to player.weapon')
                     this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
                 }
@@ -335,15 +335,16 @@ export class Item {
             }
 
             if (this._isconsumable) {
-                if (this._image.src.split("/")[3] == "redHealthPotion.png") {
+                //log(`clicked a consumable ${this._image.src.split("/")[2]}`)
+                if (this._image.src.split("/")[2] == "redHealthPotion.png") {
                     this._isconsumable = true;
                     this.potionsound.play()
                     this._player.heal(20, true);
-                } else if (this._image.src.split("/")[3] == "greenHealthPotion.png") {
+                } else if (this._image.src.split("/")[2] == "greenHealthPotion.png") {
                     this._isconsumable = true;
                     this.potionsound.play()
                     this._player.heal(50, true);
-                } else if (this._image.src.split("/")[3] == "blueHealthPotion.png") {
+                } else if (this._image.src.split("/")[2] == "blueHealthPotion.png") {
                     this._isconsumable = true;
                     this.potionsound.play()
                     this._player.heal(500, true);
@@ -520,7 +521,6 @@ export class Item {
 
     private setItemForSale() {
         log('in setItemForSale. Changing position of the potion to sales window')
-
         let slotposition = slotPicker(36)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp

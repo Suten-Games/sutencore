@@ -24,7 +24,15 @@ rc=$?
 if [[ ${rc} == 0 ]];then
   echo "Game.ts is from builder, copy contents to basescene"
   touch $INIT_CWD/src/baseScene.ts
-  cat $INIT_CWD/src/game.ts >> $INIT_CWD/src/baseScene.ts
+  echo "export class BaseScene extends Entity {" >> $INIT_CWD/src/baseScene.ts 
+    echo "constructor() {" >> $INIT_CWD/src/baseScene.ts
+    echo "super()" >> $INIT_CWD/src/baseScene.ts
+    echo "engine.addEntity(this)" >> $INIT_CWD/src/baseScene.ts
+    echo " " >> $INIT_CWD/src/baseScene.ts
+    cat $INIT_CWD/src/game.ts >> $INIT_CWD/src/baseScene.ts
+    echo " " >> $INIT_CWD/src/baseScene.ts 
+    echo "}" >> $INIT_CWD/src/baseScene.ts  
+    echo "}" >> $INIT_CWD/src/baseScene.ts  
   cp src/game.ts $INIT_CWD/src/game.ts
 else
   grep '/// --- Spawn a cube ---' $INIT_CWD/src/game.ts
@@ -32,8 +40,16 @@ else
   if [[ ${rc} == 0 ]];then
     echo "This is a DCL init build"
     touch $INIT_CWD/src/baseScene.ts
+    echo "export class BaseScene extends Entity {" >> $INIT_CWD/src/baseScene.ts 
+    echo "constructor() {" >> $INIT_CWD/src/baseScene.ts
+    echo "super()" >> $INIT_CWD/src/baseScene.ts
+    echo "engine.addEntity(this)" >> $INIT_CWD/src/baseScene.ts
+    echo " " >> $INIT_CWD/src/baseScene.ts
     cat $INIT_CWD/src/game.ts >> $INIT_CWD/src/baseScene.ts
     cp src/game.ts $INIT_CWD/src/game.ts
+    echo " " >> $INIT_CWD/src/baseScene.ts 
+    echo "}" >> $INIT_CWD/src/baseScene.ts  
+    echo "}" >> $INIT_CWD/src/baseScene.ts 
   else 
     echo "Updating game.ts"
     cp -R src/game.ts $INIT_CWD/src/game.ts

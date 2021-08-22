@@ -32,9 +32,9 @@ export class CharWindow {
 
   private equipsound = new SoundBox(
     new Transform({ position: new Vector3(8, 0, 8) }),
-     resources.sounds.sheathsword,
-     false
-   );
+    resources.sounds.sheathsword,
+    false
+  );
 
   constructor(canvas, image, charclass) {
     var obj = Singleton.getInstance();
@@ -202,12 +202,12 @@ export class CharWindow {
     this._closebutton = new UIImage(canvas, resources.interface.closebutton);
     this._closebutton.hAlign = "left";
     this._closebutton.vAlign = "center";
-    this._closebutton.width = "1%";
-    this._closebutton.height = "3%";
-    this._closebutton.positionX = "35%";
-    this._closebutton.positionY = "44.4%";
-    this._closebutton.sourceWidth = 93;
-    this._closebutton.sourceHeight = 94;
+    this._closebutton.width = "5%";
+    this._closebutton.height = "7%";
+    this._closebutton.positionX = "32%";
+    this._closebutton.positionY = "43%";
+    this._closebutton.sourceWidth = 168;
+    this._closebutton.sourceHeight = 164;
     this._closebutton.visible = false;
     this._closebutton.onClick = new OnPointerDown(
       (e) => {
@@ -230,7 +230,7 @@ export class CharWindow {
         this._lootbig.visible = false;
         this._weapontext.visible = false;
 
-        if(this._charbutton?.visible != null) {
+        if (this._charbutton?.visible != null) {
           this._charbutton.visible = false;
         }
 
@@ -253,8 +253,8 @@ export class CharWindow {
     this._base.visible = false;
   }
 
-  public setCharLoot(weapon = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage:Item, slot: number) {
-    
+  public setCharLoot(weapon = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+
     log('in setCharLoot ', lootimage)
 
 
@@ -316,7 +316,7 @@ export class CharWindow {
         }
 
         log('setting up the ebutton parameters');
-       
+
         this._charbutton.onClick = new OnPointerDown(
           (e) => {
             this.equipsound.play()
@@ -346,7 +346,7 @@ export class CharWindow {
     log('in the charWindow flip')
     let obj = Singleton.getInstance();
 
-    if(!this._loot) {
+    if (!this._loot) {
       if (obj.weapon == 'resources.loot.rustyaxe') {
 
         this._loot = new UIImage(this._canvas, resources.loot.rustyaxe);
@@ -369,8 +369,8 @@ export class CharWindow {
 
         this._loot = new UIImage(this._canvas, resources.loot.rustydagger);
         this._lootbig = new UIImage(this._canvas, resources.loot.rustydagger);
-        this._weapontext.value = "Rusty Dagger"; 
-         
+        this._weapontext.value = "Rusty Dagger";
+
       }
     }
 
@@ -439,16 +439,16 @@ export class CharWindow {
       //   this._ebutton.visible = false;
       // }
 
-      if(this._charbutton?.visible != null) {
+      if (this._charbutton?.visible != null) {
         this._charbutton.visible = false;
       }
-      
+
 
     } else {
       // log('in the charWindow flip else')
       //log('setting ebutton.visible to false')
       //this._ebutton.visible = false;
-      
+
 
       this._base.visible = true;
       this._open = true;

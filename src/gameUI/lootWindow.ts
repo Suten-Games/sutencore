@@ -7,6 +7,7 @@ export class LootWindow extends Entity {
   private _canvas;
   private _image;
   private _loot;
+  private _closebutton;
   private _actionbar;
   private _backpack;
   private _player;
@@ -97,6 +98,26 @@ export class LootWindow extends Entity {
     this._player = player;
     this._npc = orc
     //this.addComponent(new LifeItem())
+    this._closebutton = new UIImage(canvas, resources.interface.closebutton);
+    this._closebutton.hAlign = "left";
+    this._closebutton.vAlign = "center";
+    this._closebutton.width = "7%";
+    this._closebutton.height = "7%";
+    this._closebutton.positionX = "32%";
+    this._closebutton.positionY = "32%";
+    this._closebutton.sourceWidth = 168;
+    this._closebutton.sourceHeight = 164;
+    this._closebutton.visible = false;
+    this._closebutton.onClick = new OnPointerDown(
+      (e) => {
+        this.hide()
+        this._closebutton.visible = false;
+      },
+      {
+        button: ActionButton.PRIMARY,
+        hoverText: "Close",
+      }
+    );
   }
 
   async getloot() {
@@ -206,6 +227,7 @@ export class LootWindow extends Entity {
 
   public show(item = null) {
     //log('in show method')
+    this._closebutton.visible = true;
     this._loot.visible = true;
     if (item) {
       //this._lootitem = new Loot(this._canvas, item, 40, this._actionbar,this._backpack, this._player, this, this._npc)

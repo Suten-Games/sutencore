@@ -2,11 +2,14 @@ import resources from "../resources";
 import { MobState } from "../components/mobStateComponent";
 import { followData } from "../gameSystems/followSystem";
 import { LootWindow } from "../gameUI/lootWindow";
-//import * as ui from "../../node_modules/@dcl/ui-utils/index";
-//import { FollowsPlayer } from "../gameFunctions/followsPlayer";
-//import { LifeItem, VictoryItem } from "../itemflags/deathItem";
-//import { BarStyles } from "../../node_modules/@dcl/ui-utils/utils/types";
+import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
+import { FollowsPlayer } from "../components/followsPlayerComponent";
+import { LifeItem } from "../components/lifeItemComponent";
+import { VictoryItem } from "../components/victoryItemComponent";
+import { BarStyles } from "../../node_modules/@sutenquest/ui-utils/utils/types"
 import { Singleton } from "../gameUtils/playerDetail";
+import { NpcId } from "../components/npcIdComponent";
+import { NpcName } from "../components/npcNameComponent";
 
 export class Orc extends Entity {
   private _id: string;
@@ -67,8 +70,8 @@ export class Orc extends Entity {
     //log('attempting to create a new orc')
 
     this.addComponent(model);
-    // this.addComponent(new LifeItem())
-    // this.addComponent(new VictoryItem())
+    this.addComponent(new LifeItem())
+    this.addComponent(new VictoryItem())
     if (name == "Orc Chief") {
       this.addComponent(
         new Transform({
@@ -113,11 +116,11 @@ export class Orc extends Entity {
     }
 
     this._percentage = percentage;
-    //this.addComponent(new FollowsPlayer());
-    //this.addComponent(new NpcId());
-    //this.getComponent(NpcId).id = this._id;
-    //this.addComponentOrReplace(new NpcName());
-    //this.getComponent(NpcName).name = this._name;
+    this.addComponent(new FollowsPlayer());
+    this.addComponent(new NpcId());
+    this.getComponent(NpcId).id = this._id;
+    this.addComponentOrReplace(new NpcName());
+    this.getComponent(NpcName).name = this._name;
 
     let npcAnimator = new Animator();
     this.addComponent(npcAnimator);
@@ -172,13 +175,13 @@ export class Orc extends Entity {
     npcAnimator.addClip(this.turnLeft);
     npcAnimator.addClip(this.turnLeft_)
 
-    // this.getComponent(FollowsPlayer).defaultHeight = 0.1;
-    // this.getComponent(FollowsPlayer).speed = 0.1;
-    // this.getComponent(FollowsPlayer).elapsedTime = Math.random() * 0.5;
-    // this.getComponent(FollowsPlayer).randomOffsetX =
-    //   (Math.random() * 2 - 1) * this.scatterRadius;
-    // this.getComponent(FollowsPlayer).randomOffsetZ =
-    //   (Math.random() * 2 - 1) * this.scatterRadius;
+    this.getComponent(FollowsPlayer).defaultHeight = 0.1;
+    this.getComponent(FollowsPlayer).speed = 0.1;
+    this.getComponent(FollowsPlayer).elapsedTime = Math.random() * 0.5;
+    this.getComponent(FollowsPlayer).randomOffsetX =
+      (Math.random() * 2 - 1) * this.scatterRadius;
+    this.getComponent(FollowsPlayer).randomOffsetZ =
+      (Math.random() * 2 - 1) * this.scatterRadius;
 
     this._lootWindow = new LootWindow(
       canvas,
@@ -330,14 +333,14 @@ export class Orc extends Entity {
 
   showhpbar() {
     let top = 300
-    // if(this.hpbar == null) {
-    //   log(`Turning on top orc ${this._id} hpbar`)
-    //   this.hpbar = new ui.UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
-    // } else if(this.hpbar.read() == 0) {
-    //   log(`rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
-    //   this.hpbar2 = new ui.UIBar(this.percentage / 100, -30, top - 30, Color4.Blue(), BarStyles.ROUNDSILVER, .8) 
-    //   this.update2 = true;
-    // }
+    if (!this.hpbar) {
+      log(`Turning on top orc ${this._id} hpbar`)
+      this.hpbar = new ui.UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
+    } else if (this.hpbar.read() == 0) {
+      log(`rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
+      this.hpbar2 = new ui.UIBar(this.percentage / 100, -30, top - 30, Color4.Blue(), BarStyles.ROUNDSILVER, .8)
+      this.update2 = true;
+    }
   }
 
   hidehpbar() {

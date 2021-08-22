@@ -1,13 +1,14 @@
 import resources from "../resources";
 import { CombatLog } from "../gameUI/combatLog";
-//import { unloadLife, loadDeath } from "../gameFunctions/loadDeath";
+import { loadDeath } from "../gameFunctions/loadDeath";
+import { unloadLife } from "../gameFunctions/loadDeath";
 import { BackPack } from "../gameUI/backPack";
 import { ActionBar } from "../gameUI/actionBar";
 import { SoundBox } from "../gameUtils/soundbox";
-//import { BarStyles } from "../../node_modules/@dcl/ui-utils/utils/types";
-//import * as ui from "../../node_modules/@dcl/ui-utils/index";
+import { BarStyles } from "../../node_modules/@sutenquest/ui-utils/utils/types"
+import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
 import { Singleton } from "../gameUtils/playerDetail";
-//import { QuestLog } from "./questLog";
+import { QuestLog } from "../gameUI/questLog";
 
 const orclaugh = new SoundBox(
   new Transform({ position: new Vector3(7, 0, 8) }),
@@ -30,39 +31,39 @@ export class Player {
   private _startinghp: number;
   private _inbatttle: boolean;
 
-//   private hpBar = new ui.UIBar(
-//     1,
-//     -30,
-//     500,
-//     Color4.Green(),
-//     BarStyles.ROUNDWHITE,
-//     0.8
-//   );
-//   private levelBar = new ui.UIBar(
-//     0,
-//     -30,
-//     480,
-//     Color4.Blue(),
-//     BarStyles.ROUNDWHITE,
-//     0.8
-//   );
-//   private healthLabel = new ui.CornerLabel(
-//     "HP",
-//     -100,
-//     490,
-//     Color4.White(),
-//     12,
-//     true
-//   );
-//   private healthValue = new ui.UICounter(0, 35, 490, Color4.Yellow(), 12, true);
-//   private xpLabel = new ui.CornerLabel(
-//     "XP",
-//     -100,
-//     470,
-//     Color4.White(),
-//     12,
-//     true
-//   );
+  private hpBar = new ui.UIBar(
+    1,
+    -30,
+    500,
+    Color4.Green(),
+    BarStyles.ROUNDWHITE,
+    0.8
+  );
+  private levelBar = new ui.UIBar(
+    0,
+    -30,
+    480,
+    Color4.Blue(),
+    BarStyles.ROUNDWHITE,
+    0.8
+  );
+  private healthLabel = new ui.CornerLabel(
+    "HP",
+    -100,
+    490,
+    Color4.White(),
+    12,
+    true
+  );
+  private healthValue = new ui.UICounter(0, 35, 490, Color4.Yellow(), 12, true);
+  private xpLabel = new ui.CornerLabel(
+    "XP",
+    -100,
+    470,
+    Color4.White(),
+    12,
+    true
+  );
   private playerName: UIText;
   private playerLevel: UIText;
   private _aggroList: [];
@@ -105,8 +106,8 @@ export class Player {
     this.canvas = canvas;
     this.actionbar = actionbar;
     this.backpack = backpack;
-    //this.healthValue.set(startingHp);
-    //this._questlog = new QuestLog(this.canvas,resources.interface.questLog)
+    this.healthValue.set(startingHp);
+    this._questlog = new QuestLog(this.canvas, resources.interface.questLog)
 
     this._leveledup = false;
   }
@@ -165,7 +166,7 @@ export class Player {
       this._hp = val;
 
       //log(`setting healthValue to: ${val}`)
-      //this.healthValue.set(val);
+      this.healthValue.set(val);
     }
   }
 
@@ -233,30 +234,30 @@ export class Player {
     this._inbatttle = val;
   }
 
-//   showhpbar() {
-//     this.hpBar.set(1);
-//   }
+  showhpbar() {
+    this.hpBar.set(1);
+  }
 
-//   hidehpbar() {
-//     this.hpBar.set(0);
-//   }
+  hidehpbar() {
+    this.hpBar.set(0);
+  }
 
-//   initialhp(val) {
-//     this.hpBar.set(val);
-//   }
+  initialhp(val) {
+    this.hpBar.set(val);
+  }
 
   configuretrade(val) {
     this.tradewindow = val;
   }
 
-//   healthcheck(val) {
-//     this.hpBar.set(val);
-//   }
+  healthcheck(val) {
+    this.hpBar.set(val);
+  }
 
-//   xpcheck() {
-//     let val = this.currentxp / this.levelmax;
-//     this.levelBar.set(val);
-//   }
+  xpcheck() {
+    let val = this.currentxp / this.levelmax;
+    this.levelBar.set(val);
+  }
 
   achievementcheck(xp: number, currentlevel: number) {
     let url = this.levelUrl + "/" + this.address;
@@ -294,12 +295,12 @@ export class Player {
               // log(`Setting initialhp to 1`)
               // this.initialhp(1)
               obj.playerhp = res.hp;
-            //   this.xpcheck();
-            //   this.healthcheck(100 / 100);
+              this.xpcheck();
+              this.healthcheck(100 / 100);
             }
             this.currentxp = res.currentxp;
             this.levelmax = res.levelmax;
-            //this.xpcheck();
+            this.xpcheck();
             this.basedamage = res.basedamage;
           });
       } catch (error) {
@@ -343,10 +344,10 @@ export class Player {
   }
 
   trinket(text, desc) {
-    this._questlog.quest(text,desc)
+    this._questlog.quest(text, desc)
     this._questlog.flip()
-    if(desc == 'Orc Tooth') {
-      this._combatLog.text = `You have picked up an Orc Tooth. Interesting.`; 
+    if (desc == 'Orc Tooth') {
+      this._combatLog.text = `You have picked up an Orc Tooth. Interesting.`;
     } else {
       this._combatLog.text = `Why was he carrying this trinket? Interesting.`;
     }
@@ -465,9 +466,9 @@ export class Player {
       }
     }
 
-    //this.healthValue.set(obj.playerhp);
+    this.healthValue.set(obj.playerhp);
     let percentage = ((this.hp / this.maxhp) * 100).toFixed(0);
-    //this.initialhp(Number(percentage) / 100);
+    this.initialhp(Number(percentage) / 100);
     this._combatLog.text = `You have been healed for ${amount} hp.`;
 
     if (Number(percentage) > 50) {
@@ -485,8 +486,7 @@ export class Player {
     if (this.hp > 0) {
       if (this.hp - amount > 0) {
         log(
-          `playerhp: ${this.hp} damageamount: ${amount} playernewhp: ${
-            this.hp - amount
+          `playerhp: ${this.hp} damageamount: ${amount} playernewhp: ${this.hp - amount
           }`
         );
         this.hp -= amount;
@@ -499,11 +499,11 @@ export class Player {
     }
 
     //log(`this.hp ${this.hp} / this.maxhp ${this.maxhp} * 100 gives percentage of ${(this.hp / this.maxhp) * 100}`)
-    //this.healthValue.set(obj.playerhp);
+    this.healthValue.set(obj.playerhp);
 
     let percentage = ((this.hp / this.maxhp) * 100).toFixed(0);
-    //this.initialhp(Number(percentage) / 100);
-    //this.healthcheck(Number(percentage) / 100);
+    this.initialhp(Number(percentage) / 100);
+    this.healthcheck(Number(percentage) / 100);
 
     if (Number(percentage) < 30) {
       this.abouttodie.play();
@@ -512,11 +512,11 @@ export class Player {
     if (this.hp <= 0) {
       orclaugh.play();
 
-    //   obj.localmobstate.forEach((x) => {
-    //     if (x.mosthated == this.address) {
-    //       x.playerdead = true;
-    //     }
-    //   });
+      obj.localmobstate.forEach((x) => {
+        if (x.mosthated == this.address) {
+          x.playerdead = true;
+        }
+      });
       this.abouttodie.stop();
       this.deathsound.play();
       this._combatLog.text = `You have died.`;
@@ -524,15 +524,15 @@ export class Player {
       this._combatLog.text = `Seek out Anpu.`;
       obj.inDuat = true;
       this.alive = false;
-    //   unloadLife();
-    //   loadDeath(
-    //     this.canvas,
-    //     this,
-    //     this._combatLog,
-    //     this.actionbar,
-    //     this.backpack,
-    //     obj.tradewindow
-    //   );
+      unloadLife();
+      loadDeath(
+        this.canvas,
+        this,
+        this._combatLog,
+        this.actionbar,
+        this.backpack,
+        obj.tradewindow
+      );
     }
   }
 }
