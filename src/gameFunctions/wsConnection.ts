@@ -6,7 +6,6 @@ import { Orc } from "../gameObjects/orc";
 import { OrcFSM } from "../gameFunctions/npcFSM";
 import { Singleton } from "../gameUtils/playerDetail";
 import { loadDeath, unloadLife, unloadVictory } from "./loadDeath";
-//import { NoEthScene } from "../noEthScene";
 import { SoundBox } from "../gameUtils/soundbox";
 import resources from "../resources";
 import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
