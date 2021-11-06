@@ -13,12 +13,17 @@ import { Khepra } from "./gameUI/khepra";
 import { TradeWindow } from "./gameUI/tradeWindow";
 
 import { joinSocketsServer } from "./gameFunctions/wsConnection";
+import { connect } from "./gameFunctions/connections"
 import { spawnNpcs } from "./gameFunctions/spawnNpcs";
 import { reloadGame } from "./gameFunctions/reloadGame";
 
 import { Player } from "./gameObjects/player";
 
 import { Singleton } from "./gameUtils/playerDetail";
+
+import { Mob } from './gameObjects/mob';
+import { Cone, cubeColor } from './gameObjects/cones';
+import { Cube, cubes } from './gameObjects/cube';
 
 
 // import { loadDeath } from "./components/loadDeath";
@@ -140,13 +145,69 @@ async function registerPlayer() {
           }
 
           try {
-            let socket = await joinSocketsServer(
-              gameCanvas,
-              actionBar,
-              backPack,
-              player,
-              combatLog
-            );
+            connect('my_realm').then((room) => {
+              log('CONNECTED!')
+
+              // add cones
+              let blueCone = new Cone(
+                { position: new Vector3(6, 1, 14) },
+                cubeColor.BLUE,
+                room
+              )
+
+              let redCone = new Cone(
+                { position: new Vector3(10, 1, 14) },
+                cubeColor.RED,
+                room
+              )
+
+              // add cubes
+              // for (let i = 0; i < 8; i++) {
+              //   let cube = new Cube(
+              //     {
+              //       position: new Vector3(i * 2 + 1, 1, 4),
+              //     }, i, room
+              //   )
+              // }
+
+              log('cubes ', room.state.cubes)
+
+              room.onMessage('flashColor', (data) => {
+                if (data.color == cubeColor.BLUE) {
+                  blueCone.activate()
+                } else if (data.color == cubeColor.RED) {
+                  redCone.activate()
+                }
+              })
+
+              room.state.cubes.onAdd = (cubeData) => {
+                log("Added cube =>", cubeData.id)
+                let cube = new Cube({
+                  position: new Vector3(cubeData.id * 2 + 1, cubeData.height, 4)
+                }, cubeData.id, room)
+
+                cubeData.listen("color", (value) => {
+                  cubes[cubeData.id].activate(value)
+                })
+              }
+
+              room.state.mobs.onAdd = (mobData) => {
+                log("Added mob =>", mobData.name)
+                log("Added mob loc =>", mobData.spawnloc)
+                log('mobData ', mobData)
+                let mob = new Mob(
+                  mobData.id, room, mobData.name, mobData.spawnloc
+                )
+              }
+
+            })
+            // let socket = await joinSocketsServer(
+            //   gameCanvas,
+            //   actionBar,
+            //   backPack,
+            //   player,
+            //   combatLog
+            // );
           } catch (error) {
             combatLog.text = `Welcome to SutenQuest!`;
             combatLog.text = `:(  Game socket failed to load  :(`;
