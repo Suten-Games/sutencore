@@ -59,7 +59,8 @@ export async function joinSocketsServer(
 
   //    log(`You are in the realm: `, realm.displayName);
   // connect to websockets server
-  const socket = new WebSocket(server + realm.displayName + "-rivers");
+  //const socket = new WebSocket(server + realm.displayName + "-rivers");
+  const socket = new WebSocket(server)
   //log("socket connection to: ", server + realm.displayName + "-rivers");
 
   socket.onopen = async function (e) {
