@@ -21,7 +21,7 @@ export class LoadShopKeeper {
     this._cl = combatLog;
 
     this.shopkeeper = new SutenNpc(
-      resources.sounds.peasantunlock,
+      resources.sounds.shopkeeper,
       resources.models.peasant,
       22,
       new Vector3(-12.8, 1.2, -11.6),

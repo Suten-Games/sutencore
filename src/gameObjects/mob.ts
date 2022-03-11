@@ -18,6 +18,8 @@ export class Mob extends Entity {
         this.name = name
         this.spawnloc = spawnloc
 
+        log('Creating the mob: ', this.spawnloc)
+        
         // this.addComponent(
         //   new Transform(position)
         // )
