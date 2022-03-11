@@ -11,6 +11,7 @@ import { Singleton } from "../gameUtils/playerDetail";
 //   PromptStyles,
 // } from "../../node_modules/@dcl/ui-utils/index";
 import { Item } from "../gameObjects/item";
+import { CombatLog } from "./combatLog";
 
 export class TradeWindow {
   private _canvas;
@@ -45,7 +46,7 @@ export class TradeWindow {
     false
   );
 
-  constructor(canvas, image, actionBar, backPack, player, combatLog) {
+  constructor(canvas:UICanvas, image:any, actionBar:ActionBar, backPack:BackPack, player:Player, combatLog:CombatLog) {
     this._canvas = canvas;
     this.obj.canvas = canvas;
     this._image = image;
@@ -177,12 +178,12 @@ export class TradeWindow {
     }
   }
 
-  private afterConfirm(potion) {
+  private afterConfirm(potion:any) {
     potion.sendItemDown();
     this._buybutton.visible = false;
   }
 
-  public purchase(potion) {
+  public purchase(potion:any) {
     this._buybutton.visible = true;
     this._buytext.value = `${potion.potionprice} Mana`
     this._buytext.visible = true;
@@ -339,7 +340,7 @@ export class TradeWindow {
     // });
   }
 
-  public replacepotion(slot) {
+  public replacepotion(slot:any) {
     if (slot == 26) {
       this._potion1 = new Item(resources.loot.redPotion, 26, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this)
       this._potion1.show();

@@ -13,7 +13,8 @@
                 "node_modules/colyseus.js/dist/colyseus.d.ts"
             ]
         },
-        "baseUrl": "."
+        "baseUrl": ".",
+        "strictPropertyInitialization": false
     },
     "include": [
         "src/**/*.ts"
