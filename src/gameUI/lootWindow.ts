@@ -11,8 +11,8 @@ export class LootWindow extends Entity {
   private _actionbar;
   private _backpack;
   private _player;
-  private _lootitem;
-  private _activeloot;
+  private _lootitem: any;
+  private _activeloot: any;
   private _peonlootpool = [
     resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion,
     resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion,
@@ -79,7 +79,7 @@ export class LootWindow extends Entity {
   private _looted = false
   private _npc
 
-  constructor(canvas, image, actionBar, backPack, player, orc: Orc) {
+  constructor(canvas: any, image: any, actionBar: any, backPack: any, player: any, orc: Orc) {
     super()
     this._canvas = canvas;
     this._image = image;
@@ -232,7 +232,8 @@ export class LootWindow extends Entity {
     if (item) {
       //this._lootitem = new Loot(this._canvas, item, 40, this._actionbar,this._backpack, this._player, this, this._npc)
       //this._lootitem = new Loot(item, 40, this._actionbar,this._backpack, this, this._npc)
-      this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", null, null, null, null, this, this._npc)
+      this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", 
+                                null, null, null, null, this, this._npc)
       //{ image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", price: 20, itemtype: "weapon" },
       //let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
       //  element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound)

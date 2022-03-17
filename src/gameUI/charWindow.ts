@@ -9,7 +9,7 @@ import { Item } from "../gameObjects/item";
 export class CharWindow {
   private _canvas;
   private _base;
-  private _open;
+  private _open: any;
   private _closebutton;
   private _pname;
   private _desc1;
@@ -24,11 +24,11 @@ export class CharWindow {
   private _armor;
   private _wskill;
   private _damage;
-  private _loot;
-  private _lootbig;
-  private _ebutton;
+  private _loot: any;
+  private _lootbig: any;
+  private _ebutton: any;
   private _charbutton;
-  private _equipbutton;
+  private _equipbutton: any;
 
   private equipsound = new SoundBox(
     new Transform({ position: new Vector3(8, 0, 8) }),
@@ -36,7 +36,7 @@ export class CharWindow {
     false
   );
 
-  constructor(canvas, image, charclass) {
+  constructor(canvas: any, image: any, charclass: any) {
     var obj = Singleton.getInstance();
 
     this._canvas = canvas;
@@ -261,8 +261,8 @@ export class CharWindow {
     if (!this._open) {
       //log('setting charloot')
       let obj = Singleton.getInstance();
-      let charclass;
-      let weaponstring;
+      let charclass: any;
+      let weaponstring: any;
       let charwindowimage
 
       if (obj.weapon == 'resources.loot.rustyaxe') {

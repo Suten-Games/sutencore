@@ -1,6 +1,6 @@
 {
   "name": "@sutenquest/core",
-  "version": "0.8.14",
+  "version": "0.8.16",
   "description": "SutenQuest Core Libraries",
   "main": "index.js",
   "scripts": {

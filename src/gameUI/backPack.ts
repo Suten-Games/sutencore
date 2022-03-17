@@ -13,26 +13,26 @@ export class BackPack {
     private _bp;
     private _charbutton;
     private _isOpen: boolean;
-    private _slot10;
-    private _slot11;
-    private _slot12;
-    private _slot13;
-    private _slot14;
-    private _slot15;
-    private _slot16;
-    private _slot17;
-    private _slot18;
-    private _slot19;
-    private _slot20;
-    private _slot21;
-    private _slot22;
-    private _slot23;
-    private _slot24;
-    private _slot25;
+    private _slot10: any;
+    private _slot11: any;
+    private _slot12: any;
+    private _slot13: any;
+    private _slot14: any;
+    private _slot15: any;
+    private _slot16: any;
+    private _slot17: any;
+    private _slot18: any;
+    private _slot19: any;
+    private _slot20: any;
+    private _slot21: any;
+    private _slot22: any;
+    private _slot23: any;
+    private _slot24: any;
+    private _slot25: any;
     private _mybackpackcontents: Array<Item>;
-    private _playerclass;
-    private _player;
-    private _charwindow;
+    private _playerclass: any;
+    private _player: any;
+    private _charwindow: any;
 
     private backpacksound = new SoundBox(
       new Transform({ position: new Vector3(8, 0, 8) }),
@@ -209,7 +209,7 @@ export class BackPack {
       return this._playerclass
     }
 
-    public showCharWindow(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot) {
+    public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot:any) {
       log('calling charwindow.setcharloot from the backback showcharwindow function')
       this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
         //log('calling charwindow.flip from the backpack showcharwindow function')
