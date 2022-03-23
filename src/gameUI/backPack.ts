@@ -40,7 +40,7 @@ export class BackPack {
        false
      );
 
-     constructor(canvas, image) {
+     constructor(canvas:UICanvas, image:Texture) {
       let obj = Singleton.getInstance()
       this._canvas = canvas;
       this._image = image;

@@ -15,7 +15,7 @@ export class CharWindow {
   private _desc1;
   private _desc2;
   private _desc3;
-  private _weapontext;
+  private _weapontext: any;
   private _strength;
   private _agility;
   private _stamina;
@@ -253,7 +253,7 @@ export class CharWindow {
     this._base.visible = false;
   }
 
-  public setCharLoot(weapon = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+  public setCharLoot(weapon:Texture = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
 
     log('in setCharLoot ', lootimage)
 
