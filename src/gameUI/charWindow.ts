@@ -253,7 +253,9 @@ export class CharWindow {
     this._base.visible = false;
   }
 
-  public setCharLoot(weapon:Texture = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+  public setCharLoot(weapon:Texture = resources.loot.rustyaxe, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+  //set rustyaxe as the default loot texture for now.
+
 
     log('in setCharLoot ', lootimage)
 
