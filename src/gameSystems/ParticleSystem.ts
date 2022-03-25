@@ -68,7 +68,7 @@ export class ParticleSystem {
         }
     }
 
-    public turnOn(spellshape, start, end) {
+    public turnOn(spellshape:any, start:any, end:any) {
         this._timer = 2
         this._fireBurning = true
         this.soundbox.play();

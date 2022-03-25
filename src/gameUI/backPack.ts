@@ -216,11 +216,11 @@ export class BackPack {
       this._charwindow.flip()
     }
 
-    public bootLoadBackPack(data) {
+    public bootLoadBackPack(data:any) {
       //log('loading player backpack on boot ', data)
-      data.forEach(element => {
+      data.forEach((element: { slot: number; image: any; }) =>  {
         if(element.slot) {
-          let item = new Item(new Texture(element.image), element.slot)
+          let item = new Item(new Texture(element.image), element.slot, null, null, null, null, null, null, null, null, null, null, undefined, null)
           this.setSlot(element.slot)
           item.setslot = element.slot
           item.updateLoc(element.slot)

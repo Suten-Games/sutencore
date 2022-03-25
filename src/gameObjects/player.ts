@@ -73,7 +73,7 @@ export class Player {
   private canvas;
   private actionbar;
   private backpack;
-  private tradewindow;
+  private tradewindow:any;
 
   private deathsound = new SoundBox(
     new Transform({ position: new Vector3(8, 0, 8) }),
@@ -91,7 +91,7 @@ export class Player {
   constructor(
     address: string,
     startingHp: number,
-    canvas,
+    canvas:any,
     combatlog: CombatLog,
     actionbar: ActionBar,
     backpack: BackPack
@@ -242,15 +242,15 @@ export class Player {
     this.hpBar.set(0);
   }
 
-  initialhp(val) {
+  initialhp(val:number) {
     this.hpBar.set(val);
   }
 
-  configuretrade(val) {
+  configuretrade(val:number) {
     this.tradewindow = val;
   }
 
-  healthcheck(val) {
+  healthcheck(val:number) {
     this.hpBar.set(val);
   }
 
@@ -343,7 +343,7 @@ export class Player {
     this._combatLog.text = `You'll have to use some items to make more room.`;
   }
 
-  trinket(text, desc) {
+  trinket(text:string, desc:string) {
     this._questlog.quest(text, desc)
     this._questlog.flip()
     if (desc == 'Orc Tooth') {
@@ -359,12 +359,12 @@ export class Player {
     this._combatLog.text = `The item disintegrates in your hand`;
   }
 
-  weapon(weapon, weapontext, actionbar, backpack, lootimage, slot) {
+  weapon(weapon:Texture, weapontext:string, actionbar:any, backpack:any, lootimage:any, slot:number) {
     log('calling backpack.showCharWindow from the player.weapon function')
     this.backpack.showCharWindow(weapon, weapontext, this._combatLog, actionbar, backpack, lootimage, slot)
   }
 
-  changeClass(charclass, weapon) {
+  changeClass(charclass:string, weapon:string) {
     let url = this.apiUrl + "/" + this.address;
     var obj = Singleton.getInstance();
 
