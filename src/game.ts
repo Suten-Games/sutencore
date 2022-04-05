@@ -188,14 +188,14 @@ async function registerPlayer() {
             },
           };
 
-        //   fetch(apiUrl, options)
-        //     .then((res) => res.json())
-        //     .then(() => {
-        //       player.level = 1;
-        //       player.basedamage = 1;
-        //       player.hp = 45;
-        //       player.maxhp = 45;
-        //     });
+          fetch(apiUrl, options)
+            .then((res) => res.json())
+            .then(() => {
+              player.level = 1;
+              player.basedamage = 1;
+              player.hp = 45;
+              player.maxhp = 45;
+            });
         // } else {
         //   log('The player has been found')
 
