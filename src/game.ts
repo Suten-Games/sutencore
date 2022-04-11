@@ -201,45 +201,99 @@ async function registerPlayer() {
 
                               try {
                                         log('joining socket server')
-                                        // let socket = await joinSocketsServer(
-                                        //   gameCanvas,
-                                        //   actionBar,
-                                        //   backPack,
-                                        //   player,
-                                        //   combatLog
-                                        // );
-                                        // connect('my_realm').then((room) => {
-                                        //         log('CONNECTED!')
-                                        //         log('cubes ', room.state.cubes)
+                                        let socket = await joinSocketsServer(
+                                          gameCanvas,
+                                          actionBar,
+                                          backPack,
+                                          player,
+                                          combatLog
+                                        );
+                                        connect('my_realm').then((room) => {
+                                                log('CONNECTED!')
+                                                log('cubes ', room.state.cubes)
 
-                                        //         room.onMessage('flashColor', (data) => {
-                                        //               if (data.color == cubeColor.BLUE) {
-                                        //                     //blueCone.activate()
-                                        //               } else if (data.color == cubeColor.RED) {
-                                        //                   //redCone.activate()
-                                        //               }
-                                        //         })
-
-                                        //         room.state.cubes.onAdd = (cubeData: any) => {
-                                        //               log("Added cube =>", cubeData.id)
-                                        //               let cube = new Cube({
-                                        //                       position: new Vector3(cubeData.id * 2 + 1, cubeData.height, 4)
-                                        //               }, cubeData.id, room)
-
-                                        //               cubeData.listen("color", (value: any) => {
-                                        //                   cubes[cubeData.id].activate(value)
-                                        //               })
-                                        //         }
-
-                                        //         room.state.mobs.onAdd = (mobData) => {
-                                        //               log("Added mob =>", mobData.name)
-                                        //               log("Added mob loc =>", mobData.spawnloc)
-                                        //               log('mobData ', mobData)
+                                                room.state.mobs.onAdd = (mobData) => {
+                                                      log("Added mob =>", mobData.name)
+                                                      log("Added mob loc =>", mobData.spawnloc)
+                                                      log('mobData ', mobData)
                                                      
-                
-                                        //         }
+                                                  // let mob = new Mob(
+                                                  //   mobData.id, room, mobData.name, mobData.spawnloc
+                                                  // )
+                                                  // _npc = new NPC(
+                                                  //   { 
+                                                  //     position: new Vector3(mobData.spawnloc[0], mobData.spawnloc[1], mobData.spawnloc[2]), 
+                                                  //     rotation: Quaternion.Euler(0,90,0),
+                                                  //     scale: new Vector3(1, 1, 1), 
+                                                  //   },
+                                                  //   "models/" + mobData.shape,
+                                                  //   () => {
+                                                  //     _npc.talk(mobData.quest, 0)
+                                                  //   },
+                                                  //   {
+                                                  //     portrait: {
+                                                  //       path: mobData.portrait,
+                                                  //       height: 132,
+                                                  //       width: 148,
+                                                  //     },
+                                                  //     faceUser: true,
+                                                  //     darkUI: true,
+                                                  //     onWalkAway: () => {
+                                                  //       log("walked away");
+                                                  //     },
+                                                  //   }
+                                                  // );
+                                                  _npc = new Orc(
+                                                    "1",
+                                                    mobData.name,
+                                                    300,
+                                                    false,
+                                                    1,
+                                                    new AudioClip("somesound"),
+                                                    new GLTFShape("models/" + mobData.shape),
+                                                    10,
+                                                    100,
+                                                    new Vector3(
+                                                      mobData.spawnloc[0],
+                                                      mobData.spawnloc[1],
+                                                      mobData.spawnloc[2]
+                                                    ),
+                                                    Quaternion.Euler(
+                                                      0, 90, 0
+                                                    ),
+                                                    [
+                                                      new Vector3(
+                                                        4, 0, 6
+                                                      ),
+                                                      new Vector3(
+                                                        6, 0, 3
+                                                      ),
+                                                      new Vector3(
+                                                        3, 0, 8
+                                                      ),
+                                                    ],
+                                                    gameCanvas,
+                                                    actionBar,
+                                                    backPack,
+                                                    player
+                                                  );
 
-                                        // })
+                                                  engine.addSystem(
+                                                    new OrcFSM(
+                                                      gameCanvas,
+                                                      player,
+                                                      _npc,
+                                                      [6, 1, 14],
+                                                      [0, 90, 0],
+                                                      false,
+                                                      10,
+                                                      combatLog
+                                                    )
+                                                  );
+                
+                                                }
+
+                                        })
                               } catch (error) {
                                       combatLog.text = `Welcome to SutenQuest!`;
                                       combatLog.text = `:(  Game socket failed to load  :(`;
@@ -281,12 +335,13 @@ async function registerPlayer() {
                                     obj.playerhp = 0;
                                     backPack.playerclass = obj.playerclass
                               } else {
-                                    //       //log(`json.hp: ${json.hp} is greater than 0`)
+                                    //log(`json.hp: ${json.hp} is greater than 0`)
+                                    combatLog.text = ` `;
                                     combatLog.text = `Welcome back!`;
                                     combatLog.text = `You are a level ${json.level} ${json.characterclass}`;
                                     //combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
                                     //combatLog.text = `Matic Mana Balance: ${JSON.stringify(balance.l2)}`
-                                    combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
+                                    //combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
                                     //combatLog.text = `Have fun and try not to die!`;
                                     if (json.percentage == 100 && json.hp == undefined) {
                                         //log('setting playerhp to json.maxhp')

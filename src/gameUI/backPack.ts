@@ -63,10 +63,11 @@ export class BackPack {
       this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
       this._charbutton.hAlign = "right"
       this._charbutton.vAlign = "center";
-      this._charbutton.positionY = "-40%";
+      this._charbutton.positionY = "-42%";
       this._charbutton.positionX = "-20%";
-      this._charbutton.sourceWidth = 1309;
-      this._charbutton.sourceHeight = 548;
+      this._charbutton.height = '120px';
+      this._charbutton.sourceWidth = 2094;
+      this._charbutton.sourceHeight = 3000;
       this._charbutton.visible = false;
       this._charbutton.onClick = new OnPointerDown(
         (e) => {
