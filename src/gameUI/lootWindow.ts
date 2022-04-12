@@ -158,14 +158,16 @@ export class LootWindow extends Entity {
         break;
     }
 
-    try {
-      let response = await fetch("https://sutenquestapi.azurewebsites.net/loot/" + mobtier + '/' + 123456);
-      json = await response.json();
-    } catch (error) {
-      log("error: ", error.toString());
-    }
+    //Commenting out the API call to fetch the loot for now
+    //Done of 4/12/22 for testing
+    // try {
+    //   let response = await fetch("https://sutenquestapi.azurewebsites.net/loot/" + mobtier + '/' + 123456);
+    //   json = await response.json();
+    // } catch (error) {
+    //   log("error: ", error.toString());
+    // }
 
-    log('api response: ', json)
+    // log('api response: ', json)
 
     // api response:
     // { id: "60fc83b3eb1e240fdefcdd17", name: "Sand Beetle", shape: "sandbeetle.png", width: 345, height: 400 }
@@ -175,20 +177,34 @@ export class LootWindow extends Entity {
     // shape: "sandbeetle.png"
     // width: 345
 
-    if (!json.shape) { json.shape = "sandbeetle.png" }
+    // if (!json.shape) { json.shape = "sandbeetle.png" }
 
-    let lootimg = "images/looticons/" + json.shape
-    log('lootimg: ', lootimg)
-    this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
-      json.spellstart, json.spellend, json.sound, this, null)
-    //this._lootitem = new Loot(this._canvas, this._activeloot, 40, this._actionbar,this._backpack, this._player, this, this._npc)
-    //this._lootitem = new Loot(this._activeloot, 40, this._actionbar,this._backpack, this, this._npc)
-    //this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", null, null, null, null, this)
+    // let lootimg = "images/looticons/" + json.shape
+    // log('lootimg: ', lootimg)
+    // this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
+    //   json.spellstart, json.spellend, json.soundjj=, this, null)
+    
+    this._lootitem = new Item(
+      new Texture("images/looticons/manavial.png"),
+      40,
+      1219,
+      2154,
+      "Mana Vial",
+      "consumable",
+      50,
+      "consumable",
+      null,   //spellshape
+      null,   //spellstart
+      null,   //spellend
+      null,   //sound
+      this,    //lootwindow)
+      this._npc)
+    
     this._lootitem.show()
   }
 
   public sendtobp() {
-    // log(`${this._npc.id} lootWindow sendtobp`)
+    log(`${this._npc.id} lootWindow sendtobp`)
     this._lootitem.sendToBackpack()
   }
 
@@ -214,31 +230,34 @@ export class LootWindow extends Entity {
         this.show()
       }
 
-      //log(`id: ${this._npc.id} Adding the lootallclick method`)
+      log(`id: ${this._npc.id} Adding the lootallclick method`)
       this._npc.addlootallclick()
     }
   }
 
   public hidelootwindow() {
-    //log('clicked hide loot window')
+    log('clicked hide loot window')
     this._loot.visible = false;
     //this._lootitem.hide()
   }
 
   public show(item = null) {
-    //log('in show method')
+    log('in lootWindow show method')
     this._closebutton.visible = true;
     this._loot.visible = true;
     if (item) {
+      log('in lootWindow, we have an item, creating a new lootItem')
+      log(`the item ${item}`)
       //this._lootitem = new Loot(this._canvas, item, 40, this._actionbar,this._backpack, this._player, this, this._npc)
       //this._lootitem = new Loot(item, 40, this._actionbar,this._backpack, this, this._npc)
-      this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", 
+      this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", 
                                 null, null, null, null, this, this._npc)
       //{ image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", price: 20, itemtype: "weapon" },
       //let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
       //  element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound)
       this._lootitem.show()
     } else {
+      log('in lootWindow we do not have an item so calling getLoot')
       this.getloot()
     }
 

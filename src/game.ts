@@ -430,7 +430,7 @@ async function registerPlayer() {
 }
 
 startGame();
-new spawnNpcs()
+//new spawnNpcs()
 
 // // Uncomment the below model and BuilderHUD to find positions to use in the scene code
 // // User the BuilderHUD to move the model to the desired position/rotaion

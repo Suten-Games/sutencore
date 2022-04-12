@@ -56,3 +56,5 @@ else
     cp -R src/game.ts $INIT_CWD/src/game.ts
   fi
 fi
+
+#npm install --save colyseus.js

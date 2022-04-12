@@ -372,8 +372,10 @@ class pingSystem implements ISystem {
 
     if (this.npctimer >= 20) {
       this.npctimer = 0;
-      log('Quest NPC Check')
-      new spawnNpcs()
+      //Causing a bug where spawned mobs are not able to battle
+      //Commented out on 4/12/22 for now
+      //log('Quest NPC Check')
+      //new spawnNpcs()
     }
 
     if (this.timer >= 10) {

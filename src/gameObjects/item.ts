@@ -55,9 +55,20 @@ export class Item {
     );
 
     constructor(
-        image: Texture, slot: number, srcw: number | null = null, srch: number | null = null, desc: string | null = null,
-        type: string | null = null, price: number | null = null, itemtype: string | null = null, spellshape: string | null = null,
-        spellstart: number | null = null, spellend: number | null = null, sound: AudioClip | null = null, lootwindow:LootWindow|TradeWindow|undefined, npc = null,
+        image: Texture,
+        slot: number,
+        srcw: number | null = null,
+        srch: number | null = null,
+        desc: string | null = null,
+        type: string | null = null,
+        price: number | null = null,
+        itemtype: string | null = null,
+        spellshape: string | null = null,
+        spellstart: number | null = null,
+        spellend: number | null = null,
+        sound: AudioClip | null = null,
+        lootwindow: LootWindow | TradeWindow | undefined,
+        npc: Orc | NPC | null = null,
         tradewindow: TradeWindow | null = null
     ) {
         let obj = Singleton.getInstance()
