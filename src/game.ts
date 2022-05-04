@@ -13,6 +13,7 @@ import { Khepra } from "./gameUI/khepra";
 import { TradeWindow } from "./gameUI/tradeWindow";
 
 import { joinSocketsServer } from "./gameFunctions/wsConnection";
+import { connect } from "./gameFunctions/connections"
 import { spawnNpcs } from "./gameFunctions/spawnNpcs";
 import { reloadGame } from "./gameFunctions/reloadGame";
 
@@ -20,10 +21,18 @@ import { Player } from "./gameObjects/player";
 
 import { Singleton } from "./gameUtils/playerDetail";
 
+import { Mob } from './gameObjects/mob';
+import { Cone, cubeColor } from './gameObjects/cones';
+import { Cube, cubes } from './gameObjects/cube';
 
-// import { loadDeath } from "./components/loadDeath";
-// import { NoEthScene } from "./noEthScene";
-// import { BuilderHUD } from "./modules/BuilderHUD";
+import { NPC } from "../node_modules/@sutenquest/npc-utils/npc/npc";
+import { Orc } from "./gameObjects/orc";
+import { OrcFSM } from "./gameFunctions/npcFSM";
+
+
+import { loadDeath } from "./components/loadDeath";
+import { NoEthScene } from "./noEthScene";
+import { BuilderHUD } from "./modules/BuilderHUD";
 
 
 const local: boolean = false;
@@ -55,6 +64,8 @@ let player = new Player(
   backPack
 );
 
+let _npc: Orc
+
 let failedstart = false;
 let registered = false;
 let _buybutton;
@@ -82,27 +93,29 @@ function startGame() {
 async function registerPlayer() {
   executeTask(async () => {
     try {
-      //log('calling getUserAccount()')
+      log('calling getUserAccount()')
       let address = await getUserAccount();
       let userdata = await getUserData();
       if (userdata == null) {
+        combatLog.text = ``;
+        combatLog.text = ``;
         combatLog.text = `Welcome to SutenQuest!`;
         combatLog.text = `:(  Userdata failed to load  :(`;
         combatLog.text = `Please refresh/reload the scene`;
-        //new NoEthScene();
         failedstart = true;
 
         return;
       } else if (!userdata.hasConnectedWeb3) {
+        combatLog.text = ``;
+        combatLog.text = ``;
         combatLog.text = `Welcome to SutenQuest!`;
         combatLog.text = `Web3 Must be connected to play`;
         combatLog.text = `Please add '&ENABLE_WEB3' to URL`;
-        //new NoEthScene();
         failedstart = true;
 
         return;
       }
-      //const balance = await matic.balance(address)
+      // //const balance = await matic.balance(address)
       const balance = 0
       var obj = Singleton.getInstance();
       // obj.maticbalance = balance.l2
@@ -139,30 +152,9 @@ async function registerPlayer() {
             return;
           }
 
-          try {
-            let socket = await joinSocketsServer(
-              gameCanvas,
-              actionBar,
-              backPack,
-              player,
-              combatLog
-            );
-          } catch (error) {
-            combatLog.text = `Welcome to SutenQuest!`;
-            combatLog.text = `:(  Game socket failed to load  :(`;
-            combatLog.text = `Please refresh/reload the scene`;
-            //new NoEthScene();
-            failedstart = true;
-
-            return;
-          }
-
           combatLog.text = `Welcome to SutenQuest!`;
           combatLog.text = `You are a level 1 Adventurer`;
           combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
-          //combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
-          //combatLog.text = `Matic Balance: ${JSON.stringify(balance.l2)}`
-          // combatLog.text = `Have fun and try not to die!`;
 
           obj.playerhp = 43;
           obj.playerclass = "Adventurer";
@@ -216,18 +208,102 @@ async function registerPlayer() {
               player,
               combatLog
             );
+            // connect('my_realm').then((room) => {
+            //         log('CONNECTED!')
+            //         log('cubes ', room.state.cubes)
+
+            //         room.state.mobs.onAdd = (mobData) => {
+            //               log("Added mob =>", mobData.name)
+            //               log("Added mob loc =>", mobData.spawnloc)
+            //               log('mobData ', mobData)
+
+            //           // let mob = new Mob(
+            //           //   mobData.id, room, mobData.name, mobData.spawnloc
+            //           // )
+            //           // _npc = new NPC(
+            //           //   { 
+            //           //     position: new Vector3(mobData.spawnloc[0], mobData.spawnloc[1], mobData.spawnloc[2]), 
+            //           //     rotation: Quaternion.Euler(0,90,0),
+            //           //     scale: new Vector3(1, 1, 1), 
+            //           //   },
+            //           //   "models/" + mobData.shape,
+            //           //   () => {
+            //           //     _npc.talk(mobData.quest, 0)
+            //           //   },
+            //           //   {
+            //           //     portrait: {
+            //           //       path: mobData.portrait,
+            //           //       height: 132,
+            //           //       width: 148,
+            //           //     },
+            //           //     faceUser: true,
+            //           //     darkUI: true,
+            //           //     onWalkAway: () => {
+            //           //       log("walked away");
+            //           //     },
+            //           //   }
+            //           // );
+            //           _npc = new Orc(
+            //             "1",
+            //             mobData.name,
+            //             300,
+            //             false,
+            //             1,
+            //             new AudioClip("somesound"),
+            //             new GLTFShape("models/" + mobData.shape),
+            //             10,
+            //             100,
+            //             new Vector3(
+            //               mobData.spawnloc[0],
+            //               mobData.spawnloc[1],
+            //               mobData.spawnloc[2]
+            //             ),
+            //             Quaternion.Euler(
+            //               0, 90, 0
+            //             ),
+            //             [
+            //               new Vector3(
+            //                 4, 0, 6
+            //               ),
+            //               new Vector3(
+            //                 6, 0, 3
+            //               ),
+            //               new Vector3(
+            //                 3, 0, 8
+            //               ),
+            //             ],
+            //             gameCanvas,
+            //             actionBar,
+            //             backPack,
+            //             player
+            //           );
+
+            //           engine.addSystem(
+            //             new OrcFSM(
+            //               gameCanvas,
+            //               player,
+            //               _npc,
+            //               [6, 1, 14],
+            //               [0, 90, 0],
+            //               false,
+            //               10,
+            //               combatLog
+            //             )
+            //           );
+
+            //         }
+
+            // })
           } catch (error) {
             combatLog.text = `Welcome to SutenQuest!`;
             combatLog.text = `:(  Game socket failed to load  :(`;
             combatLog.text = `Please refresh/reload the scene`;
-            //new NoEthScene();
             failedstart = true;
 
             return;
           }
 
           log('after socket server')
-
           log('json ', json)
 
           log('json.percentage ', json.percentage)
@@ -260,11 +336,12 @@ async function registerPlayer() {
             backPack.playerclass = obj.playerclass
           } else {
             //log(`json.hp: ${json.hp} is greater than 0`)
+            combatLog.text = ` `;
             combatLog.text = `Welcome back!`;
             combatLog.text = `You are a level ${json.level} ${json.characterclass}`;
             //combatLog.text = `Mana Balance: ${JSON.stringify(balance.l1)}`
             //combatLog.text = `Matic Mana Balance: ${JSON.stringify(balance.l2)}`
-            combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
+            //combatLog.text = `Press 'esc' to lock/unlock your mouse.`;
             //combatLog.text = `Have fun and try not to die!`;
             if (json.percentage == 100 && json.hp == undefined) {
               //log('setting playerhp to json.maxhp')
@@ -309,7 +386,7 @@ async function registerPlayer() {
           log('calling backpack resetCharWindow')
           backPack.resetCharWindow()
 
-          // obj.manal1 = balance.l1
+          //       // obj.manal1 = balance.l1
           obj.manal1 = 0
 
           const testArray = [
@@ -337,6 +414,7 @@ async function registerPlayer() {
         log("game.ts: Player search by ether address failed ", error);
       }
     } catch (error) {
+      log('in the catch block')
       if (error.toString().includes("Could not access eth_accounts")) {
         //log('Could not access ETH Accounts 2')
         combatLog.text = `Welcome to SutenQuest!`;
@@ -358,28 +436,28 @@ new spawnNpcs()
 // // User the BuilderHUD to move the model to the desired position/rotaion
 // // The positions show up in the Dev console
 
-let orc1 = new Entity("orc1");
-orc1.addComponent(new GLTFShape("models/remetchmagician2.glb"));
-orc1.addComponent(
-  new Transform({
-    position: new Vector3(5, 0, 5),
-    rotation: new Quaternion(0, 0, 0, 1),
-    scale: new Vector3(.01, .01, .01),
-  })
-);
-orc1.addComponentOrReplace(
-  new OnPointerDown(
-    (e) => {
-      orc1.getComponent(OnPointerDown).showFeedback = true;
-    },
-    {
-      button: ActionButton.PRIMARY,
-      showFeedback: true,
-      hoverText: "Punch",
-    }
-  )
-);
+// let orc1 = new Entity("orc1");
+// orc1.addComponent(new GLTFShape("models/remetchmagician2.glb"));
+// orc1.addComponent(
+//   new Transform({
+//     position: new Vector3(5, 0, 5),
+//     rotation: new Quaternion(0, 0, 0, 1),
+//     scale: new Vector3(.01, .01, .01),
+//   })
+// );
+// orc1.addComponentOrReplace(
+//   new OnPointerDown(
+//     (e) => {
+//       orc1.getComponent(OnPointerDown).showFeedback = true;
+//     },
+//     {
+//       button: ActionButton.PRIMARY,
+//       showFeedback: true,
+//       hoverText: "Punch",
+//     }
+//   )
+// );
 
-engine.addEntity(orc1);
+// engine.addEntity(orc1);
 // // const hud: BuilderHUD = new BuilderHUD();
 // // hud.attachToEntity(orc1);

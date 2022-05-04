@@ -43,7 +43,7 @@ export class Orc extends Entity {
   public death2_: AnimationState;
   private hpbar = null;
   private hpbar2 = null;
-  private update2;
+  private update2: any;
   private npcUrl = "https://sutenquestapi.azurewebsites.net/npc";
   private scatterRadius = 6;
 
@@ -59,11 +59,11 @@ export class Orc extends Entity {
     percentage: number,
     start: Vector3,
     rotation: Quaternion,
-    path,
-    canvas,
-    actionBar,
-    backpack,
-    player
+    path:any,
+    canvas:any,
+    actionBar:any,
+    backpack:any,
+    player:any
   ) {
     super();
 
@@ -270,7 +270,7 @@ export class Orc extends Entity {
     );
   }
 
-  initialhp(val) {
+  initialhp(val:number) {
     log('in orc initialhp')
     if (this.update2) {
       if (this.hpbar2) {

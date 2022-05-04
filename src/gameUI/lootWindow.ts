@@ -11,8 +11,8 @@ export class LootWindow extends Entity {
   private _actionbar;
   private _backpack;
   private _player;
-  private _lootitem;
-  private _activeloot;
+  private _lootitem: any;
+  private _activeloot: any;
   private _peonlootpool = [
     resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion,
     resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion, resources.loot.redPotion,
@@ -79,7 +79,7 @@ export class LootWindow extends Entity {
   private _looted = false
   private _npc
 
-  constructor(canvas, image, actionBar, backPack, player, orc: Orc) {
+  constructor(canvas: any, image: any, actionBar: any, backPack: any, player: any, orc: Orc) {
     super()
     this._canvas = canvas;
     this._image = image;
@@ -110,6 +110,7 @@ export class LootWindow extends Entity {
     this._closebutton.visible = false;
     this._closebutton.onClick = new OnPointerDown(
       (e) => {
+        log('lootwindow close button has been clicked')
         this.hide()
         this._closebutton.visible = false;
       },
@@ -124,6 +125,8 @@ export class LootWindow extends Entity {
     if (this._looted) {
       this._looted = false;
     }
+
+    log(`mob name: ${this._npc.mobname}`)
 
     let json
     let mobtier = 1
@@ -158,14 +161,21 @@ export class LootWindow extends Entity {
         break;
     }
 
+    //Commenting out the API call to fetch the loot for now
+    //Done of 4/12/22 for testing
+    let lootfetched = true;
     try {
       let response = await fetch("https://sutenquestapi.azurewebsites.net/loot/" + mobtier + '/' + 123456);
       json = await response.json();
+      lootfetched = true
     } catch (error) {
       log("error: ", error.toString());
+      lootfetched = false
     }
 
-    log('api response: ', json)
+    log('loot api response: ', json)
+    log(`loot api lootfetched: ${lootfetched}`)
+    log(`loot api statusCode: ${json.statusCode}`)
 
     // api response:
     // { id: "60fc83b3eb1e240fdefcdd17", name: "Sand Beetle", shape: "sandbeetle.png", width: 345, height: 400 }
@@ -175,20 +185,54 @@ export class LootWindow extends Entity {
     // shape: "sandbeetle.png"
     // width: 345
 
-    if (!json.shape) { json.shape = "sandbeetle.png" }
+    // if (!json.shape) { json.shape = "sandbeetle.png" }
 
-    let lootimg = "images/looticons/" + json.shape
-    log('lootimg: ', lootimg)
-    this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
-      json.spellstart, json.spellend, json.sound, this, null)
-    //this._lootitem = new Loot(this._canvas, this._activeloot, 40, this._actionbar,this._backpack, this._player, this, this._npc)
-    //this._lootitem = new Loot(this._activeloot, 40, this._actionbar,this._backpack, this, this._npc)
-    //this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", null, null, null, null, this)
+    if(json.statusCode !== 500) {
+      log('')
+      let lootimg = "images/looticons/" + json.shape
+      // log('lootimg: ', lootimg)
+      // this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
+      //   json.spellstart, json.spellend, json.soundjj=, this, null)
+
+      this._lootitem = new Item(
+        new Texture(lootimg),
+        40,
+        json.width,
+        json.height,
+        json.name,
+        json.itemtype,
+        json.price,
+        json.itemtype,
+        null,
+        null,
+        null,
+        null,
+        this,
+        this._npc
+      )
+    } else {
+      this._lootitem = new Item(
+      new Texture("images/looticons/manavial.png"),
+      40,
+      1219,
+      2154,
+      "Mana Vial",
+      "consumable",
+      50,
+      "consumable",
+      null,   //spellshape
+      null,   //spellstart
+      null,   //spellend
+      null,   //sound
+      this,    //lootwindow)
+      this._npc)
+    }
+
     this._lootitem.show()
   }
 
   public sendtobp() {
-    // log(`${this._npc.id} lootWindow sendtobp`)
+    log(`${this._npc.id} lootWindow sendtobp`)
     this._lootitem.sendToBackpack()
   }
 
@@ -214,30 +258,35 @@ export class LootWindow extends Entity {
         this.show()
       }
 
-      //log(`id: ${this._npc.id} Adding the lootallclick method`)
+      log(`id: ${this._npc.id} Adding the lootallclick method`)
       this._npc.addlootallclick()
     }
   }
 
   public hidelootwindow() {
-    //log('clicked hide loot window')
+    log('clicked hide loot window')
     this._loot.visible = false;
+    this._closebutton.visible = false;
     //this._lootitem.hide()
   }
 
   public show(item = null) {
-    //log('in show method')
+    log('in lootWindow show method')
     this._closebutton.visible = true;
     this._loot.visible = true;
     if (item) {
+      log('in lootWindow, we have an item, creating a new lootItem')
+      log(`the item ${item}`)
       //this._lootitem = new Loot(this._canvas, item, 40, this._actionbar,this._backpack, this._player, this, this._npc)
       //this._lootitem = new Loot(item, 40, this._actionbar,this._backpack, this, this._npc)
-      this._lootitem = new Item(new Texture("src/images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", null, null, null, null, this, this._npc)
+      this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 40, 1219, 2154, "Mana Vial", "consumable", 50, "consumable", 
+                                null, null, null, null, this, this._npc)
       //{ image: "src/images/looticons/rustyaxe.png", slot: 1, srcw: 1219, srch: 2154, desc: "Rusty Sword", price: 20, itemtype: "weapon" },
       //let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
       //  element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound)
       this._lootitem.show()
     } else {
+      log('in lootWindow we do not have an item so calling getLoot')
       this.getloot()
     }
 
@@ -248,5 +297,6 @@ export class LootWindow extends Entity {
     this._loot.visible = false;
     //log('calling hide on the lootitem')
     this._lootitem.hide()
+    this._closebutton.visible = false;
   }
 }

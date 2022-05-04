@@ -1,10 +1,10 @@
 import { BackPack } from "./backPack";
 
 export class Khepra {
-    private _canvas;
-    private _image;
+    private _canvas: any;
+    private _image: Texture;
     private _bp;
-    constructor(canvas, image, backpack:BackPack) {
+    constructor(canvas: any, image: Texture, backpack:BackPack) {
       this._canvas = canvas;
       this._image = image;
       this._bp = new UIImage(this._canvas, this._image);

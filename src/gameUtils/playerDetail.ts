@@ -43,12 +43,12 @@ export class Singleton {
     private soundbox8: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish8, false)
     private soundbox9: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish9, false)
     private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
-    private _canvas: UICanvas
-    private _actionbar: ActionBar
-    private _backPack: BackPack
-    private _player: Player
-    private _tradewindow: TradeWindow
-    private _socketclass
+    private _canvas: UICanvas;
+    private _actionbar: ActionBar;
+    private _backPack: BackPack;
+    private _player: Player;
+    private _tradewindow: TradeWindow;
+    private _socketclass: any;
     private _inDuat: boolean = false;
 
     constructor(balance = 0) {

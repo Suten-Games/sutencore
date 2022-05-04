@@ -9,13 +9,13 @@ import { Item } from "../gameObjects/item";
 export class CharWindow {
   private _canvas;
   private _base;
-  private _open;
+  private _open: any;
   private _closebutton;
   private _pname;
   private _desc1;
   private _desc2;
   private _desc3;
-  private _weapontext;
+  private _weapontext: any;
   private _strength;
   private _agility;
   private _stamina;
@@ -24,11 +24,11 @@ export class CharWindow {
   private _armor;
   private _wskill;
   private _damage;
-  private _loot;
-  private _lootbig;
-  private _ebutton;
+  private _loot: any;
+  private _lootbig: any;
+  private _ebutton: any;
   private _charbutton;
-  private _equipbutton;
+  private _equipbutton: any;
 
   private equipsound = new SoundBox(
     new Transform({ position: new Vector3(8, 0, 8) }),
@@ -36,7 +36,7 @@ export class CharWindow {
     false
   );
 
-  constructor(canvas, image, charclass) {
+  constructor(canvas: any, image: any, charclass: any) {
     var obj = Singleton.getInstance();
 
     this._canvas = canvas;
@@ -253,7 +253,9 @@ export class CharWindow {
     this._base.visible = false;
   }
 
-  public setCharLoot(weapon = null, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+  public setCharLoot(weapon:Texture = resources.loot.rustyaxe, weapontext = null, combatlog: CombatLog, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
+  //set rustyaxe as the default loot texture for now.
+
 
     log('in setCharLoot ', lootimage)
 
@@ -261,8 +263,8 @@ export class CharWindow {
     if (!this._open) {
       //log('setting charloot')
       let obj = Singleton.getInstance();
-      let charclass;
-      let weaponstring;
+      let charclass: any;
+      let weaponstring: any;
       let charwindowimage
 
       if (obj.weapon == 'resources.loot.rustyaxe') {

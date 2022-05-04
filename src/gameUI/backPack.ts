@@ -13,26 +13,26 @@ export class BackPack {
     private _bp;
     private _charbutton;
     private _isOpen: boolean;
-    private _slot10;
-    private _slot11;
-    private _slot12;
-    private _slot13;
-    private _slot14;
-    private _slot15;
-    private _slot16;
-    private _slot17;
-    private _slot18;
-    private _slot19;
-    private _slot20;
-    private _slot21;
-    private _slot22;
-    private _slot23;
-    private _slot24;
-    private _slot25;
+    private _slot10: any;
+    private _slot11: any;
+    private _slot12: any;
+    private _slot13: any;
+    private _slot14: any;
+    private _slot15: any;
+    private _slot16: any;
+    private _slot17: any;
+    private _slot18: any;
+    private _slot19: any;
+    private _slot20: any;
+    private _slot21: any;
+    private _slot22: any;
+    private _slot23: any;
+    private _slot24: any;
+    private _slot25: any;
     private _mybackpackcontents: Array<Item>;
-    private _playerclass;
-    private _player;
-    private _charwindow;
+    private _playerclass: any;
+    private _player: any;
+    private _charwindow: any;
 
     private backpacksound = new SoundBox(
       new Transform({ position: new Vector3(8, 0, 8) }),
@@ -40,7 +40,7 @@ export class BackPack {
        false
      );
 
-     constructor(canvas, image) {
+     constructor(canvas:UICanvas, image:Texture) {
       let obj = Singleton.getInstance()
       this._canvas = canvas;
       this._image = image;
@@ -63,10 +63,11 @@ export class BackPack {
       this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
       this._charbutton.hAlign = "right"
       this._charbutton.vAlign = "center";
-      this._charbutton.positionY = "-40%";
+      this._charbutton.positionY = "-42%";
       this._charbutton.positionX = "-20%";
-      this._charbutton.sourceWidth = 1309;
-      this._charbutton.sourceHeight = 548;
+      this._charbutton.height = '120px';
+      this._charbutton.sourceWidth = 2094;
+      this._charbutton.sourceHeight = 3000;
       this._charbutton.visible = false;
       this._charbutton.onClick = new OnPointerDown(
         (e) => {
@@ -209,18 +210,18 @@ export class BackPack {
       return this._playerclass
     }
 
-    public showCharWindow(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot) {
+    public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot:any) {
       log('calling charwindow.setcharloot from the backback showcharwindow function')
       this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
         //log('calling charwindow.flip from the backpack showcharwindow function')
       this._charwindow.flip()
     }
 
-    public bootLoadBackPack(data) {
+    public bootLoadBackPack(data:any) {
       //log('loading player backpack on boot ', data)
-      data.forEach(element => {
+      data.forEach((element: { slot: number; image: any; }) =>  {
         if(element.slot) {
-          let item = new Item(new Texture(element.image), element.slot)
+          let item = new Item(new Texture(element.image), element.slot, null, null, null, null, null, null, null, null, null, null, undefined, null)
           this.setSlot(element.slot)
           item.setslot = element.slot
           item.updateLoc(element.slot)

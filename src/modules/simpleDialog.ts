@@ -1,4 +1,4 @@
-import { ActionsSequenceSystem } from "../../node_modules/decentraland-ecs-utils/actionsSequenceSystem/actionsSequenceSystem"
+import { ActionsSequenceSystem } from "../../node_modules/sutenquest-ecs-utils/actionsSequenceSystem/actionsSequenceSystem"
 
 export class SimpleDialog {
     private actionsSequenceSystem: ActionsSequenceSystem

@@ -11,6 +11,7 @@ import { Singleton } from "../gameUtils/playerDetail";
 //   PromptStyles,
 // } from "../../node_modules/@dcl/ui-utils/index";
 import { Item } from "../gameObjects/item";
+import { CombatLog } from "./combatLog";
 
 export class TradeWindow {
   private _canvas;
@@ -45,7 +46,7 @@ export class TradeWindow {
     false
   );
 
-  constructor(canvas, image, actionBar, backPack, player, combatLog) {
+  constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, player: Player, combatLog: CombatLog) {
     this._canvas = canvas;
     this.obj.canvas = canvas;
     this._image = image;
@@ -106,16 +107,16 @@ export class TradeWindow {
     this._buytext.visible = false;
 
 
-    this._potion1 = new Item(resources.loot.redPotion, 26, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this)
-    this._potion2 = new Item(resources.loot.redPotion, 27, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion3 = new Item(resources.loot.redPotion, 28, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion4 = new Item(resources.loot.redPotion, 29, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion5 = new Item(resources.loot.redPotion, 30, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion6 = new Item(resources.loot.greenPotion, 31, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion7 = new Item(resources.loot.redPotion, 32, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion8 = new Item(resources.loot.bluePotion, 33, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion9 = new Item(resources.loot.greenPotion, 34, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
-    this._potion10 = new Item(resources.loot.bluePotion, 35, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+    this._potion1 = new Item(resources.loot.redPotion, 26, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this)
+    this._potion2 = new Item(resources.loot.redPotion, 27, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion3 = new Item(resources.loot.redPotion, 28, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion4 = new Item(resources.loot.redPotion, 29, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion5 = new Item(resources.loot.redPotion, 30, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion6 = new Item(resources.loot.greenPotion, 31, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion7 = new Item(resources.loot.redPotion, 32, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion8 = new Item(resources.loot.bluePotion, 33, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion9 = new Item(resources.loot.greenPotion, 34, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
+    this._potion10 = new Item(resources.loot.bluePotion, 35, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
   }
 
   get visible() {
@@ -177,12 +178,12 @@ export class TradeWindow {
     }
   }
 
-  private afterConfirm(potion) {
+  private afterConfirm(potion: any) {
     potion.sendItemDown();
     this._buybutton.visible = false;
   }
 
-  public purchase(potion) {
+  public purchase(potion: any) {
     this._buybutton.visible = true;
     this._buytext.value = `${potion.potionprice} Mana`
     this._buytext.visible = true;
@@ -339,36 +340,36 @@ export class TradeWindow {
     // });
   }
 
-  public replacepotion(slot) {
+  public replacepotion(slot: any) {
     if (slot == 26) {
-      this._potion1 = new Item(resources.loot.redPotion, 26, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this)
+      this._potion1 = new Item(resources.loot.redPotion, 26, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this)
       this._potion1.show();
     } else if (slot == 27) {
-      this._potion2 = new Item(resources.loot.redPotion, 27, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion2 = new Item(resources.loot.redPotion, 27, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion2.show();
     } else if (slot == 28) {
-      this._potion3 = new Item(resources.loot.redPotion, 28, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion3 = new Item(resources.loot.redPotion, 28, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion3.show();
     } else if (slot == 29) {
-      this._potion4 = new Item(resources.loot.redPotion, 29, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion4 = new Item(resources.loot.redPotion, 29, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion4.show();
     } else if (slot == 30) {
-      this._potion5 = new Item(resources.loot.redPotion, 30, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion5 = new Item(resources.loot.redPotion, 30, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion5.show();
     } else if (slot == 31) {
-      this._potion6 = new Item(resources.loot.greenPotion, 31, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion6 = new Item(resources.loot.greenPotion, 31, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion6.show();
     } else if (slot == 32) {
-      this._potion7 = new Item(resources.loot.redPotion, 32, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion7 = new Item(resources.loot.redPotion, 32, 1219, 2154, "Minor Heal", null, 1, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion7.show();
     } else if (slot == 33) {
-      this._potion8 = new Item(resources.loot.bluePotion, 33, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion8 = new Item(resources.loot.bluePotion, 33, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion8.show();
     } else if (slot == 34) {
-      this._potion9 = new Item(resources.loot.greenPotion, 34, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion9 = new Item(resources.loot.greenPotion, 34, 1219, 2154, "Minor Heal", null, 5, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion9.show();
     } else if (slot == 35) {
-      this._potion10 = new Item(resources.loot.bluePotion, 35, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, null, null, this);
+      this._potion10 = new Item(resources.loot.bluePotion, 35, 1219, 2154, "Minor Heal", null, 20, "consumable", null, null, null, resources.sounds.corkpop, this, null, this);
       this._potion10.show();
     }
   }

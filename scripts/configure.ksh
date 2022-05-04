@@ -9,6 +9,7 @@ if [[ ! -d $INIT_CWD/src ]];then
 fi
 
 cp suten.ts $INIT_CWD
+cp tsconfig.json $INIT_CWD
 
 cp -R src/resources.ts $INIT_CWD/src
 cp -R src/components $INIT_CWD/src
@@ -55,3 +56,5 @@ else
     cp -R src/game.ts $INIT_CWD/src/game.ts
   fi
 fi
+
+#npm install --save colyseus.js

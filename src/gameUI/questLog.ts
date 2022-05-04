@@ -3,13 +3,13 @@ import resources from "../resources";
 
 export class QuestLog {
   private _base;
-  private _open;
-  private _closebutton;
-  private _desc1;
-  private _charisma;
-  private _questtext;
+  private _open: boolean;
+  private _closebutton: any;
+  private _desc1: any;
+  private _charisma: any;
+  private _questtext: string;
 
-  constructor(canvas, image) {
+  constructor(canvas:any, image:any) {
     var obj = Singleton.getInstance();
 
     this._base = new UIImage(canvas, image);
@@ -87,7 +87,7 @@ export class QuestLog {
       this._questtext = val
   }
 
-  public quest(val, desc) {
+  public quest(val:string, desc:string) {
     this._questtext = val
     this._desc1.value = this._questtext
     this._charisma.value = desc

@@ -23,8 +23,9 @@ export function reloadGame(gamecanvas: UICanvas, actionbar: ActionBar, backpack:
       engine.addSystem(mss);
       engine.addSystem(ws)
 
-      // shopkeeper = new LoadShopKeeper(gamecanvas, tradewindow, combatlog)
-      // engine.addEntity(shopkeeper)
+      log('calling loadShopkeeper')
+      shopkeeper = new LoadShopKeeper(gamecanvas, tradewindow, combatlog)
+      //engine.addEntity(shopkeeper)
     } catch (e) {
       log("error ", e);
     }

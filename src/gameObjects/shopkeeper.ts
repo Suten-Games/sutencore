@@ -12,7 +12,8 @@ export class LoadShopKeeper {
   private _cl;
 
   private shopping = new SoundBox(
-    new Transform({ position: new Vector3(-12.8, 1.2, -11.6) }),
+    //new Transform({ position: new Vector3(-12.8, 1.2, -11.6) }),
+    new Transform({ position: new Vector3(79, 0, 79)}),
     resources.sounds.shopkeeper,
     false
   );
@@ -20,13 +21,17 @@ export class LoadShopKeeper {
   constructor(gameCanvas: UICanvas, tradeWindow: TradeWindow, combatLog: CombatLog) {
     this._cl = combatLog;
 
+    log('in shopkeeper.ts');
+
     this.shopkeeper = new SutenNpc(
-      resources.sounds.peasantunlock,
+      resources.sounds.shopkeeper,
       resources.models.peasant,
       22,
       new Vector3(-12.8, 1.2, -11.6),
       Quaternion.Euler(0, 90, 0),
     );
+
+    //engine.addEntity(this.shopkeeper)
 
     this.shopkeeper.addComponent(
       new OnPointerDown(

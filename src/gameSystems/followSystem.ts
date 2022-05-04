@@ -12,7 +12,7 @@ export class FollowSystem implements ISystem {
   mob;
   camera = Camera.instance;
 
-  constructor(mob) {
+  constructor(mob:any) {
     this.mob = mob;
   }
   update(dt: number) {

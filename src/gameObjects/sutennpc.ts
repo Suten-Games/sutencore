@@ -21,8 +21,10 @@ export class SutenNpc extends Entity {
         start: Vector3,
         rotation: Quaternion,
     ) {
+        log('in sutennpc constructor')
         super();
         engine.addEntity(this);
+        log(`in sutennpc add ${model}`)
         this.addComponent(model);
         this.addComponent(
             new Transform({
