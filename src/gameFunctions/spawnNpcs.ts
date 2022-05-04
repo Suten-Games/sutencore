@@ -20,7 +20,7 @@ interface questNPCInterface {
 const local: boolean = false;
 const apiUrl = local
     ? "http://localhost:8080/questnpc"
-    : "https://sutenquestapi.azurewebsites.net/questnpc/loc/-148,-124";
+    : "https://sutenquestapi.azurewebsites.net/questnpc/loc/0,0";
 
 export class spawnNpcs {
     private _npc: NPC = new NPC(

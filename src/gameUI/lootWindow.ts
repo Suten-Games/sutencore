@@ -110,6 +110,7 @@ export class LootWindow extends Entity {
     this._closebutton.visible = false;
     this._closebutton.onClick = new OnPointerDown(
       (e) => {
+        log('lootwindow close button has been clicked')
         this.hide()
         this._closebutton.visible = false;
       },
@@ -124,6 +125,8 @@ export class LootWindow extends Entity {
     if (this._looted) {
       this._looted = false;
     }
+
+    log(`mob name: ${this._npc.mobname}`)
 
     let json
     let mobtier = 1
@@ -160,14 +163,19 @@ export class LootWindow extends Entity {
 
     //Commenting out the API call to fetch the loot for now
     //Done of 4/12/22 for testing
-    // try {
-    //   let response = await fetch("https://sutenquestapi.azurewebsites.net/loot/" + mobtier + '/' + 123456);
-    //   json = await response.json();
-    // } catch (error) {
-    //   log("error: ", error.toString());
-    // }
+    let lootfetched = true;
+    try {
+      let response = await fetch("https://sutenquestapi.azurewebsites.net/loot/" + mobtier + '/' + 123456);
+      json = await response.json();
+      lootfetched = true
+    } catch (error) {
+      log("error: ", error.toString());
+      lootfetched = false
+    }
 
-    // log('api response: ', json)
+    log('loot api response: ', json)
+    log(`loot api lootfetched: ${lootfetched}`)
+    log(`loot api statusCode: ${json.statusCode}`)
 
     // api response:
     // { id: "60fc83b3eb1e240fdefcdd17", name: "Sand Beetle", shape: "sandbeetle.png", width: 345, height: 400 }
@@ -179,12 +187,31 @@ export class LootWindow extends Entity {
 
     // if (!json.shape) { json.shape = "sandbeetle.png" }
 
-    // let lootimg = "images/looticons/" + json.shape
-    // log('lootimg: ', lootimg)
-    // this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
-    //   json.spellstart, json.spellend, json.soundjj=, this, null)
-    
-    this._lootitem = new Item(
+    if(json.statusCode !== 500) {
+      log('')
+      let lootimg = "images/looticons/" + json.shape
+      // log('lootimg: ', lootimg)
+      // this._lootitem = new Item(new Texture(lootimg), 40, json.width, json.height, json.name, json.type, json.price, json.itemtype, json.spellshape,
+      //   json.spellstart, json.spellend, json.soundjj=, this, null)
+
+      this._lootitem = new Item(
+        new Texture(lootimg),
+        40,
+        json.width,
+        json.height,
+        json.name,
+        json.itemtype,
+        json.price,
+        json.itemtype,
+        null,
+        null,
+        null,
+        null,
+        this,
+        this._npc
+      )
+    } else {
+      this._lootitem = new Item(
       new Texture("images/looticons/manavial.png"),
       40,
       1219,
@@ -199,7 +226,8 @@ export class LootWindow extends Entity {
       null,   //sound
       this,    //lootwindow)
       this._npc)
-    
+    }
+
     this._lootitem.show()
   }
 
@@ -238,6 +266,7 @@ export class LootWindow extends Entity {
   public hidelootwindow() {
     log('clicked hide loot window')
     this._loot.visible = false;
+    this._closebutton.visible = false;
     //this._lootitem.hide()
   }
 
@@ -268,5 +297,6 @@ export class LootWindow extends Entity {
     this._loot.visible = false;
     //log('calling hide on the lootitem')
     this._lootitem.hide()
+    this._closebutton.visible = false;
   }
 }

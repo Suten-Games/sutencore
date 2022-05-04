@@ -87,8 +87,10 @@ export async function joinSocketsServer(
             victory.play()
             socket.close()
           } else {
+            //log("in wsConnection else block");
             let mob;
             if (element.path.length == 3) {
+             // log("in wsConnection, creating 3 length orc");
               mob = new Orc(
                 element.id,
                 element.name,
@@ -375,7 +377,7 @@ class pingSystem implements ISystem {
       //Causing a bug where spawned mobs are not able to battle
       //Commented out on 4/12/22 for now
       //log('Quest NPC Check')
-      //new spawnNpcs()
+      new spawnNpcs()
     }
 
     if (this.timer >= 10) {

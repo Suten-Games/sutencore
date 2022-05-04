@@ -1,6 +1,6 @@
 {
   "name": "@sutenquest/core",
-  "version": "0.8.36",
+  "version": "0.8.38",
   "description": "SutenQuest Core Libraries",
   "main": "index.js",
   "scripts": {
@@ -21,11 +21,11 @@
   "homepage": "https://github.com/Suten-Games/suten#readme",
   "dependencies": {
     "@dcl/ecs-scene-utils": "^1.7.5",
-    "@sutenquest/crypto-scene-utils": "file:../suten-crypto-scene-utils/sutenquest-crypto-scene-utils-0.0.0.tgz",
-    "@sutenquest/ecs-scene-utils": "file:../suten-ecs-scene-utils/sutenquest-ecs-scene-utils-1.6.1.tgz",
-    "@sutenquest/l2-scene-utils": "file:../suten-l2-scene-utils/sutenquest-l2-scene-utils-0.0.1.tgz",
-    "@sutenquest/npc-utils": "file:../suten-npc-utils/sutenquest-npc-utils-0.0.1.tgz",
-    "@sutenquest/ui-utils": "file:../suten-ui-utils/sutenquest-ui-utils-1.6.1.tgz",
+    "@sutenquest/crypto-scene-utils": "file:./src/gameUtils/sutenquest-suten-scene-utils-0.0.0.tgz",
+    "@sutenquest/ecs-scene-utils": "file:./src/gameUtils/sutenquest-ecs-scene-utils-1.6.1.tgz",
+    "@sutenquest/l2-scene-utils": "file:./src/gameUtils/sutenquest-l2-scene-utils-0.0.1.tgz",
+    "@sutenquest/npc-utils": "file:./src/gameUtils/sutenquest-npc-utils-0.0.1.tgz",
+    "@sutenquest/ui-utils": "file:./src/gameUtils/sutenquest-ui-utils-1.6.1.tgz",
     "colyseus.js": "^0.14.13"
   },
   "bundledDependencies": [
