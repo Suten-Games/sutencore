@@ -1,8 +1,8 @@
 import { getUserAccount } from "@decentraland/EthereumController";
 import { getUserData } from "@decentraland/Identity";
 import { movePlayerTo } from "@decentraland/RestrictedActions";
-import { matic } from "../node_modules/@sutenquest/l2-scene-utils/dist/index"
-import * as crypto from "../node_modules/@sutenquest/crypto-scene-utils/dist/index"
+import { matic } from "../node_modules/@suten-games/l2-scene-utils/dist/index"
+import * as crypto from "../node_modules/@suten-games/suten-scene-utils/dist/index"
 import resources from "./resources";
 import { BaseScene } from "./baseScene";
 
@@ -25,7 +25,7 @@ import { Mob } from './gameObjects/mob';
 import { Cone, cubeColor } from './gameObjects/cones';
 import { Cube, cubes } from './gameObjects/cube';
 
-import { NPC } from "../node_modules/@sutenquest/npc-utils/npc/npc";
+import { NPC } from "../node_modules/@suten-games/npc-utils/npc/npc";
 import { Orc } from "./gameObjects/orc";
 import { OrcFSM } from "./gameFunctions/npcFSM";
 

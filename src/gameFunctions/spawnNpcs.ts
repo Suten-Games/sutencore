@@ -1,5 +1,5 @@
-import { NPC } from "../../node_modules/@sutenquest/npc-utils/npc/npc";
-import { Dialog } from "../../node_modules/@sutenquest/npc-utils/utils/types";
+import { NPC } from "../../node_modules/@suten-games/npc-utils/npc/npc";
+import { Dialog } from "../../node_modules/@suten-games/npc-utils/utils/types";
 import { QuestNpc } from "../components/questnpcComponent";
 import { NpcId } from "../components/npcIdComponent";
 import { NpcName } from "../components/npcNameComponent";

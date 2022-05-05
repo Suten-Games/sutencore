@@ -8,7 +8,7 @@ import { Singleton } from "../gameUtils/playerDetail";
 import { loadDeath, unloadLife, unloadVictory } from "./loadDeath";
 import { SoundBox } from "../gameUtils/soundbox";
 import resources from "../resources";
-import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
+import * as ui from "../../node_modules/@suten-games/ui-utils/index"
 import { spawnNpcs } from "../gameFunctions/spawnNpcs";
 import { sutenBase } from "../../suten"
 import { Player } from "../gameObjects/player";

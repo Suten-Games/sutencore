@@ -5,8 +5,8 @@ import { unloadLife } from "../gameFunctions/loadDeath";
 import { BackPack } from "../gameUI/backPack";
 import { ActionBar } from "../gameUI/actionBar";
 import { SoundBox } from "../gameUtils/soundbox";
-import { BarStyles } from "../../node_modules/@sutenquest/ui-utils/utils/types"
-import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
+import { BarStyles } from "../../node_modules/@suten-games/ui-utils/utils/types"
+import * as ui from "../../node_modules/@suten-games/ui-utils/index"
 import { Singleton } from "../gameUtils/playerDetail";
 import { QuestLog } from "../gameUI/questLog";
 

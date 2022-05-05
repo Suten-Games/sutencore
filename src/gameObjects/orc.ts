@@ -2,11 +2,11 @@ import resources from "../resources";
 import { MobState } from "../components/mobStateComponent";
 import { followData } from "../gameSystems/followSystem";
 import { LootWindow } from "../gameUI/lootWindow";
-import * as ui from "../../node_modules/@sutenquest/ui-utils/index"
+import * as ui from "../../node_modules/@suten-games/ui-utils/index"
 import { FollowsPlayer } from "../components/followsPlayerComponent";
 import { LifeItem } from "../components/lifeItemComponent";
 import { VictoryItem } from "../components/victoryItemComponent";
-import { BarStyles } from "../../node_modules/@sutenquest/ui-utils/utils/types"
+import { BarStyles } from "../../node_modules/@suten-games/ui-utils/utils/types"
 import { Singleton } from "../gameUtils/playerDetail";
 import { NpcId } from "../components/npcIdComponent";
 import { NpcName } from "../components/npcNameComponent";
