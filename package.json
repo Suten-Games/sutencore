@@ -21,14 +21,17 @@
   "homepage": "https://github.com/Suten-Games/suten#readme",
   "dependencies": {
     "@dcl/ecs-scene-utils": "^1.7.5",
-    "@sutenquest/crypto-scene-utils": "file:./src/gameUtils/sutenquest-suten-scene-utils-0.0.0.tgz",
-    "@sutenquest/ecs-scene-utils": "file:./src/gameUtils/sutenquest-ecs-scene-utils-1.6.1.tgz",
-    "@sutenquest/l2-scene-utils": "file:./src/gameUtils/sutenquest-l2-scene-utils-0.0.1.tgz",
-    "@sutenquest/npc-utils": "file:./src/gameUtils/sutenquest-npc-utils-0.0.1.tgz",
-    "@sutenquest/ui-utils": "file:./src/gameUtils/sutenquest-ui-utils-1.6.1.tgz",
+    "@suten-games/ecs-scene-utils": "^1.6.1",
+    "@suten-games/l2-scene-utils": "^0.0.1",
+    "@suten-games/npc-utils": "^0.0.2",
+    "@suten-games/suten-scene-utils": "^0.0.1",
+    "@suten-games/ui-utils": "^1.6.1",
     "colyseus.js": "^0.14.13"
   },
   "bundledDependencies": [
+    "colyseus.js"
+  ],
+  "bundleDependencies": [
     "colyseus.js"
   ]
 }
