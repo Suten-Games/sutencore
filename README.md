@@ -9,3 +9,6 @@
 ##  "bundleDependencies": [
 ##    "colyseus.js"
 ##  ]
+
+## npm install @dcl/ecs-scene-utils
+## npm install @suten-games/suten-npm

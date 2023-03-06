@@ -1,10 +1,10 @@
 {
   "name": "@suten-games/sutencore",
-  "version": "0.9.2",
-  "description": "SutenQuest Core Libraries",
+  "version": "0.0.0.4",
   "main": "index.js",
+  "description": "SutenQuest Core Libraries",
   "scripts": {
-    "install": "./scripts/configure.ksh"
+    "install": "./scripts/configure.sh"
   },
   "repository": {
     "type": "git",
@@ -20,17 +20,9 @@
   },
   "homepage": "https://github.com/Suten-Games/suten#readme",
   "dependencies": {
-    "@dcl/ecs-scene-utils": "^1.7.5",
-    "@suten-games/ecs-scene-utils": "^1.6.1",
-    "@suten-games/l2-scene-utils": "^0.0.1",
-    "@suten-games/npc-utils": "^0.0.2",
-    "@suten-games/suten-scene-utils": "^0.0.1",
-    "@suten-games/ui-utils": "^1.6.1",
-    "colyseus.js": "^0.14.13"
+    "@suten-games/baseimages": "^0.1.1",
+    "@suten-games/basesounds": "^0.0.8"
   },
-  "bundledDependencies": [
-    "colyseus.js"
-  ],
   "bundleDependencies": [
     "colyseus.js"
   ]

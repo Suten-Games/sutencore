@@ -57,8 +57,11 @@ export default {
         orcpeon: new GLTFShape("models/peon3.glb"),
         orcwarrior: new GLTFShape("models/warrior.glb"),
         oldanpu: new GLTFShape("models/anpu.glb"),
-        anpu: new GLTFShape("models/anubis1.glb"),
+        anpu: new GLTFShape("models/anpu.glb"),
         peasant: new GLTFShape("models/peasant1.glb"),
+        medjaywarrior: new GLTFShape("models/remetch-warrior10.glb"),
+        remetchmage: new GLTFShape("models/remetchmagician1.glb"),
+        remetchrogue: new GLTFShape("models/rogue1.glb"),
         redpeasant: new GLTFShape("models/redpeasant.glb"),
         paladin: new GLTFShape("models/paladin8.glb"),
         orc_camp: new GLTFShape("models/orc_encampment_model.glb"),
@@ -89,13 +92,15 @@ export default {
         redPotion: new Texture("images/looticons/redHealthPotion.png"),
         bluePotion: new Texture("images/looticons/blueHealthPotion.png"),
         greenPotion: new Texture("images/looticons/greenHealthPotion.png"),
-        mana: new Texture("images/looticons/mana.png")
+        mana: new Texture("images/looticons/mana.png"),
+        crackedstaff: new Texture("images/looticons/crackedstaff.png")
     },
     spells: {
-        shield: new Texture("images/spells/painterly-spell-icons-1/enchant-blue-1.png")
+        shield: new Texture("images/spells/painterly-spell-icons-1/protect-royal-1.png")
     },
     interface: {
-        questLog: new Texture("images/vali/QuestLog.jpeg"),
+        questLog: new Texture("images/vali/QuestLogScreen.png"),
+        mageScreen: new Texture("images/vali/MageCharacterScreen.png"),
         warriorScreen: new Texture("images/vali/WarriorCharacterScreen.png"),
         berzerkerScreen: new Texture("images/vali/BerzerkerCharacterScreen.png"),
         rogueScreen: new Texture("images/vali/RogueCharacterScreen.png"),
@@ -110,6 +115,11 @@ export default {
         combatlog: new Texture("images/vali/CombatLog.png"),
         closebutton: new Texture("images/vali/CloseButton.png"),
         equipButton:     new Texture("images/equip_button.png"),
-        characterButton: new Texture("images/character_button.png")
+        discardButton: new Texture("images/discard_button.png"),
+        scribeButton: new Texture("images/scribe_button.png"),
+        characterButton: new Texture("images/character_button.png"),
+        abandonButton: new Texture("images/vali/AbandonButton.png"),
+        spellBook: new Texture("images/vali/SpellBook.png"),
+        spellScroll: new Texture("images/spells/spellpage.png")
     }
 }

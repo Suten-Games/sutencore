@@ -1,11 +1,11 @@
-#!/bin/ksh
+#!/bin/sh
 
 cp -R sounds $INIT_CWD
 cp -R models $INIT_CWD
 cp -R images $INIT_CWD
 cp -R materials $INIT_CWD
 
-if [[ ! -d $INIT_CWD/src ]];then
+if [ ! -d $INIT_CWD/src ];then
   mkdir $INIT_CWD/src
 fi
 
@@ -23,14 +23,14 @@ cp -R src/modules $INIT_CWD/src
 
 grep "class BaseScene" $INIT_CWD/src/baseScene.ts 
 rc=$?
-if [[ ${rc} == 0 ]];then
+if [ ${rc} == 0 ];then
     echo "Base Scene exists, so use it"
     echo " " |tee -a $INIT_CWD/src/game.ts
     cat src/game.ts $INIT_CWD/src/game.ts
 else
     grep 'entity.setParent(_scene)' $INIT_CWD/src/game.ts
 rc=$?
-if [[ ${rc} == 0 ]];then
+if [ ${rc} == 0 ];then
   echo "Game.ts is from builder, copy contents to basescene"
   touch $INIT_CWD/src/baseScene.ts
   echo "export class BaseScene extends Entity {" >> $INIT_CWD/src/baseScene.ts 
@@ -46,7 +46,7 @@ if [[ ${rc} == 0 ]];then
 else
   grep '/// --- Spawn a cube ---' $INIT_CWD/src/game.ts
   rc=$?
-  if [[ ${rc} == 0 ]];then
+  if [ ${rc} == 0 ];then
     echo "This is a DCL init build"
     touch $INIT_CWD/src/baseScene.ts
     echo "export class BaseScene extends Entity {" >> $INIT_CWD/src/baseScene.ts 
