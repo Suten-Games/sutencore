@@ -1,12 +1,11 @@
-//import { BackPack } from "./backPack";
+import { BackPack } from "./backPack";
 
 export class Khepra {
     private _canvas: any;
     private _image: Texture;
     private _bp;
     private _blocked: boolean;
-    constructor(canvas: any, image: Texture) {
-    //constructor(canvas: any, image: Texture, backpack: BackPack) {
+    constructor(canvas: any, image: Texture, backpack: BackPack) {
         this._canvas = canvas;
         this._image = image;
         this._bp = new UIImage(this._canvas, this._image);
@@ -19,13 +18,13 @@ export class Khepra {
         this._bp.sourceWidth = 7000;
         this._bp.sourceHeight = 4172;
         this._blocked = false;
-        // this._bp.onClick = new OnPointerDown(() => {
-        //     if (backpack.visible) {
-        //         backpack.hide()
-        //     } else {
-        //         backpack.show()
-        //     }
-        // })
+        this._bp.onClick = new OnPointerDown(() => {
+            if (backpack.visible) {
+                backpack.hide()
+            } else {
+                backpack.show()
+            }
+        })
     }
 
     public show() {
