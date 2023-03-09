@@ -1,4 +1,5 @@
 //import { Item } from "../gameObjects/item";
+import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
 // import { SoundBox } from "../gameUtils/soundbox";
 // import { Singleton } from "../gameUtils/playerDetail";
@@ -35,11 +36,11 @@ export class BackPack {
     private _charwindow: any;
     private _spellbookwindow: any;
 
-    // private backpacksound = new SoundBox(
-    //     new Transform({ position: new Vector3(8, 0, 8) }),
-    //     resources.sounds.backpack,
-    //     false
-    // );
+    private backpacksound = new SoundBox(
+        new Transform({ position: new Vector3(8, 0, 8) }),
+        resources.sounds.backpack,
+        false
+    );
 
     constructor(canvas: UICanvas, image: Texture) {
         //let obj = Singleton.getInstance()
@@ -346,7 +347,7 @@ export class BackPack {
         //     this._spellbutton.visible = true;
         // }
         // this.getcontents()
-        // this.backpacksound.play()
+        this.backpacksound.play()
         this.bpopen = true
 
     }

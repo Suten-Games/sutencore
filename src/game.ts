@@ -1,3 +1,4 @@
+import { BaseScene } from "./baseScene";
 import { UI } from "./gameUI/ui";
 
 const local: boolean = false;
@@ -8,5 +9,8 @@ const apiUrl = local
 
 // SETUP UI
 const ui = new UI();
-let lowerCaseAddress: string = "";
 
+// SETUP STAGE
+if (typeof BaseScene == 'function') {
+  new BaseScene()
+}
