@@ -9,11 +9,10 @@ export class CombatLog {
     private _combatlog4: UIText;
     private _displayarray: string[];
     private _counter: number;
-    private actionWindow: ActionWindow
 
     constructor(canvas: UICanvas) {
 
-        this.actionWindow = new ActionWindow(canvas, resources.interface.combatlog)
+        new ActionWindow(canvas, resources.interface.combatlog)
 
         this._combatlog0 = new UIText(canvas);
         this._combatlog0.vAlign = "bottom";
