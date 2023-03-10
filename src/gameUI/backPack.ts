@@ -1,8 +1,8 @@
 //import { Item } from "../gameObjects/item";
+import { Item } from "src/gameObjects/item";
+import { Singleton } from "src/gameObjects/playerDetail";
 import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
-// import { SoundBox } from "../gameUtils/soundbox";
-// import { Singleton } from "../gameUtils/playerDetail";
 // import { CharWindow } from "./charWindow";
 // import { SpellBook } from "./spellBook";
 
@@ -30,7 +30,7 @@ export class BackPack {
     private _slot23: any;
     private _slot24: any;
     private _slot25: any;
-    //private _mybackpackcontents: Array<Item>;
+    private _mybackpackcontents: any;
     private _playerclass: any;
     private _player: any;
     private _charwindow: any;
@@ -43,7 +43,7 @@ export class BackPack {
     );
 
     constructor(canvas: UICanvas, image: Texture) {
-        //let obj = Singleton.getInstance()
+        let obj = Singleton.getInstance()
         this._canvas = canvas;
         this._image = image;
         this._bp = new UIImage(this._canvas, this._image);
@@ -54,7 +54,7 @@ export class BackPack {
         this._bp.sourceWidth = 665;
         this._bp.sourceHeight = 951;
         this._bp.visible = false;
-        //this._mybackpackcontents = obj.playerbackpack
+        this._mybackpackcontents = obj.showbackpack()
         //this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
         this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
         this._charbutton.hAlign = "right"
@@ -94,6 +94,7 @@ export class BackPack {
                 hoverText: "Open Spell Book",
             }
         );
+        this.bpopen = false;
     }
 
 
@@ -114,99 +115,99 @@ export class BackPack {
     //     this._charwindow.setCharLoot()
     // }
 
-    // public selectSlot(potion: Item): number {
-    //     if (!this._slot10) {
-    //         this._slot10 = 'filled'
-    //         potion.updateLoc(10)
-    //         this._mybackpackcontents.push(potion)
-    //         //log('pushing potion to backpack ', potion)
-    //         return 10
-    //     } else if (!this._slot11) {
-    //         this._slot11 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(11)
-    //         return 11
-    //     } else if (!this._slot12) {
-    //         this._slot12 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(12)
-    //         return 12
-    //     } else if (!this._slot13) {
-    //         this._slot13 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(13)
-    //         return 13
-    //     } else if (!this._slot14) {
-    //         this._slot14 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(14)
-    //         return 14
-    //     } else if (!this._slot15) {
-    //         this._slot15 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(15)
-    //         return 15
-    //     } else if (!this._slot16) {
-    //         this._slot16 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(16)
-    //         return 16
-    //     } else if (!this._slot17) {
-    //         this._slot17 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(17)
-    //         return 17
-    //     } else if (!this._slot18) {
-    //         this._slot18 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(18)
-    //         return 18
-    //     } else if (!this._slot19) {
-    //         this._slot19 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(19)
-    //         return 19
-    //     } else if (!this._slot20) {
-    //         this._slot20 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(20)
-    //         return 20
-    //     } else if (!this._slot21) {
-    //         this._slot21 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(21)
-    //         return 21
-    //     } else if (!this._slot22) {
-    //         this._slot22 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(22)
-    //         return 22
-    //     } else if (!this._slot23) {
-    //         this._slot23 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(23)
-    //         return 23
-    //     } else if (!this._slot24) {
-    //         this._slot24 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(24)
-    //         return 24
-    //     } else if (!this._slot25) {
-    //         this._slot25 = 'filled'
-    //         this._mybackpackcontents.push(potion)
-    //         potion.updateLoc(25)
-    //         return 25
-    //     } else {
-    //         return 50
-    //     }
-    // }
+    public selectSlot(potion: Item): number {
+        if (!this._slot10) {
+            this._slot10 = 'filled'
+            //potion.updateLoc(10)
+            this._mybackpackcontents.push(potion)
+            //log('pushing potion to backpack ', potion)
+            return 10
+        } else if (!this._slot11) {
+            this._slot11 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(11)
+            return 11
+        } else if (!this._slot12) {
+            this._slot12 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(12)
+            return 12
+        } else if (!this._slot13) {
+            this._slot13 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(13)
+            return 13
+        } else if (!this._slot14) {
+            this._slot14 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(14)
+            return 14
+        } else if (!this._slot15) {
+            this._slot15 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(15)
+            return 15
+        } else if (!this._slot16) {
+            this._slot16 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(16)
+            return 16
+        } else if (!this._slot17) {
+            this._slot17 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(17)
+            return 17
+        } else if (!this._slot18) {
+            this._slot18 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(18)
+            return 18
+        } else if (!this._slot19) {
+            this._slot19 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(19)
+            return 19
+        } else if (!this._slot20) {
+            this._slot20 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(20)
+            return 20
+        } else if (!this._slot21) {
+            this._slot21 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(21)
+            return 21
+        } else if (!this._slot22) {
+            this._slot22 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(22)
+            return 22
+        } else if (!this._slot23) {
+            this._slot23 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(23)
+            return 23
+        } else if (!this._slot24) {
+            this._slot24 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(24)
+            return 24
+        } else if (!this._slot25) {
+            this._slot25 = 'filled'
+            this._mybackpackcontents.push(potion)
+            //potion.updateLoc(25)
+            return 25
+        } else {
+            return 50
+        }
+    }
 
-    // private getcontents() {
-    //     //log('show contents of backpack')
-    //     this._mybackpackcontents.forEach(potion => {
-    //         potion.show()
-    //     })
-    // }
+    private getcontents() {
+        //log('show contents of backpack')
+        this._mybackpackcontents.forEach((potion: { show: () => void; }) => {
+            potion.show()
+        })
+    }
 
     get visible() {
         return this._bp.visible
@@ -217,7 +218,7 @@ export class BackPack {
     }
 
     get bpopen() {
-        return this._isOpen;
+        return this._isOpen
     }
 
     set playerclass(val) {
@@ -265,82 +266,82 @@ export class BackPack {
     //     // });
     // }
 
-    // private setSlot(slot: number) {
-    //     if (slot == 10) {
-    //         this._slot10 = 'filled';
-    //     } else if (slot == 11) {
-    //         this._slot11 = 'filled';
-    //     } else if (slot == 12) {
-    //         this._slot12 = 'filled';
-    //     } else if (slot == 13) {
-    //         this._slot13 = 'filled'
-    //     } else if (slot == 14) {
-    //         this._slot14 = 'filled'
-    //     } else if (slot == 15) {
-    //         this._slot15 = 'filled'
-    //     } else if (slot == 16) {
-    //         this._slot16 = 'filled'
-    //     } else if (slot == 17) {
-    //         this._slot17 = 'filled'
-    //     } else if (slot == 18) {
-    //         this._slot18 = 'filled'
-    //     } else if (slot == 19) {
-    //         this._slot19 = 'filled'
-    //     } else if (slot == 20) {
-    //         this._slot20 = 'filled'
-    //     } else if (slot == 21) {
-    //         this._slot21 = 'filled'
-    //     } else if (slot == 22) {
-    //         this._slot22 = 'filled'
-    //     } else if (slot == 23) {
-    //         this._slot23 = 'filled'
-    //     } else if (slot == 24) {
-    //         this._slot24 = 'filled'
-    //     } else if (slot == 25) {
-    //         this._slot25 = 'filled'
-    //     }
-    // }
+    private setSlot(slot: number) {
+        if (slot == 10) {
+            this._slot10 = 'filled';
+        } else if (slot == 11) {
+            this._slot11 = 'filled';
+        } else if (slot == 12) {
+            this._slot12 = 'filled';
+        } else if (slot == 13) {
+            this._slot13 = 'filled'
+        } else if (slot == 14) {
+            this._slot14 = 'filled'
+        } else if (slot == 15) {
+            this._slot15 = 'filled'
+        } else if (slot == 16) {
+            this._slot16 = 'filled'
+        } else if (slot == 17) {
+            this._slot17 = 'filled'
+        } else if (slot == 18) {
+            this._slot18 = 'filled'
+        } else if (slot == 19) {
+            this._slot19 = 'filled'
+        } else if (slot == 20) {
+            this._slot20 = 'filled'
+        } else if (slot == 21) {
+            this._slot21 = 'filled'
+        } else if (slot == 22) {
+            this._slot22 = 'filled'
+        } else if (slot == 23) {
+            this._slot23 = 'filled'
+        } else if (slot == 24) {
+            this._slot24 = 'filled'
+        } else if (slot == 25) {
+            this._slot25 = 'filled'
+        }
+    }
 
-    // public resetSlot(slot: number) {
-    //     if (slot == 10) {
-    //         this._slot10 = null;
-    //     } else if (slot == 11) {
-    //         this._slot11 = null;
-    //     } else if (slot == 12) {
-    //         this._slot12 = null;
-    //     } else if (slot == 13) {
-    //         this._slot13 = null
-    //     } else if (slot == 14) {
-    //         this._slot14 = null
-    //     } else if (slot == 15) {
-    //         this._slot15 = null
-    //     } else if (slot == 16) {
-    //         this._slot16 = null
-    //     } else if (slot == 17) {
-    //         this._slot17 = null
-    //     } else if (slot == 18) {
-    //         this._slot18 = null
-    //     } else if (slot == 19) {
-    //         this._slot19 = null
-    //     } else if (slot == 20) {
-    //         this._slot20 = null
-    //     } else if (slot == 21) {
-    //         this._slot21 = null
-    //     } else if (slot == 22) {
-    //         this._slot22 = null
-    //     } else if (slot == 23) {
-    //         this._slot23 = null
-    //     } else if (slot == 24) {
-    //         this._slot24 = null
-    //     } else if (slot == 25) {
-    //         this._slot25 = null
-    //     }
-    //     let i = this._mybackpackcontents.map(x => x.slot()).indexOf(slot)
-    //     this._mybackpackcontents.splice(i, 1)
-    // }
+    public resetSlot(slot: number) {
+        if (slot == 10) {
+            this._slot10 = null;
+        } else if (slot == 11) {
+            this._slot11 = null;
+        } else if (slot == 12) {
+            this._slot12 = null;
+        } else if (slot == 13) {
+            this._slot13 = null
+        } else if (slot == 14) {
+            this._slot14 = null
+        } else if (slot == 15) {
+            this._slot15 = null
+        } else if (slot == 16) {
+            this._slot16 = null
+        } else if (slot == 17) {
+            this._slot17 = null
+        } else if (slot == 18) {
+            this._slot18 = null
+        } else if (slot == 19) {
+            this._slot19 = null
+        } else if (slot == 20) {
+            this._slot20 = null
+        } else if (slot == 21) {
+            this._slot21 = null
+        } else if (slot == 22) {
+            this._slot22 = null
+        } else if (slot == 23) {
+            this._slot23 = null
+        } else if (slot == 24) {
+            this._slot24 = null
+        } else if (slot == 25) {
+            this._slot25 = null
+        }
+        let i = this._mybackpackcontents.map((x: { slot: () => any; }) => x.slot()).indexOf(slot)
+        this._mybackpackcontents.splice(i, 1)
+    }
 
     public show() {
-        //let obj = Singleton.getInstance()
+        let obj = Singleton.getInstance()
         this._bp.visible = true;
         this._charbutton.visible = true;
         // if (obj.playerclass == "Magician") {
@@ -357,8 +358,8 @@ export class BackPack {
         this._bp.visible = false;
         this._charbutton.visible = false;
         this._spellbutton.visible = false;
-        // this._mybackpackcontents.forEach(potion => {
-        //     potion.hide()
-        // })
+        this._mybackpackcontents.forEach((item: { hide: () => void; }) => {
+            item.hide()
+        })
     }
 }
