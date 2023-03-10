@@ -1,6 +1,5 @@
-//import { Item } from "../gameObjects/item";
-//import { Singleton } from "../gameUtils/playerDetail";
-//import resources from "../resources";
+import { Item } from "src/gameObjects/item";
+import { Singleton } from "src/gameObjects/playerDetail";
 
 export class ActionBar {
     private _canvas;
@@ -15,10 +14,10 @@ export class ActionBar {
     private _slot7: string | null = "";
     private _slot8: string | null = "";
     private _slot9: string | null = "";
-    //private _myactionbarcontents: Array<Item>;
+    private _myactionbarcontents: Array<Item>;
 
     constructor(canvas: UICanvas, image: Texture) {
-        //let obj = Singleton.getInstance()
+        let obj = Singleton.getInstance()
         this._canvas = canvas;
         this._image = image;
         this._ab = new UIImage(this._canvas, this._image);
@@ -28,86 +27,87 @@ export class ActionBar {
         this._ab.height = "10%";
         this._ab.sourceWidth = 1324;
         this._ab.sourceHeight = 150;
-        //this._myactionbarcontents = obj.playeractionbar
+        this._myactionbarcontents = obj.fetchactionbar()
     }
 
-    // public selectSlot(potion: Item): number {
-    //     // log(' in selectSlot')
-    //     if (!this._slot1) {
-    //         this._slot1 = 'filled'
-    //         potion.updateLoc(1)
-    //         this._myactionbarcontents.push(potion)
-    //         return 1
-    //     } else if (!this._slot2) {
-    //         this._slot2 = 'filled'
-    //         potion.updateLoc(2)
-    //         this._myactionbarcontents.push(potion)
-    //         return 2
-    //     } else if (!this._slot3) {
-    //         this._slot3 = 'filled'
-    //         potion.updateLoc(3)
-    //         this._myactionbarcontents.push(potion)
-    //         return 3
-    //     } else if (!this._slot4) {
-    //         this._slot4 = 'filled'
-    //         potion.updateLoc(4)
-    //         this._myactionbarcontents.push(potion)
-    //         return 4
-    //     } else if (!this._slot5) {
-    //         this._slot5 = 'filled'
-    //         potion.updateLoc(5)
-    //         this._myactionbarcontents.push(potion)
-    //         return 5
-    //     } else if (!this._slot6) {
-    //         this._slot6 = 'filled'
-    //         potion.updateLoc(6)
-    //         this._myactionbarcontents.push(potion)
-    //         return 6
-    //     } else if (!this._slot7) {
-    //         this._slot7 = 'filled'
-    //         potion.updateLoc(7)
-    //         this._myactionbarcontents.push(potion)
-    //         return 7
-    //     } else if (!this._slot8) {
-    //         this._slot8 = 'filled'
-    //         potion.updateLoc(8)
-    //         this._myactionbarcontents.push(potion)
-    //         return 8
-    //     } else if (!this._slot9) {
-    //         this._slot9 = 'filled'
-    //         potion.updateLoc(9)
-    //         this._myactionbarcontents.push(potion)
-    //         return 9
-    //     } else {
-    //         return 0
-    //     }
-    // }
+    public selectSlot(potion: Item): number {
+        // log(' in selectSlot')
+        if (!this._slot1) {
+            this._slot1 = 'filled'
+            //potion.updateLoc(1)
+            this._myactionbarcontents.push(potion)
+            return 1
+        } else if (!this._slot2) {
+            this._slot2 = 'filled'
+            //potion.updateLoc(2)
+            this._myactionbarcontents.push(potion)
+            return 2
+        } else if (!this._slot3) {
+            this._slot3 = 'filled'
+            //potion.updateLoc(3)
+            this._myactionbarcontents.push(potion)
+            return 3
+        } else if (!this._slot4) {
+            this._slot4 = 'filled'
+            //potion.updateLoc(4)
+            this._myactionbarcontents.push(potion)
+            return 4
+        } else if (!this._slot5) {
+            this._slot5 = 'filled'
+            //potion.updateLoc(5)
+            this._myactionbarcontents.push(potion)
+            return 5
+        } else if (!this._slot6) {
+            this._slot6 = 'filled'
+            //potion.updateLoc(6)
+            this._myactionbarcontents.push(potion)
+            return 6
+        } else if (!this._slot7) {
+            this._slot7 = 'filled'
+            //potion.updateLoc(7)
+            this._myactionbarcontents.push(potion)
+            return 7
+        } else if (!this._slot8) {
+            this._slot8 = 'filled'
+            //potion.updateLoc(8)
+            this._myactionbarcontents.push(potion)
+            return 8
+        } else if (!this._slot9) {
+            this._slot9 = 'filled'
+            //potion.updateLoc(9)
+            this._myactionbarcontents.push(potion)
+            return 9
+        } else {
+            return 0
+        }
+    }
 
 
-    // public bootLoadActionBar(data: any[]) {
-    //     let obj = Singleton.getInstance();
-    //     data.forEach(element => {
-    //         if (element.slot) {
-    //             log('actionBar:90 element ', JSON.stringify(element))
-    //             // log('actionBar:91 - Calling new Item()')
-    //             // log(`actionBar:92 - spellshape ${JSON.stringify(element.spellshape)}`)
-    //             // log(`actionBar:93 - sound ${JSON.stringify(element.sound)}`)
-    //             let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-    //                 element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-    //                 element.lootwindow, element.npc)
+    public bootLoadActionBar(data: any[]) {
+        let obj = Singleton.getInstance();
+        data.forEach(element => {
+            if (element.slot) {
+                log('actionBar:90 element ', JSON.stringify(element))
+                // let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
+                //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                //     element.lootwindow, element.npc)
 
-    //             log(`actionBar:99 class: ${obj.playerclass}`)
+                let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                )
 
-    //             if (element.itemtype != "spell" || element.itemtype == "spell" && obj.playerclass == "Magician") {
-    //                 this.setSlot(element.slot)
-    //                 potion.setslot = element.slot
-    //                 potion.updateLoc(element.slot)
-    //                 this._myactionbarcontents.push(potion)
-    //             }
+                log(`actionBar:99 class: ${obj.playerclass}`)
 
-    //         }
-    //     });
-    // }
+                if (element.itemtype != "spell" || element.itemtype == "spell" && obj.playerclass == "Magician") {
+                    this.setSlot(element.slot)
+                    item.setslot = element.slot
+                    //potion.updateLoc(element.slot)
+                    this._myactionbarcontents.push(item)
+                }
+
+            }
+        });
+    }
 
     public setSlot(slot: number) {
         if (slot == 1) {
@@ -152,8 +152,8 @@ export class ActionBar {
             this._slot9 = null
         }
 
-        //let i = this._myactionbarcontents.map(x => x.slot()).indexOf(slot)
-        //this._myactionbarcontents.splice(i, 1)
+        let i = this._myactionbarcontents.map(x => x.slot()).indexOf(slot)
+        this._myactionbarcontents.splice(i, 1)
     }
 
     public exist() {

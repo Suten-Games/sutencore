@@ -6,7 +6,7 @@ import { LifeItem } from "src/components/lifeItemComponent";
 import { MobState } from "src/components/mobStateComponent";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { Item } from "./item";
-//import { Player } from "../gameObjects/player";
+import { Player } from "./player";
 //import { closeSocket } from "../gameFunctions/wsConnection";
 //import { LootWindow } from "src/gameUI/lootWindow";
 //import { CornerLabel, UIBar } from "node_modules/@suten-games/ui-utils/index";
@@ -55,7 +55,7 @@ export class Singleton {
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
     private _backPack: BackPack;
-    // private _player: Player;
+    private _player: Player;
     private _tradewindow: TradeWindow;
     private _socketclass: any;
     private _inDuat: boolean = false;
@@ -226,13 +226,13 @@ export class Singleton {
         return this._backPack
     }
 
-    // set player(val) {
-    //     this._player = val
-    // }
+    set player(val) {
+        this._player = val
+    }
 
-    // get player() {
-    //     return this._player
-    // }
+    get player() {
+        return this._player
+    }
 
     set tradewindow(val) {
         this._tradewindow = val
@@ -331,13 +331,14 @@ export class Singleton {
         return this._playeractivespells
     }
 
-    // set playeractionbar(val) {
-    //     this._playeractionbar.push(val)
-    // }
+    playeractionbar(val: any) {
+        this._playeractionbar.push(val)
+    }
 
-    // get playeractionbar() {
-    //     return this._playeractionbar
-    // }
+    fetchactionbar() {
+        return this._playeractionbar
+    }
+
 
     set playerquestlog(val) {
         this._playerquestlog.push(val)

@@ -5,8 +5,8 @@ import { TradeWindow } from "../gameUI/tradeWindow";
 import { SoundBox } from "./soundBox";
 import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
-// import { Player } from "./player";
-// import { ParticleSystem } from "../gameSystems/ParticleSystem";
+import { Player } from "./player";
+import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 // import { LootWindow } from "../gameUI/lootWindow";
 // import { Mob } from "./mob";
 // import * as utils from '@dcl/ecs-scene-utils'
@@ -30,7 +30,7 @@ export class Item {
     private isPurchase: boolean;
     private isActiveSpell: boolean;
     private isScribedSpell: boolean;
-    //private _player: Player;
+    private _player: Player;
     //private _lw: LootWindow;
     private _potiontype;
     private _potionprice;
@@ -78,9 +78,9 @@ export class Item {
         spellstart: number | null = null,
         spellend: number | null = null,
         sound: AudioClip | null = null,
+        tradewindow: TradeWindow | null = null,
         //lootwindow: LootWindow | TradeWindow | undefined,
         //npc: Orc | NPC | null = null,
-        tradewindow: TradeWindow | null = null
     ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
@@ -90,6 +90,8 @@ export class Item {
         this._lootimage.visible = false;
         this._activespellimage = new UIImage(this._canvas, this._image);
         this._activespellimage.visible = false;
+
+        this._tradewindow = null
 
         if (tradewindow) {
             if (this._itemtype == "spell") {
@@ -117,7 +119,7 @@ export class Item {
 
         this._actionBar = obj.actionbar;
         this._backPack = obj.backpack;
-        //this._player = obj.player;
+        this._player = obj.player;
         this._questlootclicked = false;
         this._sound = sound;
         //this._lw = lootwindow;
@@ -355,296 +357,297 @@ export class Item {
     //     return 'Added quest click'
     // }
 
-    // public updateLoc(slot: number) {
+    public updateLoc(slot: number) {
 
-    //     let ps: ParticleSystem
-    //     this._lootimage.visible = true;
-    //     if (this._spellshape) {
+        let ps: ParticleSystem
+        this._lootimage.visible = true;
+        if (this._spellshape) {
 
-    //         let soundstring = "sounds/" + this._sound + ".mp3"
-    //         let sound = new AudioClip(soundstring)
-    //         ps = new ParticleSystem(2, 2, this._spellshape, sound)
-    //         engine.addSystem(ps)
-    //     }
-
-
-    //     this._lootimage.onClick = new OnPointerDown(() => {
-
-    //         if (this._player == undefined || !this._player.alive) {
-    //             log('item.ts:354 - you cant heal if you are dead')
-    //             return
-    //         }
+            let soundstring = "sounds/" + this._sound + ".mp3"
+            let sound = new AudioClip(soundstring)
+            ps = new ParticleSystem(2, 2, this._spellshape, sound)
+            engine.addSystem(ps)
+        }
 
 
-    //         if (this._isscroll) {
-    //             log('item.ts:360 - Clicked on the scroll')
-    //             log('item.ts:361 - scroll desc: ', this._desc.value)
-    //             this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
-    //             this._spellscroll.show()
-    //             log('item.ts:364 - Returning out of isscroll method');
+        this._lootimage.onClick = new OnPointerDown(() => {
 
-    //             return
-    //         }
+            if (this._player == undefined || !this._player.alive) {
+                log('item.ts:354 - you cant heal if you are dead')
+                return
+            }
 
 
-    //         if (this._isspell) {
-    //             if (this._itemtype == "spell") {
-    //                 log("item.ts:411 - Cast a spell")
-    //             }
+            if (this._isscroll) {
+                log('item.ts:360 - Clicked on the scroll')
+                log('item.ts:361 - scroll desc: ', this._desc.value)
+                //this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
+                //this._spellscroll.show()
+                log('item.ts:364 - Returning out of isscroll method');
 
-    //             ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
-    //             log("item.ts:415 - calling activateSpell()")
-    //             this.activateSpell()
-
-    //             return
-    //         }
-
-    //         if (this._isweapon) {
-    //             if (this._image.src.split('/')[2] == 'rustysword.png') {
-    //                 this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
-    //             } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
-    //                 this._player.weapon(resources.loot.rustydagger, "Rusty Dagger", this._actionBar, this._backPack, this, slot)
-    //             } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
-    //                 this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
-    //             } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
-    //                 this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
-    //             }
-    //             return
-    //         }
-
-    //         if (this._isconsumable) {
-    //             if (this._image.src.split("/")[2] == "redHealthPotion.png") {
-    //                 this._isconsumable = true;
-    //                 this.potionsound.play()
-    //                 this._player.heal(20, true);
-    //             } else if (this._image.src.split("/")[2] == "greenHealthPotion.png") {
-    //                 this._isconsumable = true;
-    //                 this.potionsound.play()
-    //                 this._player.heal(50, true);
-    //             } else if (this._image.src.split("/")[2] == "blueHealthPotion.png") {
-    //                 this._isconsumable = true;
-    //                 this.potionsound.play()
-    //                 this._player.heal(500, true);
-    //             }
-
-    //             this._lootimage.visible = false;
-    //             this._actionBar.resetSlot(slot);
-    //             this._backPack.resetSlot(slot);
-
-    //             return
-    //         }
-
-    //         if (this._isquestloot) {
-    //             if (this._image.src.split('/')[2] == 'sandbeetle.png') {
-    //                 this._isquestloot = true;
-    //                 this._player.trinket("It looks like a petrified beetle shell", "Beetle Shell", slot, this)
-    //             } else if (this._image.src.split('/')[2] == "orctooth.png") {
-    //                 this._isquestloot = true;
-    //                 this._player.trinket("You hit him so hard a tooth fell out! Someone might want this.", "Orc Tooth", slot, this);
-    //             }
-    //         } else {
-    //             this._player.unusable()
-    //             this._lootimage.visible = false;
-    //             this._actionBar.resetSlot(slot);
-    //             this._backPack.resetSlot(slot);
-    //         }
+                return
+            }
 
 
-    //     });
-    // }
+            if (this._isspell) {
+                if (this._itemtype == "spell") {
+                    log("item.ts:411 - Cast a spell")
+                }
 
-    // public activateSpell() {
-    //     log('item.ts:478 - inside activateSpell');
-    //     let slot = 60;
-    //     let slotposition = slotPicker(slot);
-    //     this._activespellimage.hAlign = slotposition.ha
-    //     this._activespellimage.vAlign = slotposition.va
-    //     this._activespellimage.width = slotposition.w
-    //     this._activespellimage.height = slotposition.h
-    //     this._activespellimage.positionY = slotposition.y
-    //     this._activespellimage.positionX = slotposition.x
-    //     this._activespellimage.sourceWidth = this._lootimage.sourceWidth;
-    //     this._activespellimage.sourceHeight = this._lootimage.sourceHeight;
-    //     this._activespellimage.visible = true;
+                ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
+                log("item.ts:415 - calling activateSpell()")
+                //this.activateSpell()
+
+                return
+            }
+
+            if (this._isweapon) {
+                if (this._image.src.split('/')[2] == 'rustysword.png') {
+                    this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
+                } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
+                    this._player.weapon(resources.loot.rustydagger, "Rusty Dagger", this._actionBar, this._backPack, this, slot)
+                } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
+                    this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
+                } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
+                    this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
+                }
+                return
+            }
+
+            if (this._isconsumable) {
+                if (this._image.src.split("/")[2] == "redHealthPotion.png") {
+                    this._isconsumable = true;
+                    this.potionsound.play()
+                    this._player.heal(20, true);
+                } else if (this._image.src.split("/")[2] == "greenHealthPotion.png") {
+                    this._isconsumable = true;
+                    this.potionsound.play()
+                    this._player.heal(50, true);
+                } else if (this._image.src.split("/")[2] == "blueHealthPotion.png") {
+                    this._isconsumable = true;
+                    this.potionsound.play()
+                    this._player.heal(500, true);
+                }
+
+                this._lootimage.visible = false;
+                this._actionBar.resetSlot(slot);
+                this._backPack.resetSlot(slot);
+
+                return
+            }
+
+            if (this._isquestloot) {
+                if (this._image.src.split('/')[2] == 'sandbeetle.png') {
+                    this._isquestloot = true;
+                    this._player.trinket("It looks like a petrified beetle shell", "Beetle Shell", slot, this)
+                } else if (this._image.src.split('/')[2] == "orctooth.png") {
+                    this._isquestloot = true;
+                    this._player.trinket("You hit him so hard a tooth fell out! Someone might want this.", "Orc Tooth", slot, this);
+                }
+            } else {
+                this._player.unusable()
+                this._lootimage.visible = false;
+                this._actionBar.resetSlot(slot);
+                this._backPack.resetSlot(slot);
+            }
 
 
-    //     let obj = Singleton.getInstance()
-    //     let spellbook = obj.allspells
+        });
+    }
 
-    //     log('item.ts:588  after assigning spellbook')
+    public activateSpell() {
+        log('item.ts:478 - inside activateSpell');
+        let slot = 60;
+        let slotposition = slotPicker(slot);
+        this._activespellimage.hAlign = slotposition.ha
+        this._activespellimage.vAlign = slotposition.va
+        this._activespellimage.width = slotposition.w
+        this._activespellimage.height = slotposition.h
+        this._activespellimage.positionY = slotposition.y
+        this._activespellimage.positionX = slotposition.x
+        this._activespellimage.sourceWidth = this._lootimage.sourceWidth;
+        this._activespellimage.sourceHeight = this._lootimage.sourceHeight;
+        this._activespellimage.visible = true;
 
-    //     let activespell: Ispell = spellbook.get("amunsshield")
+
+        let obj = Singleton.getInstance()
+        //let spellbook = obj.allspells
+
+        log('item.ts:588  after assigning spellbook')
+
+        //let activespell: Ispell = spellbook.get("amunsshield")
 
 
-    //     log('item.ts:592 - active spell size: ', activespell.size)
-    //     log('item.ts:593 - active spell duration: ', activespell.duration)
-    //     log('item.ts:597  setting shield hp')
-    //     this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
+        // log('item.ts:592 - active spell size: ', activespell.size)
+        // log('item.ts:593 - active spell duration: ', activespell.duration)
+        // log('item.ts:597  setting shield hp')
+        // this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
 
-    //     utils.setTimeout(activespell.duration, () => {
-    //         this._activespellimage.visible = false;
-    //         this._player.setShield(0, activespell.ondropmsg[0].line1);
-    //     })
-    // }
+        // utils.setTimeout(activespell.duration, () => {
+        //     this._activespellimage.visible = false;
+        //     this._player.setShield(0, activespell.ondropmsg[0].line1);
+        // })
+    }
 
-    // public sendToBackpack() {
-    //     let slot = this._actionBar.selectSlot(this);
+    public sendToBackpack() {
+        let slot = this._actionBar.selectSlot(this);
 
-    //     if (slot == 0) {
-    //         slot = this._backPack.selectSlot(this);
-    //         if (slot == 50) {
-    //             this._player.bagsfull();
-    //             this._desc.visible = false;
-    //             this._lootimage.visible = false;
-    //         } else {
-    //             this._slot = slot;
-    //             let slotposition = slotPicker(slot)
-    //             this.isActionBar = slotposition.ab
-    //             this.isBackpack = slotposition.bp
-    //             this.isMerchant = slotposition.mc
-    //             this.isPurchase = slotposition.pc
-    //             this.isLootWindow = slotposition.lw
-    //             this._lootimage.hAlign = slotposition.ha
-    //             this._lootimage.vAlign = slotposition.va
-    //             this._lootimage.width = slotposition.w
-    //             this._lootimage.height = slotposition.h
-    //             this._lootimage.positionY = slotposition.y
-    //             this._lootimage.positionX = slotposition.x
-    //             this._desc.fontSize = slotposition.fs;
-    //             this._desc.width = slotposition.fw;
-    //             this._desc.height = slotposition.fh;
-    //             this._desc.hAlign = slotposition.fha;
-    //             this._desc.vAlign = slotposition.fva;
-    //             this._desc.positionY = slotposition.fy;
-    //             this._desc.positionX = slotposition.fx;
-    //             this._desc.visible = false;
-    //             if (!this._backPack.bpopen) {
-    //                 this._desc.visible = false;
-    //                 this._lootimage.visible = false;
-    //             }
-    //         }
-    //     } else {
-    //         this._slot = slot;
-    //         let slotposition = slotPicker(slot)
-    //         this.isActionBar = slotposition.ab
-    //         this.isBackpack = slotposition.bp
-    //         this.isMerchant = slotposition.mc
-    //         this.isPurchase = slotposition.pc
-    //         this.isLootWindow = slotposition.lw
-    //         this._lootimage.hAlign = slotposition.ha
-    //         this._lootimage.vAlign = slotposition.va
-    //         this._lootimage.width = slotposition.w
-    //         this._lootimage.height = slotposition.h
-    //         this._lootimage.positionY = slotposition.y
-    //         this._lootimage.positionX = slotposition.x
-    //         this._desc.fontSize = slotposition.fs;
-    //         this._desc.width = slotposition.fw;
-    //         this._desc.height = slotposition.fh;
-    //         this._desc.hAlign = slotposition.fha;
-    //         this._desc.vAlign = slotposition.fva;
-    //         this._desc.positionY = slotposition.fy;
-    //         this._desc.positionX = slotposition.fx;
-    //         this._desc.visible = false;
-    //         this.isActionBar = true;
-    //         this._lootimage.visible = true;
-    //         this._desc.visible = false;
-    //     }
+        if (slot == 0) {
+            slot = this._backPack.selectSlot(this);
+            if (slot == 50) {
+                this._player.bagsfull();
+                this._desc.visible = false;
+                this._lootimage.visible = false;
+            } else {
+                this._slot = slot;
+                let slotposition = slotPicker(slot)
+                this.isActionBar = slotposition.ab
+                this.isBackpack = slotposition.bp
+                this.isMerchant = slotposition.mc
+                this.isPurchase = slotposition.pc
+                this.isLootWindow = slotposition.lw
+                this._lootimage.hAlign = slotposition.ha
+                this._lootimage.vAlign = slotposition.va
+                this._lootimage.width = slotposition.w
+                this._lootimage.height = slotposition.h
+                this._lootimage.positionY = slotposition.y
+                this._lootimage.positionX = slotposition.x
+                this._desc.fontSize = slotposition.fs;
+                this._desc.width = slotposition.fw;
+                this._desc.height = slotposition.fh;
+                this._desc.hAlign = slotposition.fha;
+                this._desc.vAlign = slotposition.fva;
+                this._desc.positionY = slotposition.fy;
+                this._desc.positionX = slotposition.fx;
+                this._desc.visible = false;
+                if (!this._backPack.bpopen) {
+                    this._desc.visible = false;
+                    this._lootimage.visible = false;
+                }
+            }
+        } else {
+            this._slot = slot;
+            let slotposition = slotPicker(slot)
+            this.isActionBar = slotposition.ab
+            this.isBackpack = slotposition.bp
+            this.isMerchant = slotposition.mc
+            this.isPurchase = slotposition.pc
+            this.isLootWindow = slotposition.lw
+            this._lootimage.hAlign = slotposition.ha
+            this._lootimage.vAlign = slotposition.va
+            this._lootimage.width = slotposition.w
+            this._lootimage.height = slotposition.h
+            this._lootimage.positionY = slotposition.y
+            this._lootimage.positionX = slotposition.x
+            this._desc.fontSize = slotposition.fs;
+            this._desc.width = slotposition.fw;
+            this._desc.height = slotposition.fh;
+            this._desc.hAlign = slotposition.fha;
+            this._desc.vAlign = slotposition.fva;
+            this._desc.positionY = slotposition.fy;
+            this._desc.positionX = slotposition.fx;
+            this._desc.visible = false;
+            this.isActionBar = true;
+            this._lootimage.visible = true;
+            this._desc.visible = false;
+        }
 
-    //     if (this._lw) {
-    //         this._lw.hidelootwindow();
-    //         this._lw.looted = true;
-    //     }
+        // if (this._lw) {
+        //     this._lw.hidelootwindow();
+        //     this._lw.looted = true;
+        // }
 
-    //     this.backpacksound.play();
-    //     if (this._npc) {
-    //         this._npc.hideMob();
-    //     }
+        this.backpacksound.play();
+        // if (this._npc) {
+        //     this._npc.hideMob();
+        // }
 
-    // }
+    }
 
-    // public sendItemDown() {
+    public sendItemDown() {
 
-    //     this._actionBar.exist()
+        this._actionBar.exist()
 
-    //     let slot = this._actionBar.selectSlot(this);
+        let slot = this._actionBar.selectSlot(this);
 
-    //     this._slot = slot
+        this._slot = slot
 
-    //     let slotposition = slotPicker(slot)
-    //     this.isActionBar = slotposition.ab
-    //     this.isBackpack = slotposition.bp
-    //     this.isMerchant = slotposition.mc
-    //     this.isPurchase = slotposition.pc
-    //     this.isLootWindow = slotposition.lw
-    //     this._lootimage.hAlign = slotposition.ha
-    //     this._lootimage.vAlign = slotposition.va
-    //     this._lootimage.width = slotposition.w
-    //     this._lootimage.height = slotposition.h
-    //     this._lootimage.positionY = slotposition.y
-    //     this._lootimage.positionX = slotposition.x
-    //     this._desc.fontSize = slotposition.fs;
-    //     this._desc.width = slotposition.fw;
-    //     this._desc.height = slotposition.fh;
-    //     this._desc.hAlign = slotposition.fha;
-    //     this._desc.vAlign = slotposition.fva;
-    //     this._desc.positionY = slotposition.fy;
-    //     this._desc.positionX = slotposition.fx;
-    //     this._desc.visible = false;
+        let slotposition = slotPicker(slot)
+        this.isActionBar = slotposition.ab
+        this.isBackpack = slotposition.bp
+        this.isMerchant = slotposition.mc
+        this.isPurchase = slotposition.pc
+        this.isLootWindow = slotposition.lw
+        this._lootimage.hAlign = slotposition.ha
+        this._lootimage.vAlign = slotposition.va
+        this._lootimage.width = slotposition.w
+        this._lootimage.height = slotposition.h
+        this._lootimage.positionY = slotposition.y
+        this._lootimage.positionX = slotposition.x
+        this._desc.fontSize = slotposition.fs;
+        this._desc.width = slotposition.fw;
+        this._desc.height = slotposition.fh;
+        this._desc.hAlign = slotposition.fha;
+        this._desc.vAlign = slotposition.fva;
+        this._desc.positionY = slotposition.fy;
+        this._desc.positionX = slotposition.fx;
+        this._desc.visible = false;
 
-    //     if (slot == 0) {
-    //         slot = this._backPack.selectSlot(this);
-    //         this._slot = slot
-    //         let slotposition = slotPicker(slot)
-    //         this.isActionBar = slotposition.ab
-    //         this.isBackpack = slotposition.bp
-    //         this.isMerchant = slotposition.mc
-    //         this.isPurchase = slotposition.pc
-    //         this.isLootWindow = slotposition.lw
-    //         this._lootimage.hAlign = slotposition.ha
-    //         this._lootimage.vAlign = slotposition.va
-    //         this._lootimage.width = slotposition.w
-    //         this._lootimage.height = slotposition.h
-    //         this._lootimage.positionY = slotposition.y
-    //         this._lootimage.positionX = slotposition.x
-    //         this._desc.fontSize = slotposition.fs;
-    //         this._desc.width = slotposition.fw;
-    //         this._desc.height = slotposition.fh;
-    //         this._desc.hAlign = slotposition.fha;
-    //         this._desc.vAlign = slotposition.fva;
-    //         this._desc.positionY = slotposition.fy;
-    //         this._desc.positionX = slotposition.fx;
-    //         if (!this._backPack.bpopen) {
-    //             this._desc.visible = false;
-    //             this._lootimage.visible = false;
-    //         }
-    //         this.isBackpack = true;
-    //     }
-    // }
+        if (slot == 0) {
+            slot = this._backPack.selectSlot(this);
+            this._slot = slot
+            let slotposition = slotPicker(slot)
+            this.isActionBar = slotposition.ab
+            this.isBackpack = slotposition.bp
+            this.isMerchant = slotposition.mc
+            this.isPurchase = slotposition.pc
+            this.isLootWindow = slotposition.lw
+            this._lootimage.hAlign = slotposition.ha
+            this._lootimage.vAlign = slotposition.va
+            this._lootimage.width = slotposition.w
+            this._lootimage.height = slotposition.h
+            this._lootimage.positionY = slotposition.y
+            this._lootimage.positionX = slotposition.x
+            this._desc.fontSize = slotposition.fs;
+            this._desc.width = slotposition.fw;
+            this._desc.height = slotposition.fh;
+            this._desc.hAlign = slotposition.fha;
+            this._desc.vAlign = slotposition.fva;
+            this._desc.positionY = slotposition.fy;
+            this._desc.positionX = slotposition.fx;
+            if (!this._backPack.bpopen) {
+                this._desc.visible = false;
+                this._lootimage.visible = false;
+            }
+            this.isBackpack = true;
+        }
+    }
 
-    // private setItemForSale() {
-    //     let slotposition = slotPicker(36)
-    //     this.isActionBar = slotposition.ab
-    //     this.isBackpack = slotposition.bp
-    //     this.isMerchant = slotposition.mc
-    //     this.isPurchase = slotposition.pc
-    //     this.isLootWindow = slotposition.lw
-    //     this._lootimage.hAlign = slotposition.ha
-    //     this._lootimage.vAlign = slotposition.va
-    //     this._lootimage.width = slotposition.w
-    //     this._lootimage.height = slotposition.h
-    //     this._lootimage.positionY = slotposition.y
-    //     this._lootimage.positionX = slotposition.x
-    //     this._desc.fontSize = slotposition.fs;
-    //     this._desc.width = slotposition.fw;
-    //     this._desc.height = slotposition.fh;
-    //     this._desc.hAlign = slotposition.fha;
-    //     this._desc.vAlign = slotposition.fva;
-    //     this._desc.positionY = slotposition.fy;
-    //     this._desc.positionX = slotposition.fx;
+    private setItemForSale() {
+        let slotposition = slotPicker(36)
+        this.isActionBar = slotposition.ab
+        this.isBackpack = slotposition.bp
+        this.isMerchant = slotposition.mc
+        this.isPurchase = slotposition.pc
+        this.isLootWindow = slotposition.lw
+        this._lootimage.hAlign = slotposition.ha
+        this._lootimage.vAlign = slotposition.va
+        this._lootimage.width = slotposition.w
+        this._lootimage.height = slotposition.h
+        this._lootimage.positionY = slotposition.y
+        this._lootimage.positionX = slotposition.x
+        this._desc.fontSize = slotposition.fs;
+        this._desc.width = slotposition.fw;
+        this._desc.height = slotposition.fh;
+        this._desc.hAlign = slotposition.fha;
+        this._desc.vAlign = slotposition.fva;
+        this._desc.positionY = slotposition.fy;
+        this._desc.positionX = slotposition.fx;
 
-    //     this._lootimage.onClick = new OnPointerDown(() => {
-    //         this.sendItemDown();
-    //     });
-    //     this._tradewindow.purchase(this)
-    // }
+        this._lootimage.onClick = new OnPointerDown(() => {
+            this.sendItemDown();
+        });
+
+        //this._tradewindow.purchase(this)
+    }
 }

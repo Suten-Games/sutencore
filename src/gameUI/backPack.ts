@@ -1,4 +1,3 @@
-//import { Item } from "../gameObjects/item";
 import { Item } from "src/gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { SoundBox } from "src/gameObjects/soundBox";
@@ -115,87 +114,86 @@ export class BackPack {
     //     this._charwindow.setCharLoot()
     // }
 
-    public selectSlot(potion: Item): number {
+    public selectSlot(item: Item): number {
         if (!this._slot10) {
             this._slot10 = 'filled'
-            //potion.updateLoc(10)
-            this._mybackpackcontents.push(potion)
-            //log('pushing potion to backpack ', potion)
+            item.updateLoc(10)
+            this._mybackpackcontents.push(item)
             return 10
         } else if (!this._slot11) {
             this._slot11 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(11)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(11)
             return 11
         } else if (!this._slot12) {
             this._slot12 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(12)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(12)
             return 12
         } else if (!this._slot13) {
             this._slot13 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(13)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(13)
             return 13
         } else if (!this._slot14) {
             this._slot14 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(14)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(14)
             return 14
         } else if (!this._slot15) {
             this._slot15 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(15)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(15)
             return 15
         } else if (!this._slot16) {
             this._slot16 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(16)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(16)
             return 16
         } else if (!this._slot17) {
             this._slot17 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(17)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(17)
             return 17
         } else if (!this._slot18) {
             this._slot18 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(18)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(18)
             return 18
         } else if (!this._slot19) {
             this._slot19 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(19)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(19)
             return 19
         } else if (!this._slot20) {
             this._slot20 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(20)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(20)
             return 20
         } else if (!this._slot21) {
             this._slot21 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(21)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(21)
             return 21
         } else if (!this._slot22) {
             this._slot22 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(22)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(22)
             return 22
         } else if (!this._slot23) {
             this._slot23 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(23)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(23)
             return 23
         } else if (!this._slot24) {
             this._slot24 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(24)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(24)
             return 24
         } else if (!this._slot25) {
             this._slot25 = 'filled'
-            this._mybackpackcontents.push(potion)
-            //potion.updateLoc(25)
+            this._mybackpackcontents.push(item)
+            item.updateLoc(25)
             return 25
         } else {
             return 50
@@ -203,7 +201,6 @@ export class BackPack {
     }
 
     private getcontents() {
-        //log('show contents of backpack')
         this._mybackpackcontents.forEach((potion: { show: () => void; }) => {
             potion.show()
         })
@@ -236,35 +233,25 @@ export class BackPack {
     //     this._charwindow.flip()
     // }
 
-    // public bootLoadBackPack(data: any[]) {
-    //     data.forEach(element => {
-    //         if (element.slot) {
-    //             log('actionBar:90 element ', JSON.stringify(element))
-    //             log('actionBar:91 - Calling new Item()')
-    //             log(`actionBar:92 - spellshape ${JSON.stringify(element.spellshape)}`)
-    //             log(`actionBar:93 - sound ${JSON.stringify(element.sound)}`)
-    //             let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-    //                 element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-    //                 element.lootwindow, element.npc)
+    public bootLoadBackPack(data: any[]) {
+        data.forEach(element => {
+            if (element.slot) {
+                log('actionBar:90 element ', JSON.stringify(element))
+                let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                )
+                // let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
+                //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                //     element.lootwindow, element.npc)
 
-    //             this.setSlot(element.slot)
-    //             potion.setslot = element.slot
-    //             potion.updateLoc(element.slot)
-    //             this._mybackpackcontents.push(potion)
-    //             potion.hide()
-    //         }
-    //     });
-    //     //log('loading player backpack on boot ', data)
-    //     // data.forEach((element: { slot: number; image: any; }) =>  {
-    //     //   if(element.slot) {
-    //     //     let item = new Item(new Texture(element.image), element.slot, null, null, null, null, null, null, null, null, null, null, undefined, null)
-    //     //     this.setSlot(element.slot)
-    //     //     item.setslot = element.slot
-    //     //     item.updateLoc(element.slot)
-    //     //     this._mybackpackcontents.push(item)
-    //     //   }
-    //     // });
-    // }
+                this.setSlot(element.slot)
+                item.setslot = element.slot
+                item.updateLoc(element.slot)
+                this._mybackpackcontents.push(item)
+                item.hide()
+            }
+        });
+    }
 
     private setSlot(slot: number) {
         if (slot == 10) {
@@ -344,10 +331,10 @@ export class BackPack {
         let obj = Singleton.getInstance()
         this._bp.visible = true;
         this._charbutton.visible = true;
-        // if (obj.playerclass == "Magician") {
-        //     this._spellbutton.visible = true;
-        // }
-        // this.getcontents()
+        if (obj.playerclass == "Magician") {
+            this._spellbutton.visible = true;
+        }
+        this.getcontents()
         this.backpacksound.play()
         this.bpopen = true
 
