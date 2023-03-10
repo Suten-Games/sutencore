@@ -5,8 +5,8 @@ import { SoundBox } from "./soundBox";
 import { LifeItem } from "src/components/lifeItemComponent";
 import { MobState } from "src/components/mobStateComponent";
 import { TradeWindow } from "src/gameUI/tradeWindow";
+import { Item } from "./item";
 //import { Player } from "../gameObjects/player";
-//import { Item } from "../gameObjects/item";
 //import { closeSocket } from "../gameFunctions/wsConnection";
 //import { LootWindow } from "src/gameUI/lootWindow";
 //import { CornerLabel, UIBar } from "node_modules/@suten-games/ui-utils/index";
@@ -28,9 +28,9 @@ export class Singleton {
     private _playercharisma: number = 0;
     private _playerarmor: number = 0;
     private _weapon: string = "";
-    // private _playerspellbook: Array<Item> = [];
-    // private _playerbackpack: Array<Item> = [];
-    // private _playeractionbar: Array<Item> = [];
+    private _playerspellbook: Array<Item> = [];
+    private _playerbackpack: Array<Item> = [];
+    private _playeractionbar: Array<Item> = [];
     private _playeractivespells: Array<object> = [];
     private _playerquestlog: Array<object> = [];
     private _gameover: boolean = false;
@@ -306,13 +306,13 @@ export class Singleton {
     //     this._lootwindows.push(val);
     // }
 
-    // set playerbackpack(val) {
-    //     this._playerbackpack.push(val)
-    // }
+    playerbackpack(val: any) {
+        this._playerbackpack.push(val)
+    }
 
-    // get playerbackpack() {
-    //     return this._playerbackpack
-    // }
+    showbackpack() {
+        return this._playerbackpack
+    }
 
     // set playerspellbook(val) {
     //     this._playerspellbook.push(val)
