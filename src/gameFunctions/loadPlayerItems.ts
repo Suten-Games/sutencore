@@ -14,6 +14,8 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     //       // obj.manal1 = balance.l1
     obj.manal1 = 0
 
+    ui.bp.resetCharWindow()
+
     log('json.actionbar ', json.actionbar)
     log('json.backpack ', json.backpack)
 

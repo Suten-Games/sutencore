@@ -409,7 +409,7 @@ export class Player {
 
     weapon(weapon: Texture, weapontext: string, actionbar: any, backpack: any, lootimage: any, slot: number) {
         log('calling backpack.showCharWindow from the player.weapon function')
-        //this.backpack.showCharWindow(weapon, weapontext, this._combatLog, actionbar, backpack, lootimage, slot)
+        this.backpack.showCharWindow(weapon, weapontext, this._combatLog, actionbar, backpack, lootimage, slot)
     }
 
     changeClass(charclass: string, weapon: string) {

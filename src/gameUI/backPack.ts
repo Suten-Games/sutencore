@@ -2,7 +2,7 @@ import { Item } from "src/gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
-// import { CharWindow } from "./charWindow";
+import { CharWindow } from "./charWindow";
 // import { SpellBook } from "./spellBook";
 
 
@@ -54,6 +54,7 @@ export class BackPack {
         this._bp.sourceHeight = 951;
         this._bp.visible = false;
         this._mybackpackcontents = obj.showbackpack()
+        //   this._isOpen = false;
         //this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
         this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
         this._charbutton.hAlign = "right"
@@ -84,7 +85,7 @@ export class BackPack {
         this._spellbutton.visible = false;
         this._spellbutton.onClick = new OnPointerDown(
             (e) => {
-                //this._charwindow.flip()
+                this._charwindow.flip()
                 log('open spellbook')
                 //this._spellbookwindow.show()
             },
@@ -97,22 +98,22 @@ export class BackPack {
     }
 
 
-    // public resetCharWindow() {
-    //     //log('resetting char window')
-    //     let obj = Singleton.getInstance()
-    //     if (obj.playerclass == 'Rogue') {
-    //         this._charwindow = new CharWindow(this._canvas, resources.interface.rogueScreen, 'Rogue')
-    //     } else if (obj.playerclass == 'Warrior') {
-    //         this._charwindow = new CharWindow(this._canvas, resources.interface.warriorScreen, 'Warrior')
-    //     } else if (obj.playerclass == 'Berzerker') {
-    //         this._charwindow = new CharWindow(this._canvas, resources.interface.berzerkerScreen, 'Berzerker')
-    //     } else if (obj.playerclass == 'Magician') {
-    //         this._charwindow = new CharWindow(this._canvas, resources.interface.mageScreen, "Magician")
-    //     } else {
-    //         this._charwindow = new CharWindow(this._canvas, resources.interface.characterScreen, 'Adventurer')
-    //     }
-    //     this._charwindow.setCharLoot()
-    // }
+    public resetCharWindow() {
+        log('debug - resetting char window')
+        let obj = Singleton.getInstance()
+        if (obj.playerclass == 'Rogue') {
+            this._charwindow = new CharWindow(this._canvas, resources.interface.rogueScreen, 'Rogue')
+        } else if (obj.playerclass == 'Warrior') {
+            this._charwindow = new CharWindow(this._canvas, resources.interface.warriorScreen, 'Warrior')
+        } else if (obj.playerclass == 'Berzerker') {
+            this._charwindow = new CharWindow(this._canvas, resources.interface.berzerkerScreen, 'Berzerker')
+        } else if (obj.playerclass == 'Magician') {
+            this._charwindow = new CharWindow(this._canvas, resources.interface.mageScreen, "Magician")
+        } else {
+            this._charwindow = new CharWindow(this._canvas, resources.interface.characterScreen, 'Adventurer')
+        }
+        this._charwindow.setCharLoot()
+    }
 
     public selectSlot(item: Item): number {
         if (!this._slot10) {
@@ -226,12 +227,12 @@ export class BackPack {
         return this._playerclass
     }
 
-    // public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot: any) {
-    //     log('calling charwindow.setcharloot from the backback showcharwindow function')
-    //     this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
-    //     //log('calling charwindow.flip from the backpack showcharwindow function')
-    //     this._charwindow.flip()
-    // }
+    public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot: any) {
+        log('calling charwindow.setcharloot from the backback showcharwindow function')
+        this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
+        log('calling charwindow.flip from the backpack showcharwindow function')
+        this._charwindow.flip()
+    }
 
     public bootLoadBackPack(data: any[]) {
         log(`debug: 12 Inside bootLoadBackPack`)
