@@ -234,6 +234,8 @@ export class BackPack {
     // }
 
     public bootLoadBackPack(data: any[]) {
+        log(`debug: 12 Inside bootLoadBackPack`)
+
         data.forEach(element => {
             if (element.slot) {
                 log('actionBar:90 element ', JSON.stringify(element))

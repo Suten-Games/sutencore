@@ -310,6 +310,10 @@ export class Singleton {
         this._playerbackpack.push(val)
     }
 
+    get bpack() {
+        return this._playerbackpack 
+    }
+
     showbackpack() {
         return this._playerbackpack
     }
@@ -333,6 +337,10 @@ export class Singleton {
 
     playeractionbar(val: any) {
         this._playeractionbar.push(val)
+    }
+
+    get abar() {
+        return this._playeractionbar 
     }
 
     fetchactionbar() {

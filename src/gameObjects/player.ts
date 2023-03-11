@@ -388,10 +388,10 @@ export class Player {
 
     trinket(text: string, desc: string, slot: number, lootitem: Item) {
         log('inside the player trinket method')
-        this._questlog.quest(text, desc);
-        log('calling questlog.setabandon')
-        this._questlog.setabandon(slot, lootitem);
-        this._questlog.flip()
+        // this._questlog.quest(text, desc);
+        // log('calling questlog.setabandon')
+        // this._questlog.setabandon(slot, lootitem);
+        // this._questlog.flip()
 
         if (desc == 'Orc Tooth') {
             this._combatLog.text = `You have picked up an Orc Tooth. Interesting.`;

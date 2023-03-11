@@ -1,3 +1,4 @@
+import { Player } from "src/gameObjects/player";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
@@ -22,7 +23,7 @@ export class TradeWindow {
         false
     );
 
-    constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, combatLog: CombatLog) {
+    constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, player: Player, combatLog: CombatLog) {
         this._canvas = canvas;
         this.obj.canvas = canvas;
         this._image = image;

@@ -30,52 +30,52 @@ export class ActionBar {
         this._myactionbarcontents = obj.fetchactionbar()
     }
 
-    public selectSlot(potion: Item): number {
+    public selectSlot(item: Item): number {
         // log(' in selectSlot')
         if (!this._slot1) {
             this._slot1 = 'filled'
-            //potion.updateLoc(1)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(1)
+            this._myactionbarcontents.push(item)
             return 1
         } else if (!this._slot2) {
             this._slot2 = 'filled'
-            //potion.updateLoc(2)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(2)
+            this._myactionbarcontents.push(item)
             return 2
         } else if (!this._slot3) {
             this._slot3 = 'filled'
-            //potion.updateLoc(3)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(3)
+            this._myactionbarcontents.push(item)
             return 3
         } else if (!this._slot4) {
             this._slot4 = 'filled'
-            //potion.updateLoc(4)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(4)
+            this._myactionbarcontents.push(item)
             return 4
         } else if (!this._slot5) {
             this._slot5 = 'filled'
-            //potion.updateLoc(5)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(5)
+            this._myactionbarcontents.push(item)
             return 5
         } else if (!this._slot6) {
             this._slot6 = 'filled'
-            //potion.updateLoc(6)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(6)
+            this._myactionbarcontents.push(item)
             return 6
         } else if (!this._slot7) {
             this._slot7 = 'filled'
-            //potion.updateLoc(7)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(7)
+            this._myactionbarcontents.push(item)
             return 7
         } else if (!this._slot8) {
             this._slot8 = 'filled'
-            //potion.updateLoc(8)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(8)
+            this._myactionbarcontents.push(item)
             return 8
         } else if (!this._slot9) {
             this._slot9 = 'filled'
-            //potion.updateLoc(9)
-            this._myactionbarcontents.push(potion)
+            item.updateLoc(9)
+            this._myactionbarcontents.push(item)
             return 9
         } else {
             return 0
@@ -84,6 +84,8 @@ export class ActionBar {
 
 
     public bootLoadActionBar(data: any[]) {
+        log(`debug: 13 Inside bootLoadActionBar`)
+
         let obj = Singleton.getInstance();
         data.forEach(element => {
             if (element.slot) {
@@ -101,7 +103,7 @@ export class ActionBar {
                 if (element.itemtype != "spell" || element.itemtype == "spell" && obj.playerclass == "Magician") {
                     this.setSlot(element.slot)
                     item.setslot = element.slot
-                    //potion.updateLoc(element.slot)
+                    item.updateLoc(element.slot)
                     this._myactionbarcontents.push(item)
                 }
 
