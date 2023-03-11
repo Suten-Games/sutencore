@@ -7,6 +7,7 @@ import { MobState } from "src/components/mobStateComponent";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { Item } from "./item";
 import { Player } from "./player";
+import { Ispell } from "src/components/spellComponent";
 //import { closeSocket } from "../gameFunctions/wsConnection";
 //import { LootWindow } from "src/gameUI/lootWindow";
 //import { CornerLabel, UIBar } from "node_modules/@suten-games/ui-utils/index";
@@ -59,8 +60,8 @@ export class Singleton {
     private _tradewindow: TradeWindow;
     private _socketclass: any;
     private _inDuat: boolean = false;
-    // private _allspells: Map<string, Ispell>;
-    // private _scribedspells: Map<string, Ispell>;
+    private _allspells: Map<string, Ispell>;
+    private _scribedspells: Map<string, Ispell>;
 
     constructor(balance = 0) {
         if (Singleton.instance) {
@@ -109,13 +110,13 @@ export class Singleton {
         return this._playerclass
     }
 
-    // set allspells(val) {
-    //     this._allspells.set("amunsshielding", val)
-    // }
+    set allspells(val) {
+        this._allspells.set("amunsshielding", val)
+    }
 
-    // get allspells() {
-    //     return this._allspells
-    // }
+    get allspells() {
+        return this._allspells
+    }
 
     set actionbar(val) {
         this._actionbar = val;
@@ -318,13 +319,17 @@ export class Singleton {
         return this._playerbackpack
     }
 
-    // set playerspellbook(val) {
-    //     this._playerspellbook.push(val)
-    // }
+    set playerspellbook(val) {
+        this._playerspellbook.push(val)
+    }
 
-    // get playerspellbook() {
-    //     return this._playerspellbook;
-    // }
+    fetchspellbook() {
+        return this._playerspellbook
+    }
+
+    get playerspellbook() {
+        return this._playerspellbook;
+    }
 
 
     set playeractivespells(val) {

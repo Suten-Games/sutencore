@@ -7,11 +7,11 @@ import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
 import { Player } from "./player";
 import { ParticleSystem } from "src/gameSystems/ParticleSystem";
+import { SpellScroll } from "src/gameUI/spellScroll";
+import { Ispell } from "src/components/spellComponent";
+import { setTimeout } from "src/gameUtils/timeOut";
 // import { LootWindow } from "../gameUI/lootWindow";
 // import { Mob } from "./mob";
-// import * as utils from '@dcl/ecs-scene-utils'
-// import { SpellScroll } from "src/gameUI/spellScroll";
-// import { Ispell } from "./Ispell";
 
 
 export class Item {
@@ -50,7 +50,7 @@ export class Item {
     private _isspell;
     private _isability;
     private _isscroll;
-    //private _spellscroll;
+    private _spellscroll: SpellScroll;
     private _scribedspell;
 
     private potionsound = new SoundBox(
@@ -71,7 +71,7 @@ export class Item {
         srcw: number,
         srch: number,
         desc: string,
-        //type: string | null = null,
+        type: string | null = null,
         price: number | null = null,
         itemtype: string | null = null,
         spellshape: string | null = null,
@@ -198,23 +198,23 @@ export class Item {
         this._desc.visible = false;
 
 
-        // if (this.isMerchant) {
-        //     this._lootimage.onClick = new OnClick(() => {
-        //         this.setItemForSale();
-        //     });
-        // } else if (this.isActionBar) {
-        //     log('--')
-        // } else if (this.isPurchase) {
-        //     this._lootimage.onClick = new OnClick(() => {
-        //         this.sendItemDown();
-        //     });
-        // } else if (this.isLootWindow) {
-        //     this._lootimage.onClick = new OnClick(() => {
-        //         this.sendToBackpack()
-        //     })
-        // } else if (this.isSpellBook) {
-        //     log(`item.ts:212 - This is a scribed spell`)
-        // }
+        if (this.isMerchant) {
+            this._lootimage.onClick = new OnClick(() => {
+                this.setItemForSale();
+            });
+        } else if (this.isActionBar) {
+            log('--')
+        } else if (this.isPurchase) {
+            this._lootimage.onClick = new OnClick(() => {
+                this.sendItemDown();
+            });
+        } else if (this.isLootWindow) {
+            this._lootimage.onClick = new OnClick(() => {
+                this.sendToBackpack()
+            })
+        } else if (this.isSpellBook) {
+            log(`item.ts:212 - This is a scribed spell`)
+        }
     }
 
     public image() {
@@ -381,8 +381,8 @@ export class Item {
             if (this._isscroll) {
                 log('item.ts:360 - Clicked on the scroll')
                 log('item.ts:361 - scroll desc: ', this._desc.value)
-                //this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
-                //this._spellscroll.show()
+                this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
+                this._spellscroll.show()
                 log('item.ts:364 - Returning out of isscroll method');
 
                 return
@@ -396,7 +396,7 @@ export class Item {
 
                 ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
                 log("item.ts:415 - calling activateSpell()")
-                //this.activateSpell()
+                this.activateSpell()
 
                 return
             }
@@ -471,22 +471,22 @@ export class Item {
 
 
         let obj = Singleton.getInstance()
-        //let spellbook = obj.allspells
+        let spellbook = obj.allspells
 
         log('item.ts:588  after assigning spellbook')
 
-        //let activespell: Ispell = spellbook.get("amunsshield")
+        let activespell: Ispell = spellbook.get("amunsshield")
 
 
         // log('item.ts:592 - active spell size: ', activespell.size)
         // log('item.ts:593 - active spell duration: ', activespell.duration)
         // log('item.ts:597  setting shield hp')
-        // this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
+        //this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
 
-        // utils.setTimeout(activespell.duration, () => {
-        //     this._activespellimage.visible = false;
-        //     this._player.setShield(0, activespell.ondropmsg[0].line1);
-        // })
+        setTimeout(activespell.duration, () => {
+            this._activespellimage.visible = false;
+            this._player.setShield(0, activespell.ondropmsg[0].line1);
+        })
     }
 
     public sendToBackpack() {

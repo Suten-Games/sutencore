@@ -3,7 +3,7 @@ import { Singleton } from "src/gameObjects/playerDetail";
 import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
 import { CharWindow } from "./charWindow";
-// import { SpellBook } from "./spellBook";
+import { SpellBook } from "./spellBook";
 
 
 export class BackPack {
@@ -31,7 +31,6 @@ export class BackPack {
     private _slot25: any;
     private _mybackpackcontents: any;
     private _playerclass: any;
-    private _player: any;
     private _charwindow: any;
     private _spellbookwindow: any;
 
@@ -55,7 +54,7 @@ export class BackPack {
         this._bp.visible = false;
         this._mybackpackcontents = obj.showbackpack()
         //   this._isOpen = false;
-        //this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
+        this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
         this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
         this._charbutton.hAlign = "right"
         this._charbutton.vAlign = "center";
@@ -85,9 +84,9 @@ export class BackPack {
         this._spellbutton.visible = false;
         this._spellbutton.onClick = new OnPointerDown(
             (e) => {
-                this._charwindow.flip()
+                //this._charwindow.flip()
                 log('open spellbook')
-                //this._spellbookwindow.show()
+                this._spellbookwindow.show()
             },
             {
                 button: ActionButton.PRIMARY,
