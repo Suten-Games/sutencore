@@ -7,7 +7,9 @@ import { MobState } from "src/components/mobStateComponent";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { Item } from "./item";
 import { Player } from "./player";
-import { Ispell } from "src/components/spellComponent";
+import { SpellScroll } from "src/gameUI/spellScroll";
+import { SpellBook } from "src/gameUI/spellBook";
+//import { Ispell } from "src/components/spellComponent";
 //import { closeSocket } from "../gameFunctions/wsConnection";
 //import { LootWindow } from "src/gameUI/lootWindow";
 //import { CornerLabel, UIBar } from "node_modules/@suten-games/ui-utils/index";
@@ -56,18 +58,18 @@ export class Singleton {
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
     private _backPack: BackPack;
+    private _spellScroll: SpellScroll;
+    private _spellBook: SpellBook;
     private _player: Player;
     private _tradewindow: TradeWindow;
     private _socketclass: any;
     private _inDuat: boolean = false;
-    private _allspells: Map<string, Ispell>;
-    private _scribedspells: Map<string, Ispell>;
+    // private _scribedspells: Map<string, Ispell>;
 
     constructor(balance = 0) {
         if (Singleton.instance) {
             throw new Error("Error - use Singleton.getInstance()");
         }
-        //this._allspells = new Map()
         this.member = 0;
         this._inDuat = false;
         this._balance = balance;
@@ -108,14 +110,6 @@ export class Singleton {
 
     get playerclass() {
         return this._playerclass
-    }
-
-    set allspells(val) {
-        this._allspells.set("amunsshielding", val)
-    }
-
-    get allspells() {
-        return this._allspells
     }
 
     set actionbar(val) {
@@ -227,6 +221,22 @@ export class Singleton {
         return this._backPack
     }
 
+    set spellscroll(val) {
+        this._spellScroll = val
+    }
+
+    get spellscroll() {
+        return this._spellScroll
+    }
+
+    set spellbook(val) {
+        this._spellBook = val
+    }
+
+    get spellbook() {
+        return this._spellBook
+    }
+
     set player(val) {
         this._player = val
     }
@@ -311,6 +321,14 @@ export class Singleton {
         this._playerbackpack.push(val)
     }
 
+    playeractionbar(val: any) {
+        this._playeractionbar.push(val)
+    }
+
+    playerspellbook(val: any) {
+        this._playerspellbook.push(val)
+    }
+
     get bpack() {
         return this._playerbackpack 
     }
@@ -319,18 +337,17 @@ export class Singleton {
         return this._playerbackpack
     }
 
-    set playerspellbook(val) {
-        this._playerspellbook.push(val)
+    get sbook() {
+        return this._playerspellbook
+    }
+
+    fetchactionbar() {
+        return this._playeractionbar
     }
 
     fetchspellbook() {
         return this._playerspellbook
     }
-
-    get playerspellbook() {
-        return this._playerspellbook;
-    }
-
 
     set playeractivespells(val) {
         this._playeractivespells.push(val)
@@ -340,19 +357,10 @@ export class Singleton {
         return this._playeractivespells
     }
 
-    playeractionbar(val: any) {
-        this._playeractionbar.push(val)
-    }
-
     get abar() {
         return this._playeractionbar 
     }
-
-    fetchactionbar() {
-        return this._playeractionbar
-    }
-
-
+   
     set playerquestlog(val) {
         this._playerquestlog.push(val)
     }

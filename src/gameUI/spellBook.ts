@@ -1,6 +1,8 @@
 import resources from "../resources";
 import { Item } from "../gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
+import { slotPicker } from "src/gameUtils/slotPicker";
+import { getspell } from "src/gameObjects/spells";
 
 export class SpellBook {
     private _canvas;
@@ -23,11 +25,13 @@ export class SpellBook {
 
 
     constructor(canvas: any, image: any) {
+        //log('in the spellBook constructor')
         let obj = Singleton.getInstance()
         this._canvas = canvas;
         this.obj.canvas = canvas;
         this._image = image;
-        this._myspellbookcontents = obj.playerspellbook;
+        //this._myspellbookcontents = obj.playerspellbook;
+        this._myspellbookcontents = obj.fetchspellbook();
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "left";
         this._bp.vAlign = "center";
@@ -79,50 +83,107 @@ export class SpellBook {
 
     }
 
-    public selectSlot(item: Item) {
+    public selectSlot() {
         if (!this._slot1) {
             this._slot1 = 'filled';
-            this._myspellbookcontents.push(item)
             return 51
         } else if (!this._slot2) {
             this._slot2 = 'filled';
-            this._myspellbookcontents.push(item)
             return 52
         } else if (!this._slot3) {
             this._slot3 = 'filled';
-            this._myspellbookcontents.push(item)
             return 53
         } else if (!this._slot4) {
             this._slot4 = 'filled';
-            this._myspellbookcontents.push(item)
             return 54
         } else if (!this._slot5) {
             this._slot5 = 'filled';
-            this._myspellbookcontents.push(item)
             return 55
         } else if (!this._slot6) {
             this._slot6 = 'filled'
-            this._myspellbookcontents.push(item)
             return 56
         } else if (!this._slot7) {
             this._slot7 = 'filled'
-            this._myspellbookcontents.push(item)
             return 57
         } else if (!this._slot8) {
             this._slot8 = 'filled'
-            this._myspellbookcontents.push(item)
             return 58
         } else {
             return 90
         }
     }
 
+    private setSlot(slot: number) {
+        if (slot == 51) {
+            this._slot1 = 'filled';
+        } else if (slot == 52) {
+            this._slot2 = 'filled';
+        } else if (slot == 53) {
+            this._slot3 = 'filled';
+        } else if (slot == 54) {
+            this._slot4 = 'filled'
+        } else if (slot == 55) {
+            this._slot5 = 'filled'
+        } else if (slot == 56) {
+            this._slot6 = 'filled'
+        } else if (slot == 57) {
+            this._slot7 = 'filled'
+        } else if (slot == 58) {
+            this._slot8 = 'filled'
+        } 
+    }
+
     private getcontents() {
-        log(`spellBook.ts:141 - In getContents method size of spellbook: ${this._myspellbookcontents.length} `)
-        this._myspellbookcontents.forEach(item => {
-            log(`spellBook.ts:142 - Calling item.show()`)
-            item.show()
+        this._myspellbookcontents.forEach(spell => {
+            spell.show()
         })
+    }
+
+    public bootLoadSpellBook(data: any[]) {
+        log(`debug: 13 Inside bootSpellBook`)
+
+        data.forEach(element => {
+            if (element.slot) {
+                // log('spellBook element ', JSON.stringify(element))
+                // log('spellBook element image ', JSON.stringify(element.image))
+
+                let slot = this.selectSlot()
+
+                let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                )
+
+                // log('spellBook item slot before set: ', item.slot)
+                // log('spellBook slot ', slot)
+                this.setSlot(slot)
+                //log('spellBook item slot after set: ', item.slot)
+
+                //item.updateLoc(slot)
+                this._myspellbookcontents.push(item)
+                
+                item.hide()
+            }
+        })
+    }
+
+    public scribeSpell(spellname:string) {
+        log('inside scribeSpell')
+        // let dbspell = getspell(spellname)
+        // let slot = this.selectSlot()
+
+        // let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype, 
+        // 5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound)
+
+        // this.setSlot(slot)
+
+        // this._myspellbookcontents.push(spell)
+
+        // spell.hide()
+    }
+
+    public test() {
+        log("Testing 1,2,3")
+        return true
     }
 
     get visible() {
@@ -130,10 +191,10 @@ export class SpellBook {
     }
 
     public show() {
-        log(`spellBook.ts:152 - In showmethod()`)
+        //log(`spellBook.ts:152 - In showmethod()`)
         this._bp.visible = true;
         this._closebutton.visible = true;
-        log(`spellBookts:155 - Calling getContents method`)
+        //log(`spellBookts:155 - Calling getContents method`)
         this.getcontents()
     }
 
@@ -142,5 +203,8 @@ export class SpellBook {
         this._buybutton.visible = false;
         this._closebutton.visible = false;
         this._buytext.visible = false;
+        for (let spell of this._myspellbookcontents) {
+            spell.hide()
+        }
     }
 }

@@ -1,6 +1,8 @@
 import resources from "../resources";
-import { Item } from "../gameObjects/item";
+import { Ispell } from "src/components/spellComponent";
+import { getspell } from "src/gameObjects/spells";
 import { Singleton } from "src/gameObjects/playerDetail";
+import { SpellBook } from "./spellBook";
 
 export class SpellScroll {
     private _canvas;
@@ -9,24 +11,19 @@ export class SpellScroll {
     private _closebutton;
     private _scribebutton;
     private _buytext;
-    private obj = Singleton.getInstance();
-    private _spellbook;
-    private _spelldetails;
-    private _lootbig;
+    private _lootbig:UIImage;
     private _desc1;
     private _title;
     private _armor;
+    private _spell:Ispell;
+    private _spellbook: SpellBook;
 
-    constructor(canvas: any, image: any, spellname: string) {
+    constructor(canvas: any, image: any) {
         let obj = Singleton.getInstance();
+        this._spellbook = obj.spellbook
         this._canvas = canvas;
-        this.obj.canvas = canvas;
         this._image = image;
-        this._spellbook = obj.allspells
-        log(`spellScroll.ts:42 - spellbook: ${JSON.stringify(this._spellbook)}`)
-        this._spelldetails = this._spellbook.get(spellname)
 
-        
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "left";
         this._bp.vAlign = "center";
@@ -38,17 +35,6 @@ export class SpellScroll {
         this._bp.sourceHeight = 644; //Old Style
         this._bp.visible = false;
 
-        this._lootbig = new UIImage(this._canvas, this._spelldetails.image)
-        this._lootbig.hAlign = "center";
-        this._lootbig.vAlign = "bottom";
-        this._lootbig.width = "5%";
-        this._lootbig.height = "8%";
-        this._lootbig.positionY = "68%";
-        this._lootbig.positionX = "-30%";
-        this._lootbig.sourceWidth = 122;
-        this._lootbig.sourceHeight = 120;
-        this._lootbig.visible = false;
-
         this._title = new UIText(canvas);
         this._title.fontSize = 14;
         this._title.width = 120;
@@ -57,7 +43,7 @@ export class SpellScroll {
         this._title.vAlign = "center";
         this._title.positionY = "23%";
         this._title.positionX = "23%";
-        this._title.value = this._spelldetails.name;
+        //this._title.value = this._spell.name;
         this._title.visible = false;
 
         this._desc1 = new UIText(canvas);
@@ -68,7 +54,7 @@ export class SpellScroll {
         this._desc1.vAlign = "center";
         this._desc1.positionY = "10%";
         this._desc1.positionX = "17%";
-        this._desc1.value = this._spelldetails.desc;
+        //this._desc1.value = this._spell.desc;
         this._desc1.visible = false;
 
         this._armor = new UIText(canvas);
@@ -130,27 +116,33 @@ export class SpellScroll {
         return this._bp.visible;
     }
 
+    public setSpell(spellname:string) {
+        log('spellScroll - Inside setSpell')
+
+        let spell = getspell(spellname)
+        this._spell = spell
+
+        this._lootbig = new UIImage(this._canvas, spell.image)
+        this._lootbig.hAlign = "center";
+        this._lootbig.vAlign = "bottom";
+        this._lootbig.width = "5%";
+        this._lootbig.height = "8%";
+        this._lootbig.positionY = "68%";
+        this._lootbig.positionX = "-30%";
+        this._lootbig.sourceWidth = 122;
+        this._lootbig.sourceHeight = 120;
+        //this._lootbig.visible = false;
+        this.show()
+    }
+
     private scribe() {
-        log('spellScroll.ts:157 - checking for requirements')
-        log('spellScroll.ts:158 - Scribing the spell to spellbook')
-        let element = { "image": "images/spells/painterly-spell-icons-1/protect-jade-1.png", "slot": 51, "srcw": 122, "srch": 120, "desc": "Jade Shielding", "type": null, "price": 4, "itemtype": "scribedscroll", "spellshape": "BoxShape", "spellstart": 10, "spellend": 90, "sound": null }
-
-        // let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-        //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-        //     undefined, null)
-        
-        let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, 
-            element.type, element.price, element.itemtype, element.spellshape, element.spellstart, 
-            element.spellend, element.sound)
-
-        log(`spellScroll.ts:165 - Pushing Spell onto the playerspellbook`)
-        this.obj.playerspellbook.push(item)
-
-        //this.setSlot(element.slot)
-        item.setslot = element.slot
-        item.updateLoc(element.slot)
-        //this._mybackpackcontents.push(item)
-        item.hide()
+        log('need to scribe the spell without reference to UI')
+        //let ui = UI.getInstance()
+        let val = this._spellbook.test()
+        log(val)
+        //this._spellbook.scribeSpell(this._spell.name)
+        //ui.sb.scribeSpell(this._spell.name)
+        this.hide()
     }
 
     public show() {

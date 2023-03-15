@@ -38,6 +38,8 @@ export async function getEthData(ui: UI, player:Player) {
     obj.player = player;
     obj.actionbar = ui.ab;
     obj.backpack = ui.bp;
+    obj.spellscroll = ui.ss;
+    obj.spellbook = ui.sb;
 
     return lowerCaseAddress
 }

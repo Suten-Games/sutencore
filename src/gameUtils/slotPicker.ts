@@ -231,50 +231,50 @@ export function slotPicker(slot: number) {
             break;
         case 52:
             position = "sb";
-            positionY = "29.4%";
-            positionX = "26.9%";
+            positionY = "14.8%";
+            positionX = "17.2%";
             fontPositionY = "31%";
-            fontPositionX = "30%";
+            fontPositionX = "19.5%";
             break;
         case 53:
             position = "sb";
-            positionY = "21.4%";
-            positionX = "16.2%";
+            positionY = "4.8%";
+            positionX = "17.2%";
             fontPositionY = "23%";
             fontPositionX = "19.5%";
             break;
         case 54:
             position = "sb";
-            positionY = "21.4%";
-            positionX = "26.9%";
-            fontPositionY = "23%";
+            positionY = "-4.8%";
+            positionX = "17.2%";
+            fontPositionY = "20%";
             fontPositionX = "30%";
             break;
         case 55:
             position = "sb";
-            positionY = "13.6%";
-            positionX = "16.2%";
+            positionY = "25.8%";
+            positionX = "35.2%";
             fontPositionY = "15%";
             fontPositionX = "19.5%";
             break;
         case 56:
             position = "sb";
-            positionY = "13.6%";
-            positionX = "26.9%";
+            positionY = "14.8%";
+            positionX = "35.2%";
             fontPositionY = "15%";
             fontPositionX = "30%";
             break;
         case 57:
             position = "sb";
-            positionY = "5.5%";
-            positionX = "16.2%";
+            positionY = "4.8%";
+            positionX = "35.2%";
             fontPositionY = "7%";
             fontPositionX = "19.5%";
             break;
         case 58:
             position = "sb";
-            positionY = "5.5%";
-            positionX = "26.9%";
+            positionY = "-4.8%";
+            positionX = "35.2%";
             fontPositionY = "7%";
             fontPositionX = "30%";
             break;

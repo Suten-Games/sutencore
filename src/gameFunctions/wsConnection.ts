@@ -66,7 +66,7 @@ export async function joinSocketsServer(
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
-            log("in wsConnection - msg: ", msg);
+            //log("in wsConnection - msg: ", msg);
 
         } catch (error) {
             log("ws error ", error);
@@ -165,8 +165,8 @@ class pingSystem implements ISystem {
                 }
             });
 
-            log('m3 ', m3)
-            log('m4 ', m4)
+            // log('m3 ', m3)
+            // log('m4 ', m4)
 
             //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 

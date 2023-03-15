@@ -7,9 +7,10 @@ import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
 import { Player } from "./player";
 import { ParticleSystem } from "src/gameSystems/ParticleSystem";
-import { SpellScroll } from "src/gameUI/spellScroll";
-import { Ispell } from "src/components/spellComponent";
 import { setTimeout } from "src/gameUtils/timeOut";
+import { UI } from "src/gameUI/ui";
+import { setSpell } from "src/gameFunctions/setSpell";
+import { SpellScroll } from "src/gameUI/spellScroll";
 // import { LootWindow } from "../gameUI/lootWindow";
 // import { Mob } from "./mob";
 
@@ -19,6 +20,7 @@ export class Item {
     private _image;
     private _actionBar: ActionBar;
     private _backPack: BackPack;
+    private _spellScroll: SpellScroll;
     private _lootimage;
     private _activespellimage;
     private _desc;
@@ -50,7 +52,7 @@ export class Item {
     private _isspell;
     private _isability;
     private _isscroll;
-    private _spellscroll: SpellScroll;
+    //private _spellscroll: SpellScroll;
     private _scribedspell;
 
     private potionsound = new SoundBox(
@@ -119,6 +121,7 @@ export class Item {
 
         this._actionBar = obj.actionbar;
         this._backPack = obj.backpack;
+        this._spellScroll = obj.spellscroll;
         this._player = obj.player;
         this._questlootclicked = false;
         this._sound = sound;
@@ -172,6 +175,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
+        log('item.ts calling slotPicker with slot: ', slot)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -228,6 +232,8 @@ export class Item {
     public show() {
         if (this._itemtype == "spell") {
             log('item.ts:226 - in  item show')
+            this._lootimage.visible = true;
+            this._desc.visible = true;
         }
 
         if (this.isLootWindow) {
@@ -379,11 +385,14 @@ export class Item {
 
 
             if (this._isscroll) {
+                //let ui = UI.getInstance()
                 log('item.ts:360 - Clicked on the scroll')
-                log('item.ts:361 - scroll desc: ', this._desc.value)
-                this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
-                this._spellscroll.show()
-                log('item.ts:364 - Returning out of isscroll method');
+                this._spellScroll.setSpell(this._desc.value)
+                //this._spellScroll.show()
+
+                // this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
+                // this._spellscroll.show()
+                // log('item.ts:364 - Returning out of isscroll method');
 
                 return
             }
@@ -396,7 +405,7 @@ export class Item {
 
                 ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
                 log("item.ts:415 - calling activateSpell()")
-                this.activateSpell()
+                //this.activateSpell()
 
                 return
             }
@@ -446,9 +455,9 @@ export class Item {
                 }
             } else {
                 this._player.unusable()
-                this._lootimage.visible = false;
-                this._actionBar.resetSlot(slot);
-                this._backPack.resetSlot(slot);
+                // this._lootimage.visible = false;
+                // this._actionBar.resetSlot(slot);
+                // this._backPack.resetSlot(slot);
             }
 
 
@@ -471,11 +480,11 @@ export class Item {
 
 
         let obj = Singleton.getInstance()
-        let spellbook = obj.allspells
+        //let spellbook = obj.allspells
 
         log('item.ts:588  after assigning spellbook')
 
-        let activespell: Ispell = spellbook.get("amunsshield")
+        //let activespell: Ispell = spellbook.get("amunsshield")
 
 
         // log('item.ts:592 - active spell size: ', activespell.size)
@@ -483,10 +492,10 @@ export class Item {
         // log('item.ts:597  setting shield hp')
         //this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
 
-        setTimeout(activespell.duration, () => {
-            this._activespellimage.visible = false;
-            this._player.setShield(0, activespell.ondropmsg[0].line1);
-        })
+        // setTimeout(activespell.duration, () => {
+        //     this._activespellimage.visible = false;
+        //     this._player.setShield(0, activespell.ondropmsg[0].line1);
+        // })
     }
 
     public sendToBackpack() {
