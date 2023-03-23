@@ -6,7 +6,7 @@ import { UI } from "src/gameUI/ui";
 import { writeToCl } from "./writeToCL";
 
 export async function getEthData(ui: UI, player:Player) {
-    log('calling getUserAccount()')
+    //log('calling getUserAccount()')
     let lowerCaseAddress: string = "";
     let address = await getUserAccount();
     let userdata = await getUserData();

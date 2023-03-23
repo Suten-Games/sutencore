@@ -222,7 +222,7 @@ export function slotPicker(slot: number) {
             fontPositionX = "30%";
             break;
         case 51:
-            log(`slotPicker.ts - Slot 51`)
+            //log(`slotPicker.ts - Slot 51`)
             position = "sb";
             positionY = "25.8%";
             positionX = "17.2%";
@@ -281,7 +281,7 @@ export function slotPicker(slot: number) {
         case 60:
             position = "as";
             positionX = "-2%";
-            log('slotPicker.ts:226 - inside case 60');
+            //log('slotPicker.ts:226 - inside case 60');
         default:
             break;
     }
@@ -303,7 +303,7 @@ export function slotPicker(slot: number) {
             height = "5%";
             break;
         case "sb":
-            log(`slotPicker.ts:304 - Inside sb (spellbook)`)
+            //log(`slotPicker.ts:304 - Inside sb (spellbook)`)
             isSpellBook = true;
             hAlign = "left"
             vAlign = "center";
@@ -316,7 +316,7 @@ export function slotPicker(slot: number) {
             fontVAlign = "center";
             break
         case "as":
-            log('slotPicker.ts:248 - inside as block');
+            //log('slotPicker.ts:248 - inside as block');
             isActiveSpell = true;
             hAlign = "right";
             vAlign = "center";

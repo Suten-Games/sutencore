@@ -268,7 +268,7 @@ export class CharWindow {
         //set rustyaxe as the default loot texture for now.
 
 
-        log('charWindow.ts:260 - in setCharLoot ', lootimage)
+        //log('charWindow.ts:260 - in setCharLoot ', lootimage)
 
 
         if (!this._open) {
@@ -332,7 +332,7 @@ export class CharWindow {
                     charwindowimage = resources.interface.mageScreen;
                 }
 
-                log('charWindow.ts:320 - setting up the ebutton parameters');
+                //log(':320 - setting up the ebutton parameters');
 
                 this._discardbutton.onClick = new OnPointerDown(
                     (e) => {
@@ -397,7 +397,7 @@ export class CharWindow {
     }
 
     public flip() {
-        log('charWindow.ts:348 - in the charWindow flip')
+        //log('charWindow.ts:348 - in the charWindow flip')
         let obj = Singleton.getInstance();
 
         if (!this._loot) {

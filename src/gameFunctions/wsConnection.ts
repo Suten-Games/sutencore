@@ -58,7 +58,8 @@ export async function joinSocketsServer(
     //log("socket connection to: ", server + realm.displayName + "-rivers");
 
     socket.onopen = async function (e) {
-        log("wsConnection successful ", e);
+        //log("wsConnection successful ", e);
+        let good = "good";
     };
 
     // for each ws message that arrives
@@ -165,8 +166,21 @@ class pingSystem implements ISystem {
                 }
             });
 
-            // log('m3 ', m3)
-            // log('m4 ', m4)
+            let m5 = obj.sbook.map((lootitem) => {
+                return {
+                    image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(),
+                    spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                    spellend: lootitem.spellend(), sound: lootitem.sound() 
+                }
+            });
+
+            log('sutenBase ', sutenBase)
+            log('hp ', obj.playerhp)
+            log('address ', obj.playeraddress)
+            log('m3 ', m3)
+            log('m4 ', m4)
+            log('m5 ', m5) 
 
             //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 
@@ -179,6 +193,7 @@ class pingSystem implements ISystem {
                         address: obj.playeraddress,
                         backpack: m3,
                         actionbar: m4,
+                        spellbook: m5
                     },
                 })
             );
@@ -201,8 +216,8 @@ class updateSystem implements ISystem {
             let obj = Singleton.getInstance();
             if (obj.localmobstate && obj.localmobstate.length > 0) {
                 //Only send a sync if there is something in localmobstate to send
-                log(`sending an updateSystem call to the server`)
-                log(`sending obj.localmobstate ${JSON.stringify(obj.localmobstate)}`)
+                // log(`sending an updateSystem call to the server`)
+                // log(`sending obj.localmobstate ${JSON.stringify(obj.localmobstate)}`)
 
                 this.interval = updateInterval;
                 //log('sending  ', JSON.stringify(obj.localmobstate))

@@ -387,7 +387,7 @@ export class Player {
     }
 
     trinket(text: string, desc: string, slot: number, lootitem: Item) {
-        log('inside the player trinket method')
+        //log('inside the player trinket method')
         // this._questlog.quest(text, desc);
         // log('calling questlog.setabandon')
         // this._questlog.setabandon(slot, lootitem);
@@ -408,7 +408,7 @@ export class Player {
 
 
     weapon(weapon: Texture, weapontext: string, actionbar: any, backpack: any, lootimage: any, slot: number) {
-        log('calling backpack.showCharWindow from the player.weapon function')
+        //log('calling backpack.showCharWindow from the player.weapon function')
         this.backpack.showCharWindow(weapon, weapontext, this._combatLog, actionbar, backpack, lootimage, slot)
     }
 

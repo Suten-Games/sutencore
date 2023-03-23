@@ -175,7 +175,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
-        log('item.ts calling slotPicker with slot: ', slot)
+        //log('item.ts calling slotPicker with slot: ', slot)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -217,7 +217,8 @@ export class Item {
                 this.sendToBackpack()
             })
         } else if (this.isSpellBook) {
-            log(`item.ts:212 - This is a scribed spell`)
+            //log(`item.ts:212 - This is a scribed spell`)
+            let stuff = "stuff"
         }
     }
 

@@ -84,12 +84,12 @@ export class ActionBar {
 
 
     public bootLoadActionBar(data: any[]) {
-        log(`debug: 13 Inside bootLoadActionBar`)
+        //log(`debug: 13 Inside bootLoadActionBar`)
 
         let obj = Singleton.getInstance();
         data.forEach(element => {
             if (element.slot) {
-                log('actionBar:90 element ', JSON.stringify(element))
+                //log('actionBar:90 element ', JSON.stringify(element))
                 // let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
                 //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
                 //     element.lootwindow, element.npc)
@@ -98,7 +98,7 @@ export class ActionBar {
                     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
                 )
 
-                log(`actionBar:99 class: ${obj.playerclass}`)
+                //log(`actionBar:99 class: ${obj.playerclass}`)
 
                 if (element.itemtype != "spell" || element.itemtype == "spell" && obj.playerclass == "Magician") {
                     this.setSlot(element.slot)

@@ -8,7 +8,7 @@ export async function connectToServer(ui: UI,json: PlayerState, player: Player) 
     log(`debug: 8 Inside connectToServer`)
 
     try {
-        log('joining socket server')
+        //log('joining socket server')
         let socket = await joinSocketsServer(
             ui.gc,
             ui.ab,

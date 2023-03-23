@@ -140,45 +140,58 @@ export class SpellBook {
     }
 
     public bootLoadSpellBook(data: any[]) {
-        log(`debug: 13 Inside bootSpellBook`)
+        log(`debug: 13 Inside bootSpellBook `, data)
 
         data.forEach(element => {
             if (element.slot) {
-                // log('spellBook element ', JSON.stringify(element))
-                // log('spellBook element image ', JSON.stringify(element.image))
-
-                let slot = this.selectSlot()
-
-                let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
+                //log('element.slot ', element.slot)
+                //let slot = this.selectSlot()
+                //log('creating new item for spellbook')
+                let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
                     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
                 )
-
-                // log('spellBook item slot before set: ', item.slot)
-                // log('spellBook slot ', slot)
-                this.setSlot(slot)
-                //log('spellBook item slot after set: ', item.slot)
-
+                //log('new spellbook item is creating, setting slot')
+                this.setSlot(element.slot)
+                //log('adfter the setSlot call')
                 //item.updateLoc(slot)
+                //log('pushing the new spell to the spellbookcontents array ', this._myspellbookcontents)
                 this._myspellbookcontents.push(item)
                 
                 item.hide()
+            } else {
+                log('Slot was not set in the DB, so picking a slot')
+                let slot = this.selectSlot()
+                //log('creating new item for spellbook')
+                let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
+                )
+                //log('new spellbook item is creating, setting slot')
+                this.setSlot(slot)
+                //log('adfter the setSlot call')
+                //item.updateLoc(slot)
+                //log('pushing the new spell to the spellbookcontents array ', this._myspellbookcontents)
+                this._myspellbookcontents.push(item)
+
+                item.hide() 
             }
         })
     }
 
     public scribeSpell(spellname:string) {
         log('inside scribeSpell')
-        // let dbspell = getspell(spellname)
-        // let slot = this.selectSlot()
+        let dbspell = getspell(spellname)
+        let slot = this.selectSlot()
 
-        // let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype, 
-        // 5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound)
+        let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype, 
+        5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound)
 
-        // this.setSlot(slot)
+        this.setSlot(slot)
 
-        // this._myspellbookcontents.push(spell)
+        //log('in scribeSpell, spell before push to array ', JSON.stringify(spell))
 
-        // spell.hide()
+        this._myspellbookcontents.push(spell)
+
+        spell.hide()
     }
 
     public test() {

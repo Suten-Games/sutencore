@@ -98,7 +98,7 @@ export class BackPack {
 
 
     public resetCharWindow() {
-        log('debug - resetting char window')
+        //log('debug - resetting char window')
         let obj = Singleton.getInstance()
         if (obj.playerclass == 'Rogue') {
             this._charwindow = new CharWindow(this._canvas, resources.interface.rogueScreen, 'Rogue')
@@ -227,14 +227,14 @@ export class BackPack {
     }
 
     public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot: any) {
-        log('calling charwindow.setcharloot from the backback showcharwindow function')
+        //log('calling charwindow.setcharloot from the backback showcharwindow function')
         this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
-        log('calling charwindow.flip from the backpack showcharwindow function')
+        //log('calling charwindow.flip from the backpack showcharwindow function')
         this._charwindow.flip()
     }
 
     public bootLoadBackPack(data: any[]) {
-        log(`debug: 12 Inside bootLoadBackPack`)
+        //log(`debug: 12 Inside bootLoadBackPack`)
 
         data.forEach(element => {
             if (element.slot) {

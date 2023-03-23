@@ -117,7 +117,7 @@ export class SpellScroll {
     }
 
     public setSpell(spellname:string) {
-        log('spellScroll - Inside setSpell')
+        //log('spellScroll - Inside setSpell')
 
         let spell = getspell(spellname)
         this._spell = spell
@@ -136,12 +136,9 @@ export class SpellScroll {
     }
 
     private scribe() {
-        log('need to scribe the spell without reference to UI')
-        //let ui = UI.getInstance()
-        let val = this._spellbook.test()
-        log(val)
-        //this._spellbook.scribeSpell(this._spell.name)
-        //ui.sb.scribeSpell(this._spell.name)
+        //log('need to scribe the spell without reference to UI')
+        let obj = Singleton.getInstance();
+        obj.spellbook.scribeSpell(this._spell.name)
         this.hide()
     }
 
