@@ -1,8 +1,8 @@
 import resources from "../resources";
 import { Item } from "../gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
-import { slotPicker } from "src/gameUtils/slotPicker";
 import { getspell } from "src/gameObjects/spells";
+import { addSpellClick } from "src/gameFunctions/spellClick";
 
 export class SpellBook {
     private _canvas;
@@ -135,6 +135,7 @@ export class SpellBook {
 
     private getcontents() {
         this._myspellbookcontents.forEach(spell => {
+            addSpellClick(spell.lootimage, spell.lootdesc())
             spell.show()
         })
     }
@@ -194,20 +195,15 @@ export class SpellBook {
         spell.hide()
     }
 
-    public test() {
-        log("Testing 1,2,3")
-        return true
-    }
-
     get visible() {
         return this._bp.visible;
     }
 
     public show() {
-        //log(`spellBook.ts:152 - In showmethod()`)
+        log(`spellBook.ts:152 - In showmethod()`)
         this._bp.visible = true;
         this._closebutton.visible = true;
-        //log(`spellBookts:155 - Calling getContents method`)
+        log(`spellBookts:155 - Calling getContents method`)
         this.getcontents()
     }
 

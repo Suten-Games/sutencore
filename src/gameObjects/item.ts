@@ -87,6 +87,7 @@ export class Item {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
         this._image = image;
+        log(`item.ts slot: ${slot} itemtype: ${itemtype}`)
         this._itemtype = itemtype;
         this._lootimage = new UIImage(this._canvas, this._image);
         this._lootimage.visible = false;
@@ -272,7 +273,15 @@ export class Item {
         return this._desc.value
     }
 
-    public itemtype() {
+    get lootimage() {
+        return this._lootimage
+    }
+
+    set itemtype(type) {
+        this._itemtype = type
+    }
+
+    get itemtype() {
         return this._itemtype
     }
 
@@ -364,12 +373,24 @@ export class Item {
     //     return 'Added quest click'
     // }
 
+    public addSpellClick() {
+        log('inside addSpellClick')
+        this._lootimage.onClick = new OnPointerDown(
+            (e) => {
+                log('Clicked in addSpellClick')
+            },
+            {
+                button: ActionButton.PRIMARY,
+                hoverText: "Add to ActionBar",
+            }
+        );
+    }
+
     public updateLoc(slot: number) {
 
         let ps: ParticleSystem
         this._lootimage.visible = true;
         if (this._spellshape) {
-
             let soundstring = "sounds/" + this._sound + ".mp3"
             let sound = new AudioClip(soundstring)
             ps = new ParticleSystem(2, 2, this._spellshape, sound)
@@ -386,14 +407,8 @@ export class Item {
 
 
             if (this._isscroll) {
-                //let ui = UI.getInstance()
                 log('item.ts:360 - Clicked on the scroll')
                 this._spellScroll.setSpell(this._desc.value)
-                //this._spellScroll.show()
-
-                // this._spellscroll = new SpellScroll(this._canvas, resources.interface.spellScroll, this._desc.value)
-                // this._spellscroll.show()
-                // log('item.ts:364 - Returning out of isscroll method');
 
                 return
             }
@@ -467,197 +482,115 @@ export class Item {
 
     public activateSpell() {
         log('item.ts:478 - inside activateSpell');
-        let slot = 60;
-        let slotposition = slotPicker(slot);
-        this._activespellimage.hAlign = slotposition.ha
-        this._activespellimage.vAlign = slotposition.va
-        this._activespellimage.width = slotposition.w
-        this._activespellimage.height = slotposition.h
-        this._activespellimage.positionY = slotposition.y
-        this._activespellimage.positionX = slotposition.x
+        const slot = 60;
+        const slotPosition = slotPicker(slot);
+        this.setActiveSpellImageProperties(slotPosition);
         this._activespellimage.sourceWidth = this._lootimage.sourceWidth;
         this._activespellimage.sourceHeight = this._lootimage.sourceHeight;
         this._activespellimage.visible = true;
-
-
-        let obj = Singleton.getInstance()
-        //let spellbook = obj.allspells
-
-        log('item.ts:588  after assigning spellbook')
-
-        //let activespell: Ispell = spellbook.get("amunsshield")
-
-
-        // log('item.ts:592 - active spell size: ', activespell.size)
-        // log('item.ts:593 - active spell duration: ', activespell.duration)
-        // log('item.ts:597  setting shield hp')
-        //this._player.setShield(activespell.size, activespell.oncastmsg[0].line1);
-
-        // setTimeout(activespell.duration, () => {
-        //     this._activespellimage.visible = false;
-        //     this._player.setShield(0, activespell.ondropmsg[0].line1);
-        // })
     }
 
     public sendToBackpack() {
         let slot = this._actionBar.selectSlot(this);
 
-        if (slot == 0) {
+        if (slot === 0) {
             slot = this._backPack.selectSlot(this);
-            if (slot == 50) {
-                this._player.bagsfull();
-                this._desc.visible = false;
-                this._lootimage.visible = false;
-            } else {
-                this._slot = slot;
-                let slotposition = slotPicker(slot)
-                this.isActionBar = slotposition.ab
-                this.isBackpack = slotposition.bp
-                this.isMerchant = slotposition.mc
-                this.isPurchase = slotposition.pc
-                this.isLootWindow = slotposition.lw
-                this._lootimage.hAlign = slotposition.ha
-                this._lootimage.vAlign = slotposition.va
-                this._lootimage.width = slotposition.w
-                this._lootimage.height = slotposition.h
-                this._lootimage.positionY = slotposition.y
-                this._lootimage.positionX = slotposition.x
-                this._desc.fontSize = slotposition.fs;
-                this._desc.width = slotposition.fw;
-                this._desc.height = slotposition.fh;
-                this._desc.hAlign = slotposition.fha;
-                this._desc.vAlign = slotposition.fva;
-                this._desc.positionY = slotposition.fy;
-                this._desc.positionX = slotposition.fx;
-                this._desc.visible = false;
+        }
+
+        if (slot === 50) {
+            this._player.bagsfull();
+            this._desc.visible = false;
+            this._lootimage.visible = false;
+        } else {
+            this._slot = slot;
+            const slotPosition = slotPicker(slot);
+            this.setSlotProperties(slotPosition);
+
+            if (slot === 0) {
                 if (!this._backPack.bpopen) {
                     this._desc.visible = false;
                     this._lootimage.visible = false;
                 }
+            } else {
+                this.isActionBar = true;
+                this._lootimage.visible = true;
+                this._desc.visible = false;
             }
-        } else {
-            this._slot = slot;
-            let slotposition = slotPicker(slot)
-            this.isActionBar = slotposition.ab
-            this.isBackpack = slotposition.bp
-            this.isMerchant = slotposition.mc
-            this.isPurchase = slotposition.pc
-            this.isLootWindow = slotposition.lw
-            this._lootimage.hAlign = slotposition.ha
-            this._lootimage.vAlign = slotposition.va
-            this._lootimage.width = slotposition.w
-            this._lootimage.height = slotposition.h
-            this._lootimage.positionY = slotposition.y
-            this._lootimage.positionX = slotposition.x
-            this._desc.fontSize = slotposition.fs;
-            this._desc.width = slotposition.fw;
-            this._desc.height = slotposition.fh;
-            this._desc.hAlign = slotposition.fha;
-            this._desc.vAlign = slotposition.fva;
-            this._desc.positionY = slotposition.fy;
-            this._desc.positionX = slotposition.fx;
-            this._desc.visible = false;
-            this.isActionBar = true;
-            this._lootimage.visible = true;
-            this._desc.visible = false;
+
+            // if (this._lw) {
+            //     this._lw.hidelootwindow();
+            //     this._lw.looted = true;
+            // }
+
+            this.backpacksound.play();
+            // if (this._npc) {
+            //     this._npc.hideMob();
+            // }
         }
+    }
 
-        // if (this._lw) {
-        //     this._lw.hidelootwindow();
-        //     this._lw.looted = true;
-        // }
+    setSlotProperties(slotPosition:any) {
+        this.isActionBar = slotPosition.ab;
+        this.isBackpack = slotPosition.bp;
+        this.isMerchant = slotPosition.mc;
+        this.isPurchase = slotPosition.pc;
+        this.isLootWindow = slotPosition.lw;
+        this._lootimage.hAlign = slotPosition.ha;
+        this._lootimage.vAlign = slotPosition.va;
+        this._lootimage.width = slotPosition.w;
+        this._lootimage.height = slotPosition.h;
+        this._lootimage.positionY = slotPosition.y;
+        this._lootimage.positionX = slotPosition.x;
+        this._desc.fontSize = slotPosition.fs;
+        this._desc.width = slotPosition.fw;
+        this._desc.height = slotPosition.fh;
+        this._desc.hAlign = slotPosition.fha;
+        this._desc.vAlign = slotPosition.fva;
+        this._desc.positionY = slotPosition.fy;
+        this._desc.positionX = slotPosition.fx;
+        this._desc.visible = false;
+    }
 
-        this.backpacksound.play();
-        // if (this._npc) {
-        //     this._npc.hideMob();
-        // }
-
+    setActiveSpellImageProperties(slotPosition:any) {
+        this._activespellimage.hAlign = slotPosition.ha;
+        this._activespellimage.vAlign = slotPosition.va;
+        this._activespellimage.width = slotPosition.w;
+        this._activespellimage.height = slotPosition.h;
+        this._activespellimage.positionY = slotPosition.y;
+        this._activespellimage.positionX = slotPosition.x;
     }
 
     public sendItemDown() {
-
-        this._actionBar.exist()
-
+        this._actionBar.exist();
         let slot = this._actionBar.selectSlot(this);
+        this._slot = slot;
+        let slotPosition = slotPicker(slot);
+        this.setSlotProperties(slotPosition);
 
-        this._slot = slot
-
-        let slotposition = slotPicker(slot)
-        this.isActionBar = slotposition.ab
-        this.isBackpack = slotposition.bp
-        this.isMerchant = slotposition.mc
-        this.isPurchase = slotposition.pc
-        this.isLootWindow = slotposition.lw
-        this._lootimage.hAlign = slotposition.ha
-        this._lootimage.vAlign = slotposition.va
-        this._lootimage.width = slotposition.w
-        this._lootimage.height = slotposition.h
-        this._lootimage.positionY = slotposition.y
-        this._lootimage.positionX = slotposition.x
-        this._desc.fontSize = slotposition.fs;
-        this._desc.width = slotposition.fw;
-        this._desc.height = slotposition.fh;
-        this._desc.hAlign = slotposition.fha;
-        this._desc.vAlign = slotposition.fva;
-        this._desc.positionY = slotposition.fy;
-        this._desc.positionX = slotposition.fx;
-        this._desc.visible = false;
-
-        if (slot == 0) {
+        if (slot === 0) {
             slot = this._backPack.selectSlot(this);
-            this._slot = slot
-            let slotposition = slotPicker(slot)
-            this.isActionBar = slotposition.ab
-            this.isBackpack = slotposition.bp
-            this.isMerchant = slotposition.mc
-            this.isPurchase = slotposition.pc
-            this.isLootWindow = slotposition.lw
-            this._lootimage.hAlign = slotposition.ha
-            this._lootimage.vAlign = slotposition.va
-            this._lootimage.width = slotposition.w
-            this._lootimage.height = slotposition.h
-            this._lootimage.positionY = slotposition.y
-            this._lootimage.positionX = slotposition.x
-            this._desc.fontSize = slotposition.fs;
-            this._desc.width = slotposition.fw;
-            this._desc.height = slotposition.fh;
-            this._desc.hAlign = slotposition.fha;
-            this._desc.vAlign = slotposition.fva;
-            this._desc.positionY = slotposition.fy;
-            this._desc.positionX = slotposition.fx;
+            this._slot = slot;
+            slotPosition = slotPicker(slot);
+            this.setSlotProperties(slotPosition);
+
             if (!this._backPack.bpopen) {
                 this._desc.visible = false;
                 this._lootimage.visible = false;
             }
+
             this.isBackpack = true;
         }
     }
 
     private setItemForSale() {
-        let slotposition = slotPicker(36)
-        this.isActionBar = slotposition.ab
-        this.isBackpack = slotposition.bp
-        this.isMerchant = slotposition.mc
-        this.isPurchase = slotposition.pc
-        this.isLootWindow = slotposition.lw
-        this._lootimage.hAlign = slotposition.ha
-        this._lootimage.vAlign = slotposition.va
-        this._lootimage.width = slotposition.w
-        this._lootimage.height = slotposition.h
-        this._lootimage.positionY = slotposition.y
-        this._lootimage.positionX = slotposition.x
-        this._desc.fontSize = slotposition.fs;
-        this._desc.width = slotposition.fw;
-        this._desc.height = slotposition.fh;
-        this._desc.hAlign = slotposition.fha;
-        this._desc.vAlign = slotposition.fva;
-        this._desc.positionY = slotposition.fy;
-        this._desc.positionX = slotposition.fx;
-
+        const slotPosition = slotPicker(36);
+        this.setSlotProperties(slotPosition);
         this._lootimage.onClick = new OnPointerDown(() => {
             this.sendItemDown();
         });
 
         //this._tradewindow.purchase(this)
     }
+
+
 }

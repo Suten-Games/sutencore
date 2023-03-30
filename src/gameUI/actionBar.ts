@@ -5,16 +5,9 @@ export class ActionBar {
     private _canvas;
     private _image;
     private _ab;
-    private _slot1: string | null = "";
-    private _slot2: string | null = "";
-    private _slot3: string | null = "";
-    private _slot4: string | null = "";
-    private _slot5: string | null = "";
-    private _slot6: string | null = "";
-    private _slot7: string | null = "";
-    private _slot8: string | null = "";
-    private _slot9: string | null = "";
-    private _myactionbarcontents: Array<Item>;
+    private _slots: (string | null)[] = new Array(9).map(() => null);
+    private _myactionbarcontents: Item[] = [];
+    
 
     constructor(canvas: UICanvas, image: Texture) {
         let obj = Singleton.getInstance()
@@ -31,132 +24,101 @@ export class ActionBar {
     }
 
     public selectSlot(item: Item): number {
-        // log(' in selectSlot')
-        if (!this._slot1) {
-            this._slot1 = 'filled'
-            item.updateLoc(1)
-            this._myactionbarcontents.push(item)
-            return 1
-        } else if (!this._slot2) {
-            this._slot2 = 'filled'
-            item.updateLoc(2)
-            this._myactionbarcontents.push(item)
-            return 2
-        } else if (!this._slot3) {
-            this._slot3 = 'filled'
-            item.updateLoc(3)
-            this._myactionbarcontents.push(item)
-            return 3
-        } else if (!this._slot4) {
-            this._slot4 = 'filled'
-            item.updateLoc(4)
-            this._myactionbarcontents.push(item)
-            return 4
-        } else if (!this._slot5) {
-            this._slot5 = 'filled'
-            item.updateLoc(5)
-            this._myactionbarcontents.push(item)
-            return 5
-        } else if (!this._slot6) {
-            this._slot6 = 'filled'
-            item.updateLoc(6)
-            this._myactionbarcontents.push(item)
-            return 6
-        } else if (!this._slot7) {
-            this._slot7 = 'filled'
-            item.updateLoc(7)
-            this._myactionbarcontents.push(item)
-            return 7
-        } else if (!this._slot8) {
-            this._slot8 = 'filled'
-            item.updateLoc(8)
-            this._myactionbarcontents.push(item)
-            return 8
-        } else if (!this._slot9) {
-            this._slot9 = 'filled'
-            item.updateLoc(9)
-            this._myactionbarcontents.push(item)
-            return 9
+        let obj = Singleton.getInstance()
+        const index = this._slots.indexOf(null);
+        if (index !== -1) {
+            const slot = index + 1;
+            this._slots[index] = 'filled';
+            obj.actionbarslots[index] = 'filled'
+            item.updateLoc(slot);
+            this._myactionbarcontents.push(item);
+            return slot;
         } else {
-            return 0
+            return 0;
         }
     }
 
 
     public bootLoadActionBar(data: any[]) {
-        //log(`debug: 13 Inside bootLoadActionBar`)
-
-        let obj = Singleton.getInstance();
+        const obj = Singleton.getInstance();
         data.forEach(element => {
             if (element.slot) {
-                //log('actionBar:90 element ', JSON.stringify(element))
-                // let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-                //     element.lootwindow, element.npc)
+                let item = new Item(
+                    new Texture(element.image), element.slot, element.srcw, element.srch, element.desc,
+                    element.type, element.price, element.itemtype, element.spellshape, element.spellstart,
+                    element.spellend, element.sound,
+                );
 
-                let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-                )
-
-                //log(`actionBar:99 class: ${obj.playerclass}`)
-
-                if (element.itemtype != "spell" || element.itemtype == "spell" && obj.playerclass == "Magician") {
-                    this.setSlot(element.slot)
-                    item.setslot = element.slot
-                    item.updateLoc(element.slot)
-                    this._myactionbarcontents.push(item)
+                if (element.desc == "Cracked Staff" && element.itemtype == null) {
+                    element.itemtype = "weapon";
                 }
 
+                if (element.desc == "Rusty Dagger" && element.itemtype == null) {
+                    element.itemtype = "weapon";
+                }
+
+                if (element.desc == "Sand Beetle Husk" && element.itemtype == null) {
+                    element.itemtype = "questloot";
+                }
+
+                if (element.itemtype != "spell" || (element.itemtype == "spell" && obj.playerclass == "Magician")) {
+                    this.setSlot(element.slot);
+                    item.setslot = element.slot;
+                    item.updateLoc(element.slot);
+                    this._myactionbarcontents.push(item);
+                }
+            } else {
+                log('actionBar:111 slot is not set');
             }
         });
     }
 
+
+
     public setSlot(slot: number) {
-        if (slot == 1) {
-            this._slot1 = 'filled'
-        } else if (slot == 2) {
-            this._slot2 = 'filled'
-        } else if (slot == 3) {
-            this._slot3 = 'filled'
-        } else if (slot == 4) {
-            this._slot4 = 'filled'
-        } else if (slot == 5) {
-            this._slot5 = 'filled'
-        } else if (slot == 6) {
-            this._slot6 = 'filled'
-        } else if (slot == 7) {
-            this._slot7 = 'filled'
-        } else if (slot == 8) {
-            this._slot8 = 'filled'
-        } else if (slot == 9) {
-            this._slot9 = 'filled'
-        }
+        const obj = Singleton.getInstance();
+        this._slots[slot - 1] = 'filled';
+        obj.actionbarslots[slot - 1] = 'filled';
     }
+
 
     public resetSlot(slot: number) {
-        if (slot == 1) {
-            this._slot1 = null
-        } else if (slot == 2) {
-            this._slot2 = null
-        } else if (slot == 3) {
-            this._slot3 = null
-        } else if (slot == 4) {
-            this._slot4 = null
-        } else if (slot == 5) {
-            this._slot5 = null
-        } else if (slot == 6) {
-            this._slot6 = null
-        } else if (slot == 7) {
-            this._slot7 = null
-        } else if (slot == 8) {
-            this._slot8 = null
-        } else if (slot == 9) {
-            this._slot9 = null
-        }
-
+        const obj = Singleton.getInstance();
+        this._slots[slot - 1] = null;
+        obj.actionbarslots[slot - 1] = null;
         let i = this._myactionbarcontents.map(x => x.slot()).indexOf(slot)
-        this._myactionbarcontents.splice(i, 1)
+        if (i !== -1) {
+            this._myactionbarcontents.splice(i, 1)
+        }
+        // const index = this._myactionbarcontents.findIndex(item => item.slot() === slot);
+        // if (index !== -1) {
+        //     this._myactionbarcontents.splice(index, 1);
+        // }
     }
+
+
+    public querySlot(): number {
+        log('in the querySlot method');
+        const obj = Singleton.getInstance();
+        let found = 0
+        for (let i = 0; i < 9; i++) {
+            log(` On loop: ${i} - Checking ${this._slots[i]} against ${this._myactionbarcontents[i].itemtype}`)
+            if (this._slots[i] === 'filled' && this._myactionbarcontents[i].itemtype !== 'spell') {
+                const poppeditem = this._myactionbarcontents.shift();
+                this._slots[i] = null;
+                //this._myactionbarcontents.push(poppeditem);
+                log(`in the querySlot method returning 1 ${i + 1}`)
+                return i + 1;
+            } else if (this._slots[i] !== 'filled') {
+                log(`in the querySlot method returning 2 ${i + 1}`)
+                return i + 1;
+            }
+        }
+        log(`in the querySlot method returning 3 ${found}`)
+        return found
+        
+    }
+
 
     public exist() {
         log('The actionBar exists')

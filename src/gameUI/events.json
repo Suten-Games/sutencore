@@ -1,0 +1,199 @@
+[
+  {
+    "event": "events",
+    "data": {
+      "type": "200,200",
+      "hp": 52,
+      "address": "0xd95a49409529b1ee533c9a1166c9c669f21722e6",
+      "backpack": [],
+      "actionbar": [
+        {
+          "image": "images/looticons/crackedstaff.png",
+          "slot": 2,
+          "srcw": 122,
+          "srch": 120,
+          "desc": "Cracked Staff",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/crackedstaff.png",
+          "slot": 1,
+          "srcw": 122,
+          "srch": 120,
+          "desc": "Cracked Staff",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/blueHealthPotion.png",
+          "slot": 8,
+          "srcw": 1219,
+          "srch": 2154,
+          "desc": "Major Healing Potion",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/sandbeetle.png",
+          "slot": 4,
+          "srcw": 345,
+          "srch": 400,
+          "desc": "Sand Beetle Husk",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/rustydagger.png",
+          "slot": 5,
+          "srcw": 1219,
+          "srch": 2154,
+          "desc": "Rusty Dagger",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/manavial.png",
+          "slot": 6,
+          "srcw": 122,
+          "srch": 120,
+          "desc": "Mana Vial",
+          "type": null,
+          "itemtype": null,
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        },
+        {
+          "image": "images/looticons/rustyaxe.png",
+          "slot": 3,
+          "srcw": 1219,
+          "srch": 2154,
+          "desc": "Rusty Axe",
+          "type": null,
+          "price": 6,
+          "itemtype": "weapon",
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": ""
+        },
+        {
+          "image": "images/looticons/spellscroll.png",
+          "slot": 7,
+          "srcw": 122,
+          "srch": 120,
+          "desc": "Minor Shielding",
+          "type": null,
+          "price": 5,
+          "itemtype": "scroll",
+          "spellshape": null,
+          "spellstart": null,
+          "spellend": null,
+          "sound": null
+        }
+      ],
+      "spellbook": [
+        {
+          "image": "images/spells/painterly-spell-icons-3/explosion-magenta-1.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Minor Shielding",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        },
+        {
+          "image": "images/spells/painterly-spell-icons-1/protect-eerie-1.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Amun's Shielding",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        },
+        {
+          "image": "images/spells/painterly-spell-icons-1/fireball-sky-3.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Fire Strike",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        },
+        {
+          "image": "images/spells/painterly-spell-icons-1/enchant-acid-3.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Acid Strike",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        },
+        {
+          "image": "images/spells/painterly-spell-icons-1/enchant-orange-2.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Fire Blade",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        },
+        {
+          "image": "images/spells/painterly-spell-icons-1/evil-eye-eerie-3.png",
+          "srcw": 256,
+          "srch": 256,
+          "desc": "Evil Eye",
+          "type": null,
+          "price": 10,
+          "itemtype": "spell",
+          "spellshape": "BoxShape",
+          "spellstart": 5,
+          "spellend": 200,
+          "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
+        }
+      ]
+    }
+  }
+]

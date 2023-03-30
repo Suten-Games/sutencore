@@ -57,6 +57,7 @@ export class Singleton {
     private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
+    private _actionbarslots: (string | null)[] = new Array(9).map(() => null);
     private _backPack: BackPack;
     private _spellScroll: SpellScroll;
     private _spellBook: SpellBook;
@@ -118,6 +119,14 @@ export class Singleton {
 
     get actionbar() {
         return this._actionbar;
+    }
+
+    set actionbarslots(val) {
+        this._actionbarslots = val;
+    }
+
+    get actionbarslots() {
+        return this._actionbarslots;
     }
 
     set gameover(val) {

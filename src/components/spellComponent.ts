@@ -6,7 +6,8 @@ export interface Ispell {
     deletable: boolean, focusable: boolean, interruptable: boolean, targettype: string,
     desc: string, levelmsg: Array<Imsg>, oncastmsg: Array<Imsg>,
     ondropmsg: Array<Imsg>, duration: number, image: Texture,
-    itemtype: string, spellshape: string, spellstart: number, spellend: number, sound: AudioClip
+    itemtype: string, spellshape: string, spellstart: number, spellend: number, sound: AudioClip,
+    srcw: number, srch:number, price: number
 }
 
 export interface Imsg {

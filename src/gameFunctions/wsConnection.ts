@@ -150,7 +150,7 @@ class pingSystem implements ISystem {
                 //return { image: lootitem.image().src, slot: lootitem.slot() };
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(),
+                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound()
                 }
@@ -160,7 +160,7 @@ class pingSystem implements ISystem {
                 //return { image: lootitem.image().src, slot: lootitem.slot() };
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(),
+                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound()
                 }
@@ -169,18 +169,18 @@ class pingSystem implements ISystem {
             let m5 = obj.sbook.map((lootitem) => {
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype(),
+                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound() 
                 }
             });
 
-            log('sutenBase ', sutenBase)
-            log('hp ', obj.playerhp)
-            log('address ', obj.playeraddress)
-            log('m3 ', m3)
-            log('m4 ', m4)
-            log('m5 ', m5) 
+            // log('sutenBase ', sutenBase)
+            // log('hp ', obj.playerhp)
+            // log('address ', obj.playeraddress)
+            // log('m3 ', m3)
+            // log('m4 ', m4)
+            // log('m5 ', m5) 
 
             //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 

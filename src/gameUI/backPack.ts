@@ -85,7 +85,7 @@ export class BackPack {
         this._spellbutton.onClick = new OnPointerDown(
             (e) => {
                 //this._charwindow.flip()
-                log('open spellbook')
+                log('backPack.ts:88 - open spellbook')
                 this._spellbookwindow.show()
             },
             {

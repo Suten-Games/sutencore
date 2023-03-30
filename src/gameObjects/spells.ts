@@ -1,6 +1,3 @@
-//import { Map } from 'node_modules/immutable/dist/immutable'
-//import { Map} from 'immutable';
-
 import { Ispell } from "src/components/spellComponent";
 import resources from "src/resources";
 
@@ -36,7 +33,10 @@ const amunsShielding:Ispell = {
     "spellshape":"SphereShape",
     "spellstart":5,
     "spellend":200,
-    "sound":resources.sounds.wardspell
+    "sound":resources.sounds.wardspell,
+    "srcw": 122,
+    "srch": 120,
+    "price":6
 
 }
 
@@ -71,7 +71,10 @@ const minorShielding: Ispell = {
     "spellshape": "SphereShape",
     "spellstart": 5,
     "spellend": 200,
-    "sound": resources.sounds.wardspell
+    "sound": resources.sounds.wardspell,
+    "srcw":122,
+    "srch":120,
+    "price":5
 
 }
 
@@ -84,6 +87,7 @@ let allspells: Record<string, Ispell> = {}
 allspells.amunsshield = amunsShielding
 allspells.minorshield = minorShielding
 allspells["Minor Shielding"] = minorShielding
+allspells["Minor Shielding I"] = minorShielding
 
 //const allspells = Map({"amunsShielding":amunsShielding});
 
