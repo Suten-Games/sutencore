@@ -6,11 +6,12 @@ import { SoundBox } from "./soundBox";
 import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
 import { Player } from "./player";
-import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 import { setTimeout } from "src/gameUtils/timeOut";
-import { UI } from "src/gameUI/ui";
 import { setSpell } from "src/gameFunctions/setSpell";
 import { SpellScroll } from "src/gameUI/spellScroll";
+import { spellAction } from "src/gameFunctions/spellAction";
+import { getspell } from "./spells";
+import { Ispell } from "src/components/spellComponent";
 // import { LootWindow } from "../gameUI/lootWindow";
 // import { Mob } from "./mob";
 
@@ -37,6 +38,7 @@ export class Item {
     private _potiontype;
     private _potionprice;
     private _slot: number;
+    private _type: string | null;
     private _spellshape;
     private _spellstart;
     private _spellend;
@@ -87,7 +89,9 @@ export class Item {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
         this._image = image;
-        log(`item.ts slot: ${slot} itemtype: ${itemtype}`)
+        //log(`item.ts slot: ${slot} itemtype: ${itemtype}`)
+        this._slot = slot;
+        this._type = type;
         this._itemtype = itemtype;
         this._lootimage = new UIImage(this._canvas, this._image);
         this._lootimage.visible = false;
@@ -198,9 +202,18 @@ export class Item {
         this._desc.vAlign = slotposition.fva;
         this._desc.positionY = slotposition.fy;
         this._desc.positionX = slotposition.fx;
-
         this._lootimage.visible = false;
         this._desc.visible = false;
+
+        // if (this._isspell) {
+        //     log(`item.ts desc fontSize ${slotposition.fs}`)
+        //     log(`item.ts desc width ${slotposition.fw}`)
+        //     log(`item.ts desc height ${slotposition.fh}`)
+        //     log(`item.ts desc hAlign ${slotposition.fha}`)
+        //     log(`item.ts desc vAlign ${slotposition.fva}`)
+        //     log(`item.ts desc positionY ${slotposition.fy}`)
+        //     log(`item.ts desc positionX ${slotposition.fx}`)
+        // }
 
 
         if (this.isMerchant) {
@@ -232,11 +245,15 @@ export class Item {
     }
 
     public show() {
-        if (this._itemtype == "spell") {
-            log('item.ts:226 - in  item show')
-            this._lootimage.visible = true;
-            this._desc.visible = true;
-        }
+        log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
+        // this._desc.visible = true;
+
+        // if (this._itemtype == "spell") {
+        //     log('item.ts:226 - in  item show')
+        //     log('item.ts:242 - ', this._desc.value)
+        //     this._lootimage.visible = true;
+        //     this._desc.visible = true;
+        // }
 
         if (this.isLootWindow) {
             this._lootimage.visible = true;
@@ -248,7 +265,7 @@ export class Item {
         } else if (this._backPack) {
             log('in backpack')
             this._lootimage.visible = true;
-            this._desc.visible = false;
+            this._desc.visible = true;
             // } else if (this._backPack.bpopen) {
             //     log('in bpopen')
             //     this._lootimage.visible = true;
@@ -279,6 +296,10 @@ export class Item {
 
     set itemtype(type) {
         this._itemtype = type
+    }
+
+    public spelltype() {
+        return this._type
     }
 
     get itemtype() {
@@ -387,23 +408,36 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
-
-        let ps: ParticleSystem
+        //log('in updateLoc:399 ')
         this._lootimage.visible = true;
-        if (this._spellshape) {
-            let soundstring = "sounds/" + this._sound + ".mp3"
-            let sound = new AudioClip(soundstring)
-            ps = new ParticleSystem(2, 2, this._spellshape, sound)
-            engine.addSystem(ps)
+
+        if (this._isspell) {
+            // if (this._itemtype == "spell") {
+            //     log("item.ts:411 - Cast a spell")
+            // }
+
+            //log('item.ts:416 - calling getspell with: ', this._desc.value)
+            let completespell = getspell(this._desc.value)
+            spellAction(this, completespell)
+            //this.activateSpell(completespell)
+
+            return
         }
 
 
+        //log('in updateLoc:427')
+
+
         this._lootimage.onClick = new OnPointerDown(() => {
+
+            //log('in updateLoc:432')
 
             if (this._player == undefined || !this._player.alive) {
                 log('item.ts:354 - you cant heal if you are dead')
                 return
             }
+
+            log('in item.ts:435')
 
 
             if (this._isscroll) {
@@ -413,18 +447,8 @@ export class Item {
                 return
             }
 
+            log('in item.ts:445')
 
-            if (this._isspell) {
-                if (this._itemtype == "spell") {
-                    log("item.ts:411 - Cast a spell")
-                }
-
-                ps.turnOn(new BoxShape(), this._spellstart, this._spellend)
-                log("item.ts:415 - calling activateSpell()")
-                //this.activateSpell()
-
-                return
-            }
 
             if (this._isweapon) {
                 if (this._image.src.split('/')[2] == 'rustysword.png') {
@@ -480,14 +504,21 @@ export class Item {
         });
     }
 
-    public activateSpell() {
-        log('item.ts:478 - inside activateSpell');
+    public activateSpell(spell: Ispell) {
+        //log('item.ts:478 - inside activateSpell');
         const slot = 60;
         const slotPosition = slotPicker(slot);
         this.setActiveSpellImageProperties(slotPosition);
         this._activespellimage.sourceWidth = this._lootimage.sourceWidth;
         this._activespellimage.sourceHeight = this._lootimage.sourceHeight;
         this._activespellimage.visible = true;
+
+        this._player.setShield(spell.size, spell.oncastmsg[0].line1);
+
+       setTimeout(spell.duration, () => {
+            this._activespellimage.visible = false;
+            this._player.setShield(0, spell.ondropmsg[0].line1);
+        })
     }
 
     public sendToBackpack() {

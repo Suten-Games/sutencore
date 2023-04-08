@@ -134,7 +134,9 @@ export class SpellBook {
     }
 
     private getcontents() {
+        log('in getcontents')
         this._myspellbookcontents.forEach(spell => {
+            log(`spellBook.ts:138 ${spell.lootdesc()}`)
             addSpellClick(spell.lootimage, spell.lootdesc())
             spell.show()
         })
@@ -160,7 +162,7 @@ export class SpellBook {
                 
                 item.hide()
             } else {
-                log('Slot was not set in the DB, so picking a slot')
+                //log('Slot was not set in the DB, so picking a slot')
                 let slot = this.selectSlot()
                 //log('creating new item for spellbook')
                 let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
@@ -208,6 +210,7 @@ export class SpellBook {
     }
 
     public hide() {
+        log(`spellBook.ts:212 - Clicked hide in the spellBook`)
         this._bp.visible = false;
         this._buybutton.visible = false;
         this._closebutton.visible = false;

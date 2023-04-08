@@ -25,12 +25,12 @@ const amunsShielding:Ispell = {
     "targettype":"self",
     "desc": "Shield of Amun",
     "levelmsg":[{"line1":"msg 2"}],
-    "oncastmsg":[{"line1":"castmsg 1"}],
-    "ondropmsg":[{"line1":"faded 2"}],
-    "duration":3,
+    "oncastmsg":[{"line1":"You feel armored"}],
+    "ondropmsg":[{"line1":"Your shielding fades away"}],
+    "duration":50000,
     "image": new Texture("images/spells/painterly-spell-icons-3/explosion-magenta-1.png"),
     "itemtype":"spell",
-    "spellshape":"SphereShape",
+    "spellshape": "SphereShape",
     "spellstart":5,
     "spellend":200,
     "sound":resources.sounds.wardspell,
@@ -63,9 +63,9 @@ const minorShielding: Ispell = {
     "targettype": "self",
     "desc": "Minor Shielding I",
     "levelmsg": [{ "line1": "msg 2" }],
-    "oncastmsg": [{ "line1": "castmsg 1" }],
-    "ondropmsg": [{ "line1": "faded 2" }],
-    "duration": 3,
+    "oncastmsg": [{ "line1": "Your skin shines" }],
+    "ondropmsg": [{ "line1": "Your skin loses its luster" }],
+    "duration": 60000,
     "image": new Texture("images/spells/painterly-spell-icons-3/explosion-magenta-1.png"),
     "itemtype": "spell",
     "spellshape": "SphereShape",
@@ -84,10 +84,9 @@ const minorShielding: Ispell = {
 
 let allspells: Record<string, Ispell> = {}
 
-allspells.amunsshield = amunsShielding
-allspells.minorshield = minorShielding
 allspells["Minor Shielding"] = minorShielding
 allspells["Minor Shielding I"] = minorShielding
+allspells["Amun's Shielding"] = amunsShielding
 
 //const allspells = Map({"amunsShielding":amunsShielding});
 
@@ -98,7 +97,7 @@ export function getspells() {
 }
 
 export function getspell(val: string) {
-    //log('inside get spell with spell val: ', val)
+    //log('spells.ts:100 - inside get spell with spell val: ', val)
     //log('allspells ', allspells)
     //log('with parens ', allspells[val])
     return allspells[val]

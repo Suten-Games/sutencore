@@ -1,21 +1,26 @@
 import { Item } from "src/gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { getspell } from "src/gameObjects/spells";
+import { ParticleSystem } from "src/gameSystems/ParticleSystem";
+import { spellAction } from "./spellAction";
 //import { UI } from "src/gameUI/ui";
 
 export function addSpellClick(image:UIImage, name:string) {
     log('inside addSpellClick function')
     //var ui = UI.getInstance();
+    
     let obj = Singleton.getInstance()
     image.onClick = new OnPointerDown(
         (e) => {
+
+            let ps: ParticleSystem
             let myactionbarcontents = obj.fetchactionbar()
             log('Clicked in addSpellClick function')
             log('First Check if the first slot in the AB is a spell or not')
             let slot = querySlot()
             setSlot(slot)
 
-            log(`looks like slot: ${slot } is open for a new spell`)
+            log(`looks like slot: ${slot} is open for a new spell`)
             
             log('Now I need to create a new object, a spell object in the ActionBar slot selected')
             log('lets check the spell library to see how to fetch the spell data')
@@ -31,7 +36,7 @@ export function addSpellClick(image:UIImage, name:string) {
             
             myactionbarcontents.push(newspell)
             newspell.show()
-
+            spellAction(newspell,completespell)
         },
         {
             button: ActionButton.PRIMARY,

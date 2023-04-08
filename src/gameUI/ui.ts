@@ -20,6 +20,7 @@ export class UI {
         if (UI.instance) {
             throw new Error("Error - use UI.getInstance()");
         }
+
         this.gameCanvas = new UICanvas();
         this.combatLog = new CombatLog(this.gameCanvas);
         this.actionBar = new ActionBar(this.gameCanvas, resources.interface.blueActionBar);
@@ -27,6 +28,7 @@ export class UI {
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.spellScroll = new SpellScroll(this.gameCanvas, resources.interface.spellScroll)
+
     }
 
     static getInstance(): UI {

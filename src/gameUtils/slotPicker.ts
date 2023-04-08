@@ -226,57 +226,57 @@ export function slotPicker(slot: number) {
             position = "sb";
             positionY = "25.8%";
             positionX = "17.2%";
-            fontPositionY = "31%";
-            fontPositionX = "19.5%";
+            fontPositionY = "27%";
+            fontPositionX = "23%";
             break;
         case 52:
             position = "sb";
             positionY = "14.8%";
             positionX = "17.2%";
-            fontPositionY = "31%";
-            fontPositionX = "19.5%";
+            fontPositionY = "17%";
+            fontPositionX = "23%";
             break;
         case 53:
             position = "sb";
             positionY = "4.8%";
             positionX = "17.2%";
-            fontPositionY = "23%";
-            fontPositionX = "19.5%";
+            fontPositionY = "7%";
+            fontPositionX = "23%";
             break;
         case 54:
             position = "sb";
             positionY = "-4.8%";
             positionX = "17.2%";
-            fontPositionY = "20%";
-            fontPositionX = "30%";
+            fontPositionY = "-5%";
+            fontPositionX = "23%";
             break;
         case 55:
             position = "sb";
             positionY = "25.8%";
             positionX = "35.2%";
-            fontPositionY = "15%";
-            fontPositionX = "19.5%";
+            fontPositionY = "27%";
+            fontPositionX = "41%";
             break;
         case 56:
             position = "sb";
             positionY = "14.8%";
             positionX = "35.2%";
-            fontPositionY = "15%";
-            fontPositionX = "30%";
+            fontPositionY = "17%";
+            fontPositionX = "41%";
             break;
         case 57:
             position = "sb";
             positionY = "4.8%";
             positionX = "35.2%";
             fontPositionY = "7%";
-            fontPositionX = "19.5%";
+            fontPositionX = "41%";
             break;
         case 58:
             position = "sb";
             positionY = "-4.8%";
             positionX = "35.2%";
             fontPositionY = "7%";
-            fontPositionX = "30%";
+            fontPositionX = "41%";
             break;
         case 60:
             position = "as";

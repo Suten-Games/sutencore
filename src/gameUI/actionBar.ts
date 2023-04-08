@@ -42,6 +42,7 @@ export class ActionBar {
     public bootLoadActionBar(data: any[]) {
         const obj = Singleton.getInstance();
         data.forEach(element => {
+            //log('actionBar:45 - in bootLoadActionBar slot: ', element.slot)
             if (element.slot) {
                 let item = new Item(
                     new Texture(element.image), element.slot, element.srcw, element.srch, element.desc,

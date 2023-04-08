@@ -11,7 +11,7 @@ export class ParticleSystem {
     group = engine.getComponentGroup(Particle)
 
     constructor(timer: number, height: number, shape: Shape, sound: AudioClip) {
-        log(`ParticleSystem sound ${sound}`)
+        //log(`ParticleSystem sound ${sound}`)
         this._timer = timer;
         this._fireHeight = height;
         this._shape = shape;

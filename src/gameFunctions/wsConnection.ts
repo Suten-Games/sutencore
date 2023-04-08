@@ -146,30 +146,30 @@ class pingSystem implements ISystem {
         if (this.timer >= 10) {
             this.timer = 0;
 
-            let m3 = obj.bpack.map((lootitem: Item) => {
+            let backpack = obj.bpack.map((lootitem: Item) => {
                 //return { image: lootitem.image().src, slot: lootitem.slot() };
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound()
                 }
             });
 
-            let m4 = obj.abar.map((lootitem) => {
+            let actionbar = obj.abar.map((lootitem) => {
                 //return { image: lootitem.image().src, slot: lootitem.slot() };
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound()
                 }
             });
 
-            let m5 = obj.sbook.map((lootitem) => {
+            let spellbook = obj.sbook.map((lootitem) => {
                 return {
                     image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: null, price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
                     spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
                     spellend: lootitem.spellend(), sound: lootitem.sound() 
                 }
@@ -178,9 +178,9 @@ class pingSystem implements ISystem {
             // log('sutenBase ', sutenBase)
             // log('hp ', obj.playerhp)
             // log('address ', obj.playeraddress)
-            // log('m3 ', m3)
-            // log('m4 ', m4)
-            // log('m5 ', m5) 
+            log('backpack ', backpack)
+            log('actionbar ', actionbar)
+            log('spellbook ', spellbook) 
 
             //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 
@@ -191,9 +191,9 @@ class pingSystem implements ISystem {
                         type: sutenBase,
                         hp: obj.playerhp,
                         address: obj.playeraddress,
-                        backpack: m3,
-                        actionbar: m4,
-                        spellbook: m5
+                        backpack: backpack,
+                        actionbar: actionbar,
+                        spellbook: spellbook
                     },
                 })
             );
