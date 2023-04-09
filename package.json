@@ -1,6 +1,6 @@
 {
   "name": "@suten-games/sutencore",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "main": "index.js",
   "description": "SutenQuest Core Libraries",
   "scripts": {
@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/Suten-Games/suten#readme",
   "dependencies": {
-    "@suten-games/baseimages": "^0.1.3",
+    "@suten-games/baseimages": "^0.1.4",
     "@suten-games/basesounds": "^0.0.8"
   },
   "bundleDependencies": [
