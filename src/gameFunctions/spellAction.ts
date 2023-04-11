@@ -31,7 +31,7 @@ export function spellAction(spell:Item, completespell:any) {
     deleteSpellIcon.visible = false;
     deleteSpellIcon.onClick = new OnPointerDown(
         (e) => {
-            log('clicked the spell delete button')
+            //log('clicked the spell delete button')
             spell.removeItem()
             deleteSpell.visible = false;
             deleteSpellIcon.visible = false;
@@ -66,7 +66,7 @@ export function spellAction(spell:Item, completespell:any) {
     let doubleClickDuration: number = 300; // milliseconds
     let singleClickTimeout: Entity | null = null;
 
-    log("inside addSpellClick");
+    //log("inside addSpellClick");
     spell.lootimage.onClick = new OnPointerDown(
             (e) => {
                 const currentTime = Date.now();
@@ -75,8 +75,8 @@ export function spellAction(spell:Item, completespell:any) {
                     if (singleClickTimeout) {
                         engine.removeEntity(singleClickTimeout); // Cancel the single-click timeout
                     }
-                    log("Double-clicked in addSpellClick");
-                    log("Show the Delete")
+                    // log("Double-clicked in addSpellClick");
+                    // log("Show the Delete")
                     lastClickTime = 0;
                     
                     deleteSpell.visible = true
@@ -84,7 +84,7 @@ export function spellAction(spell:Item, completespell:any) {
                 } else {
                     singleClickTimeout = setTimeout(doubleClickDuration, () => {
                         // Handle single-click
-                        log("Single-clicked in addSpellClick");
+                        //log("Single-clicked in addSpellClick");
                         deleteSpell.visible = false;
                         deleteSpellIcon.visible = false;
                         ps.turnOn(shape, completespell.spellstart, completespell.spellend) 
