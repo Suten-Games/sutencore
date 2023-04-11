@@ -35,8 +35,8 @@ export class SpellBook {
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "left";
         this._bp.vAlign = "center";
-        this._bp.width = "40%";
-        this._bp.height = "50%";
+        this._bp.width = "23%"
+        this._bp.height = "41%";
         this._bp.positionY = "10.2%";
         this._bp.positionX = "12.5%";
         this._bp.sourceWidth = 2032; //Old Style
@@ -48,8 +48,8 @@ export class SpellBook {
         this._closebutton.vAlign = "center";
         this._closebutton.width = "5%";
         this._closebutton.height = "8%";
-        this._closebutton.positionX = "47%";
-        this._closebutton.positionY = "29%";
+        this._closebutton.positionX = "31%";
+        this._closebutton.positionY = "26%";
         this._closebutton.sourceWidth = 168;
         this._closebutton.sourceHeight = 164;
         this._closebutton.visible = false;

@@ -146,57 +146,74 @@ class pingSystem implements ISystem {
         if (this.timer >= 10) {
             this.timer = 0;
 
-            let backpack = obj.bpack.map((lootitem: Item) => {
-                //return { image: lootitem.image().src, slot: lootitem.slot() };
-                return {
-                    image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
-                    spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
-                    spellend: lootitem.spellend(), sound: lootitem.sound()
-                }
-            });
+            if(obj.bpack.length == 0 && obj.abar.length == 0 && obj.sbook.length == 0) {
+                log(`Syncing HP Only`)
+                this.socket.send(
+                    JSON.stringify({
+                        event: "events",
+                        data: {
+                            type: sutenBase,
+                            hp: obj.playerhp,
+                            address: obj.playeraddress,
+                        },
+                    })
+                );
+            } else {
+                log(`Syncing ALL`)
+                let backpack = obj.bpack.map((lootitem: Item) => {
+                    //return { image: lootitem.image().src, slot: lootitem.slot() };
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    }
+                });
 
-            let actionbar = obj.abar.map((lootitem) => {
-                //return { image: lootitem.image().src, slot: lootitem.slot() };
-                return {
-                    image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
-                    spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
-                    spellend: lootitem.spellend(), sound: lootitem.sound()
-                }
-            });
+                let actionbar = obj.abar.map((lootitem) => {
+                    //return { image: lootitem.image().src, slot: lootitem.slot() };
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    }
+                });
 
-            let spellbook = obj.sbook.map((lootitem) => {
-                return {
-                    image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
-                    desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
-                    spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
-                    spellend: lootitem.spellend(), sound: lootitem.sound() 
-                }
-            });
+                let spellbook = obj.sbook.map((lootitem) => {
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    }
+                });
 
-            // log('sutenBase ', sutenBase)
-            // log('hp ', obj.playerhp)
-            // log('address ', obj.playeraddress)
-            log('backpack ', backpack)
-            log('actionbar ', actionbar)
-            log('spellbook ', spellbook) 
+                // log('sutenBase ', sutenBase)
+                // log('hp ', obj.playerhp)
+                // log('address ', obj.playeraddress)
+                // log('backpack ', backpack)
+                // log('actionbar ', actionbar)
+                // log('spellbook ', spellbook)
 
-            //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
+                //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 
-            this.socket.send(
-                JSON.stringify({
-                    event: "events",
-                    data: {
-                        type: sutenBase,
-                        hp: obj.playerhp,
-                        address: obj.playeraddress,
-                        backpack: backpack,
-                        actionbar: actionbar,
-                        spellbook: spellbook
-                    },
-                })
-            );
+                this.socket.send(
+                    JSON.stringify({
+                        event: "events",
+                        data: {
+                            type: sutenBase,
+                            hp: obj.playerhp,
+                            address: obj.playeraddress,
+                            backpack: backpack,
+                            actionbar: actionbar,
+                            spellbook: spellbook
+                        },
+                    })
+                );
+            }
+
+            
         }
     }
     constructor(socket: WebSocket) {

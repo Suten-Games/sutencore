@@ -23,10 +23,12 @@ export class ParticleSystem {
     }
 
     update(dt: number) {
+        log(`ParticleSystem update loop: burning? ${this._fireBurning}`)
         if (this._fireBurning) {
             if (this._timer > 0) {
                 this._timer -= dt
             } else {
+                log(`removing added particles`)
                 this._fireBurning = false;
                 this._timer = 0
                 this.particles.forEach(particle => {
@@ -69,6 +71,7 @@ export class ParticleSystem {
     }
 
     public turnOn(spellshape: any, start: any, end: any) {
+        log(`in ps.turnOn ${spellshape} ${start} ${end}`)
         this._timer = 2
         this._fireBurning = true
         log("Calling soundbox play()")
@@ -90,6 +93,7 @@ export class ParticleSystem {
         const billboard = new Billboard()
 
         for (let i = 0; i < 26; i++) {
+            log(`looping to add particles: ${i}`)
             const particle = new Entity()
             particle.addComponent(shape)
             particle.addComponent(billboard)

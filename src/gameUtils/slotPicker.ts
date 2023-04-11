@@ -222,59 +222,58 @@ export function slotPicker(slot: number) {
             fontPositionX = "30%";
             break;
         case 51:
-            //log(`slotPicker.ts - Slot 51`)
             position = "sb";
-            positionY = "25.8%";
-            positionX = "17.2%";
-            fontPositionY = "27%";
-            fontPositionX = "23%";
+            positionY = "23.1%";
+            positionX = "15.3%";
+            fontPositionY = "25.5%";
+            fontPositionX = "18.2%";
             break;
         case 52:
             position = "sb";
-            positionY = "14.8%";
-            positionX = "17.2%";
+            positionY = "14.5%";
+            positionX = "15.3%";
             fontPositionY = "17%";
-            fontPositionX = "23%";
+            fontPositionX = "18.2%";
             break;
         case 53:
             position = "sb";
-            positionY = "4.8%";
-            positionX = "17.2%";
+            positionY = "5.5%";
+            positionX = "15.3%";
             fontPositionY = "7%";
-            fontPositionX = "23%";
+            fontPositionX = "18.2%";
             break;
         case 54:
             position = "sb";
-            positionY = "-4.8%";
-            positionX = "17.2%";
-            fontPositionY = "-5%";
-            fontPositionX = "23%";
+            positionY = "-3.2%";
+            positionX = "15.3%";
+            fontPositionY = "-2%";
+            fontPositionX = "18.2%";
             break;
         case 55:
             position = "sb";
-            positionY = "25.8%";
-            positionX = "35.2%";
-            fontPositionY = "27%";
-            fontPositionX = "41%";
+            positionY = "23.1%";
+            positionX = "25.7%";
+            fontPositionY = "25.5%";
+            fontPositionX = "28.6%";
             break;
         case 56:
             position = "sb";
-            positionY = "14.8%";
-            positionX = "35.2%";
+            positionY = "14.6%";
+            positionX = "25.7%";
             fontPositionY = "17%";
-            fontPositionX = "41%";
+            fontPositionX = "28.7%";
             break;
         case 57:
             position = "sb";
             positionY = "4.8%";
-            positionX = "35.2%";
+            positionX = "25.7%";
             fontPositionY = "7%";
             fontPositionX = "41%";
             break;
         case 58:
             position = "sb";
             positionY = "-4.8%";
-            positionX = "35.2%";
+            positionX = "25.7%";
             fontPositionY = "7%";
             fontPositionX = "41%";
             break;
@@ -307,8 +306,10 @@ export function slotPicker(slot: number) {
             isSpellBook = true;
             hAlign = "left"
             vAlign = "center";
-            width = "4.8%";
-            height = "7.8%";
+            //width = "4.8%";
+            //height = "7.8%";
+            width = "2.5%";
+            height = "7%";
             fontSize = 12;
             fontWidth = 120;
             fontHeight = 30;

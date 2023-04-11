@@ -12,8 +12,6 @@ import { SpellScroll } from "src/gameUI/spellScroll";
 import { spellAction } from "src/gameFunctions/spellAction";
 import { getspell } from "./spells";
 import { Ispell } from "src/components/spellComponent";
-// import { LootWindow } from "../gameUI/lootWindow";
-// import { Mob } from "./mob";
 
 
 export class Item {
@@ -34,7 +32,6 @@ export class Item {
     private isActiveSpell: boolean;
     private isScribedSpell: boolean;
     private _player: Player;
-    //private _lw: LootWindow;
     private _potiontype;
     private _potionprice;
     private _slot: number;
@@ -54,7 +51,6 @@ export class Item {
     private _isspell;
     private _isability;
     private _isscroll;
-    //private _spellscroll: SpellScroll;
     private _scribedspell;
 
     private potionsound = new SoundBox(
@@ -83,13 +79,10 @@ export class Item {
         spellend: number | null = null,
         sound: AudioClip | null = null,
         tradewindow: TradeWindow | null = null,
-        //lootwindow: LootWindow | TradeWindow | undefined,
-        //npc: Orc | NPC | null = null,
     ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
         this._image = image;
-        //log(`item.ts slot: ${slot} itemtype: ${itemtype}`)
         this._slot = slot;
         this._type = type;
         this._itemtype = itemtype;
@@ -130,8 +123,6 @@ export class Item {
         this._player = obj.player;
         this._questlootclicked = false;
         this._sound = sound;
-        //this._lw = lootwindow;
-        //this._npc = npc;
 
         switch (spellshape) {
             case "BoxShape":
@@ -205,16 +196,6 @@ export class Item {
         this._lootimage.visible = false;
         this._desc.visible = false;
 
-        // if (this._isspell) {
-        //     log(`item.ts desc fontSize ${slotposition.fs}`)
-        //     log(`item.ts desc width ${slotposition.fw}`)
-        //     log(`item.ts desc height ${slotposition.fh}`)
-        //     log(`item.ts desc hAlign ${slotposition.fha}`)
-        //     log(`item.ts desc vAlign ${slotposition.fva}`)
-        //     log(`item.ts desc positionY ${slotposition.fy}`)
-        //     log(`item.ts desc positionX ${slotposition.fx}`)
-        // }
-
 
         if (this.isMerchant) {
             this._lootimage.onClick = new OnClick(() => {
@@ -231,7 +212,6 @@ export class Item {
                 this.sendToBackpack()
             })
         } else if (this.isSpellBook) {
-            //log(`item.ts:212 - This is a scribed spell`)
             let stuff = "stuff"
         }
     }
@@ -246,15 +226,7 @@ export class Item {
 
     public show() {
         log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
-        // this._desc.visible = true;
-
-        // if (this._itemtype == "spell") {
-        //     log('item.ts:226 - in  item show')
-        //     log('item.ts:242 - ', this._desc.value)
-        //     this._lootimage.visible = true;
-        //     this._desc.visible = true;
-        // }
-
+        
         if (this.isLootWindow) {
             this._lootimage.visible = true;
             this._desc.visible = true;
@@ -266,10 +238,6 @@ export class Item {
             log('in backpack')
             this._lootimage.visible = true;
             this._desc.visible = true;
-            // } else if (this._backPack.bpopen) {
-            //     log('in bpopen')
-            //     this._lootimage.visible = true;
-            //     this._desc.visible = false;
         } else {
             log('setting desc to visible')
             this._lootimage.visible = true;
@@ -369,30 +337,12 @@ export class Item {
         return this._questlootclicked
     }
 
-    // public quest(questinstance) {
-    //     log("we have a quest match!");
-    //     this._lootimage.onClick = new OnClick(() => {
-    //         this._lootimage.visible = false;
-    //         log('resetting slot: ', this.slot())
-    //         this._actionBar.resetSlot(this.slot());
-    //         log("clicked the quest item in slot ");
-    //         this._questlootclicked = true;
-    //         questinstance.acceptloot()
-
-    //     })
-    //     return 'Added quest click'
-    // }
-
-    // public quest(questinstance) {
-    //     this._lootimage.onClick = new OnPointerDown(() => {
-    //         this._lootimage.visible = false;
-    //         this._actionBar.resetSlot(this.slot());
-    //         this._questlootclicked = true;
-    //         questinstance.acceptloot()
-
-    //     })
-    //     return 'Added quest click'
-    // }
+    public removeItem() {
+        log('inside removeItem')
+        log('slot ', this.slot())
+        this._lootimage.visible = false;
+        this._actionBar.resetSlot(this._slot);
+    }
 
     public addSpellClick() {
         log('inside addSpellClick')
@@ -408,37 +358,21 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
-        //log('in updateLoc:399 ')
         this._lootimage.visible = true;
 
         if (this._isspell) {
-            // if (this._itemtype == "spell") {
-            //     log("item.ts:411 - Cast a spell")
-            // }
-
-            //log('item.ts:416 - calling getspell with: ', this._desc.value)
             let completespell = getspell(this._desc.value)
             spellAction(this, completespell)
             //this.activateSpell(completespell)
 
             return
         }
-
-
-        //log('in updateLoc:427')
-
-
         this._lootimage.onClick = new OnPointerDown(() => {
-
-            //log('in updateLoc:432')
-
             if (this._player == undefined || !this._player.alive) {
                 log('item.ts:354 - you cant heal if you are dead')
                 return
             }
-
             log('in item.ts:435')
-
 
             if (this._isscroll) {
                 log('item.ts:360 - Clicked on the scroll')
@@ -446,9 +380,7 @@ export class Item {
 
                 return
             }
-
             log('in item.ts:445')
-
 
             if (this._isweapon) {
                 if (this._image.src.split('/')[2] == 'rustysword.png') {
@@ -495,12 +427,7 @@ export class Item {
                 }
             } else {
                 this._player.unusable()
-                // this._lootimage.visible = false;
-                // this._actionBar.resetSlot(slot);
-                // this._backPack.resetSlot(slot);
             }
-
-
         });
     }
 
@@ -547,16 +474,7 @@ export class Item {
                 this._lootimage.visible = true;
                 this._desc.visible = false;
             }
-
-            // if (this._lw) {
-            //     this._lw.hidelootwindow();
-            //     this._lw.looted = true;
-            // }
-
             this.backpacksound.play();
-            // if (this._npc) {
-            //     this._npc.hideMob();
-            // }
         }
     }
 
@@ -608,7 +526,6 @@ export class Item {
                 this._desc.visible = false;
                 this._lootimage.visible = false;
             }
-
             this.isBackpack = true;
         }
     }
@@ -619,9 +536,5 @@ export class Item {
         this._lootimage.onClick = new OnPointerDown(() => {
             this.sendItemDown();
         });
-
-        //this._tradewindow.purchase(this)
     }
-
-
 }

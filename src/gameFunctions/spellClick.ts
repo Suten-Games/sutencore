@@ -13,7 +13,7 @@ export function addSpellClick(image:UIImage, name:string) {
     image.onClick = new OnPointerDown(
         (e) => {
 
-            let ps: ParticleSystem
+            //let ps: ParticleSystem
             let myactionbarcontents = obj.fetchactionbar()
             log('Clicked in addSpellClick function')
             log('First Check if the first slot in the AB is a spell or not')

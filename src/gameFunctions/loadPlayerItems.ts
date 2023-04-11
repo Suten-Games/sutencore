@@ -13,16 +13,16 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     ui.bp.resetCharWindow()
 
     let sb = [
-        { image: "images/spells/painterly-spell-icons-1/protect-red-3.png", slot: 51, srcw: 256, srch: 256, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/painterly-spell-icons-1/protect-eerie-1.png", slot: 52, srcw: 256, srch: 256, desc: "Amun's Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/painterly-spell-icons-1/fireball-sky-3.png", slot: 53, srcw: 256, srch: 256, desc: "Fire Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/painterly-spell-icons-1/enchant-acid-3.png", slot: 54, srcw: 256, srch: 256, desc: "Acid Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/painterly-spell-icons-1/enchant-orange-2.png", slot: 55, srcw: 256, srch: 256, desc: "Fire Blade", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/painterly-spell-icons-1/evil-eye-eerie-3.png", slot: 56, srcw: 256, srch: 256, desc: "Evil Eye", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }
+        { image: "images/spells/protect-red-3.png", slot: 51, srcw: 122, srch: 120, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/protect-eerie-1.png", slot: 52, srcw: 122, srch: 120, desc: "Amun's Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/fireball-sky-3.png", slot: 53, srcw: 122, srch: 120, desc: "Fire Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/enchant-acid-3.png", slot: 54, srcw: 122, srch: 120, desc: "Acid Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/enchant-orange-2.png", slot: 55, srcw: 122, srch: 120, desc: "Fire Blade", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/evil-eye-eerie-3.png", slot: 56, srcw: 122, srch: 120, desc: "Evil Eye", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }
     ]
 
     let actions = [
-        //{ image: "images/spells/painterly-spell-icons-1/protect-red-3.png", slot: 1, srcw: 256, srch: 256, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/spells/protect-red-3.png", slot: 1, srcw: 122, srch: 120, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
         {
             "image": "images/looticons/blueHealthPotion.png",
             "slot": 8,
@@ -108,11 +108,11 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     //log('in loadPlayerItems - spellbook ', json.spellbook)
         
 
-    ui.bp.bootLoadBackPack(json.backpack);
-    ui.ab.bootLoadActionBar(json.actionbar);
-    //ui.ab.bootLoadActionBar(actions)
-    ui.sb.bootLoadSpellBook(json.spellbook)
-    //ui.sb.bootLoadSpellBook(sb)
+    //ui.bp.bootLoadBackPack(json.backpack);
+    //ui.ab.bootLoadActionBar(json.actionbar);
+    ui.ab.bootLoadActionBar(actions)
+    //ui.sb.bootLoadSpellBook(json.spellbook)
+    ui.sb.bootLoadSpellBook(sb)
     obj.actionbar = ui.ab;
     obj.backpack = ui.bp;
     obj.spellbook = ui.sb;

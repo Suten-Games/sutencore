@@ -27,10 +27,12 @@ export class SpellScroll {
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "left";
         this._bp.vAlign = "center";
-        this._bp.width = "40%";
-        this._bp.height = "50%";
-        this._bp.positionY = "10.2%";
-        this._bp.positionX = "12.5%";
+        this._bp.width = "30%";
+        this._bp.height = "40%";
+        // this._bp.positionY = "10.2%";
+        // this._bp.positionX = "12.5%";
+        this._bp.positionY = "40.2%";
+        this._bp.positionX = "50.5%";
         this._bp.sourceWidth = 820; //Old Style
         this._bp.sourceHeight = 644; //Old Style
         this._bp.visible = false;
@@ -52,8 +54,8 @@ export class SpellScroll {
         this._desc1.height = 30;
         this._desc1.hAlign = "left";
         this._desc1.vAlign = "center";
-        this._desc1.positionY = "10%";
-        this._desc1.positionX = "17%";
+        this._desc1.positionY = "40%";
+        this._desc1.positionX = "61%";
         //this._desc1.value = this._spell.desc;
         this._desc1.visible = false;
 
@@ -73,8 +75,8 @@ export class SpellScroll {
         this._closebutton.vAlign = "center";
         this._closebutton.width = "5%";
         this._closebutton.height = "8%";
-        this._closebutton.positionX = "44%";
-        this._closebutton.positionY = "24%";
+        this._closebutton.positionX = "74%";
+        this._closebutton.positionY = "50%";
         this._closebutton.sourceWidth = 168;
         this._closebutton.sourceHeight = 164;
         this._closebutton.visible = false;
@@ -89,8 +91,10 @@ export class SpellScroll {
         this._scribebutton.vAlign = "center";
         this._scribebutton.width = "5%";
         this._scribebutton.height = "5.3%";
-        this._scribebutton.positionY = "-6%";
-        this._scribebutton.positionX = "18%";
+        this._scribebutton.positionY = "30%";
+        this._scribebutton.positionX = "55%";
+        // this._bp.positionY = "40.2%";
+        // this._bp.positionX = "50.5%";
         this._scribebutton.sourceWidth = 1314;
         this._scribebutton.sourceHeight = 545;
         this._scribebutton.visible = false;
@@ -117,7 +121,7 @@ export class SpellScroll {
     }
 
     public setSpell(spellname:string) {
-        //log('spellScroll - Inside setSpell')
+        log('spellScroll - Inside setSpell')
 
         let spell = getspell(spellname)
         this._spell = spell
@@ -127,10 +131,11 @@ export class SpellScroll {
         this._lootbig.vAlign = "bottom";
         this._lootbig.width = "5%";
         this._lootbig.height = "8%";
-        this._lootbig.positionY = "68%";
-        this._lootbig.positionX = "-30%";
+        this._lootbig.positionY = "95%";
+        this._lootbig.positionX = "8%";
         this._lootbig.sourceWidth = 122;
         this._lootbig.sourceHeight = 120;
+        this._desc1.value = this._spell.desc;
         //this._lootbig.visible = false;
         this.show()
     }
