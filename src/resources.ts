@@ -152,6 +152,8 @@ export default {
         characterButton: new Texture("images/character_button.png"),
         abandonButton: new Texture("images/vali/AbandonButton.png"),
         spellBook: new Texture("images/vali/SpellBook.png"),
-        spellScroll: new Texture("images/spells/spellpage.png")
+        spellScroll: new Texture("images/spells/spellpage.png"),
+        deleteSpell: new Texture("images/vali/DeleteSpell.png"),
+        deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png")
     }
 }
