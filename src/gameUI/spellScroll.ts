@@ -3,6 +3,7 @@ import { Ispell } from "src/components/spellComponent";
 import { getspell } from "src/gameObjects/spells";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { SpellBook } from "./spellBook";
+import { Item } from "src/gameObjects/item";
 
 export class SpellScroll {
     private _canvas;
@@ -17,6 +18,7 @@ export class SpellScroll {
     private _armor;
     private _spell:Ispell;
     private _spellbook: SpellBook;
+    private currentScroll: Item
 
     constructor(canvas: any, image: any) {
         let obj = Singleton.getInstance();
@@ -120,8 +122,9 @@ export class SpellScroll {
         return this._bp.visible;
     }
 
-    public setSpell(spellname:string) {
+    public setSpell(spellname:string, scroll:Item) {
         log('spellScroll - Inside setSpell')
+        this.currentScroll = scroll
 
         let spell = getspell(spellname)
         this._spell = spell
@@ -141,10 +144,22 @@ export class SpellScroll {
     }
 
     private scribe() {
-        //log('need to scribe the spell without reference to UI')
         let obj = Singleton.getInstance();
+        let spells = obj.sbook
+
+        const isSpellAlreadyScribed = spells.some((spell) => {
+            log('spells ', spell.lootdesc())
+            return this._spell.name === spell.lootdesc();
+        });
+
+        if (isSpellAlreadyScribed) {
+            log('Spell is already scribed, exiting')
+            return;
+        }
+
         obj.spellbook.scribeSpell(this._spell.name)
         this.hide()
+        this.currentScroll.removeItem()
     }
 
     public show() {

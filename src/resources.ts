@@ -112,7 +112,8 @@ export default {
         fishskeleton: new GLTFShape('models/floor2/FishSkeleton_01/FishSkeleton_01.glb'),
         dagger: new GLTFShape('models/floor2/Dagger_01/Dagger_01.glb'),
         bannerblue: new GLTFShape('models/floor2/Banner_Blue_02/Banner_Blue_02.glb'),
-        bannerred: new GLTFShape('models/floor2/Banner_Red_02/Banner_Red_02.glb')
+        bannerred: new GLTFShape('models/floor2/Banner_Red_02/Banner_Red_02.glb'),
+        barricade: new GLTFShape('models/barricade.glb'),
     },
     loot: {
         greekSword: new Texture("images/looticons/greeksword.png"),

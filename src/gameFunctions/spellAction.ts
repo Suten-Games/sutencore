@@ -1,5 +1,6 @@
 import { Item } from "src/gameObjects/item";
 import { ParticleSystem } from "src/gameSystems/ParticleSystem";
+import { openHeavens } from "src/gameSystems/precipitation";
 import { setTimeout } from "src/gameUtils/timeOut";
 import resources from "src/resources";
 
@@ -53,15 +54,6 @@ export function spellAction(spell:Item, completespell:any) {
     ps = new ParticleSystem(2, 2, shape, completespell.sound)
     engine.addSystem(ps)
 
-    //log('spellAction.ts:33 - Setting spell onClick')
-
-    // spell.lootimage.onClick = new OnPointerDown(() => {
-    //     ps.turnOn(shape, completespell.spellstart, completespell.spellend)
-    //     //log("spellAction.ts:415 - calling activateSpell()")
-    //     //this.activateSpell()
-    //     spell.activateSpell(completespell)
-    // })
-
     let lastClickTime: number = 0;
     let doubleClickDuration: number = 300; // milliseconds
     let singleClickTimeout: Entity | null = null;
@@ -87,8 +79,39 @@ export function spellAction(spell:Item, completespell:any) {
                         //log("Single-clicked in addSpellClick");
                         deleteSpell.visible = false;
                         deleteSpellIcon.visible = false;
-                        ps.turnOn(shape, completespell.spellstart, completespell.spellend) 
-                        spell.activateSpell(completespell) 
+                        if(spell.spelltype() == "Shield") {
+                            ps.turnOn(shape, completespell.spellstart, completespell.spellend)
+                            spell.activateSpell(completespell) 
+                        } else if (spell.spelltype() == "Defense") {
+                            //log('Create a Blue Barricade')
+                            //const origin = Camera.instance.feetPosition
+                            let origin = Camera.instance.feetPosition.clone()
+                            //newTarget.y = newTarget.y - 1.75;
+                            origin.x = origin.x + 2;
+                            //origin.y = origin.y + 2;
+                            //let dividerShape = resources.models.barricade;
+                            const myEntity = new Entity()
+                            myEntity.addComponent(new BoxShape())
+
+                            //Create material and configure its fields
+                            const myMaterial = new Material()
+                            myMaterial.albedoColor = Color3.Blue()
+                            myMaterial.metallic = 0.9
+                            myMaterial.roughness = 0.1
+
+                            //myEntity.addComponent(new Transform())
+                            //myEntity.getComponent(Transform).position.set(5, 1, 5)
+                            //myEntity.getComponent(Transform).position.set(origin)
+                            myEntity.addComponent(new Transform({ position: origin }))
+                           
+
+                            //Assign the material to the entity
+                            myEntity.addComponent(myMaterial)
+                            engine.addEntity(myEntity)
+                        } else if (spell.spelltype() == "Weather") {
+                            openHeavens("rain")   
+                        }
+                        
                     });
                 }
                 lastClickTime = currentTime;

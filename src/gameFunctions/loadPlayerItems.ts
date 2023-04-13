@@ -18,24 +18,11 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
         { image: "images/spells/fireball-sky-3.png", slot: 53, srcw: 122, srch: 120, desc: "Fire Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
         { image: "images/spells/enchant-acid-3.png", slot: 54, srcw: 122, srch: 120, desc: "Acid Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
         { image: "images/spells/enchant-orange-2.png", slot: 55, srcw: 122, srch: 120, desc: "Fire Blade", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/evil-eye-eerie-3.png", slot: 56, srcw: 122, srch: 120, desc: "Evil Eye", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }
     ]
 
     let actions = [
         { image: "images/spells/protect-red-3.png", slot: 1, srcw: 122, srch: 120, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        {
-            "image": "images/looticons/blueHealthPotion.png",
-            "slot": 8,
-            "srcw": 1219,
-            "srch": 2154,
-            "desc": "Major Healing Potion",
-            "type": "potion",
-            "itemtype": "consumable",
-            "spellshape": null,
-            "spellstart": null,
-            "spellend": null,
-            "sound": null
-        },
+       
         {
             "image": "images/looticons/sandbeetle.png",
             "slot": 4,
@@ -76,32 +63,32 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
             "sound": null
         },
         {
-            "image": "images/looticons/rustyaxe.png",
-            "slot": 3,
-            "srcw": 1219,
-            "srch": 2154,
-            "desc": "Rusty Axe",
-            "type": "1H slash",
-            "price": 6,
-            "itemtype": "weapon",
-            "spellshape": null,
-            "spellstart": null,
-            "spellend": null,
-            "sound": ""
-        },
-        {
             "image": "images/looticons/spellscroll.png",
             "slot": 7,
             "srcw": 122,
             "srch": 120,
-            "desc": "Minor Shielding",
-            "type": "shield",
+            "desc": "Barricade",
+            "type": "defense",
             "price": 5,
             "itemtype": "scroll",
-            "spellshape": null,
-            "spellstart": null,
-            "spellend": null,
-            "sound": null
+            "spellshape": "BoxShape",
+            "spellstart": 10,
+            "spellend": 100,
+            "sound": resources.sounds.wardspell
+        },
+        {
+            "image": "images/looticons/spellscroll.png",
+            "slot": 8,
+            "srcw": 122,
+            "srch": 120,
+            "desc": "Blizzard",
+            "type": "weather",
+            "price": 5,
+            "itemtype": "scroll",
+            "spellshape": "BoxShape",
+            "spellstart": 10,
+            "spellend": 100,
+            "sound": resources.sounds.wardspell
         }
     ]
 
@@ -116,5 +103,34 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     obj.actionbar = ui.ab;
     obj.backpack = ui.bp;
     obj.spellbook = ui.sb;
+
+    //{ image: "images/spells/evil-eye-eerie-3.png", slot: 56, srcw: 122, srch: 120, desc: "Evil Eye", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }
+    // {
+    //     "image": "images/looticons/blueHealthPotion.png",
+    //         "slot": 8,
+    //             "srcw": 1219,
+    //                 "srch": 2154,
+    //                     "desc": "Major Healing Potion",
+    //                         "type": "potion",
+    //                             "itemtype": "consumable",
+    //                                 "spellshape": null,
+    //                                     "spellstart": null,
+    //                                         "spellend": null,
+    //                                             "sound": null
+    // },
+    // {
+    //     "image": "images/looticons/rustyaxe.png",
+    //         "slot": 3,
+    //             "srcw": 1219,
+    //                 "srch": 2154,
+    //                     "desc": "Rusty Axe",
+    //                         "type": "1H slash",
+    //                             "price": 6,
+    //                                 "itemtype": "weapon",
+    //                                     "spellshape": null,
+    //                                         "spellstart": null,
+    //                                             "spellend": null,
+    //                                                 "sound": ""
+    // },
 
 }

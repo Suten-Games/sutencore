@@ -65,6 +65,7 @@ export class Singleton {
     private _tradewindow: TradeWindow;
     private _socketclass: any;
     private _inDuat: boolean = false;
+    private _currentWeather: string = "sun";
     // private _scribedspells: Map<string, Ispell>;
 
     constructor(balance = 0) {
@@ -136,6 +137,15 @@ export class Singleton {
     get gameover() {
         return this._gameover;
     }
+    
+    set currentWeather(val:string) {
+        this._currentWeather = val;
+    }
+
+    get currentweather() {
+        return this._currentWeather;
+    }
+
 
     set winner(val) {
         this._winner = val;

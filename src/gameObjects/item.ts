@@ -376,7 +376,7 @@ export class Item {
 
             if (this._isscroll) {
                 log('item.ts:360 - Clicked on the scroll')
-                this._spellScroll.setSpell(this._desc.value)
+                this._spellScroll.setSpell(this._desc.value, this)
 
                 return
             }

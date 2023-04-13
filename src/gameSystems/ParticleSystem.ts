@@ -87,7 +87,13 @@ export class ParticleSystem {
         material.emissiveIntensity = 2
         let fireHeight = 0
 
-        const origin = Camera.instance.feetPosition
+        //let newTarget = this.camera.feetPosition.clone();
+        let origin = Camera.instance.feetPosition
+        //newTarget.y = newTarget.y - 1.75;
+        //origin.x = origin.x + 23;
+        //origin.y = origin.y + 10;
+        //const origin = Camera.instance.feetPosition
+        //origin.x += 2;
         const shape = spellshape
         shape.withCollisions = false;
         const billboard = new Billboard()
