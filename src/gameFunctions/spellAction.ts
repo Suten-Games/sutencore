@@ -3,6 +3,8 @@ import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 import { openHeavens } from "src/gameSystems/precipitation";
 import { setTimeout } from "src/gameUtils/timeOut";
 import resources from "src/resources";
+//import { writeToCl } from "./writeToCL";
+//import { CombatLog } from "src/gameUI/combatLog";
 
 export function spellAction(spell:Item, completespell:any) {
     let ps: ParticleSystem
@@ -79,10 +81,12 @@ export function spellAction(spell:Item, completespell:any) {
                         //log("Single-clicked in addSpellClick");
                         deleteSpell.visible = false;
                         deleteSpellIcon.visible = false;
-                        if(spell.spelltype() == "Shield") {
+                        //log(`spell.spelltype: ${spell.spelltype()}`)
+                        //log(`completespell.spelltype ${completespell.spelltype}`)
+                        if(completespell.spelltype === "Shield") {
                             ps.turnOn(shape, completespell.spellstart, completespell.spellend)
                             spell.activateSpell(completespell) 
-                        } else if (spell.spelltype() == "Defense") {
+                        } else if (completespell.spelltype === "Defense") {
                             //log('Create a Blue Barricade')
                             //const origin = Camera.instance.feetPosition
                             let origin = Camera.instance.feetPosition.clone()
@@ -108,8 +112,10 @@ export function spellAction(spell:Item, completespell:any) {
                             //Assign the material to the entity
                             myEntity.addComponent(myMaterial)
                             engine.addEntity(myEntity)
-                        } else if (spell.spelltype() == "Weather") {
-                            openHeavens("rain")   
+                        } else if (completespell.spelltype === "Weather") {
+                            //writeToCl(completespell.oncastmsg[0].line1,'')
+                            openHeavens(completespell, completespell.sound)   
+                            spell.activateSpell(completespell) 
                         }
                         
                     });

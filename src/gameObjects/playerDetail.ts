@@ -9,6 +9,7 @@ import { Item } from "./item";
 import { Player } from "./player";
 import { SpellScroll } from "src/gameUI/spellScroll";
 import { SpellBook } from "src/gameUI/spellBook";
+import { CombatLog } from "src/gameUI/combatLog";
 //import { Ispell } from "src/components/spellComponent";
 //import { closeSocket } from "../gameFunctions/wsConnection";
 //import { LootWindow } from "src/gameUI/lootWindow";
@@ -61,6 +62,7 @@ export class Singleton {
     private _backPack: BackPack;
     private _spellScroll: SpellScroll;
     private _spellBook: SpellBook;
+    private _combatLog: CombatLog
     private _player: Player;
     private _tradewindow: TradeWindow;
     private _socketclass: any;
@@ -138,7 +140,7 @@ export class Singleton {
         return this._gameover;
     }
     
-    set currentWeather(val:string) {
+    set currentweather(val:string) {
         this._currentWeather = val;
     }
 
@@ -246,6 +248,14 @@ export class Singleton {
 
     get spellscroll() {
         return this._spellScroll
+    }
+
+    set combatlog(val) {
+        this._combatLog = val
+    }
+
+    get combatlog() {
+        return this._combatLog
     }
 
     set spellbook(val) {

@@ -261,21 +261,21 @@ export function slotPicker(slot: number) {
             positionY = "14.6%";
             positionX = "25.7%";
             fontPositionY = "17%";
-            fontPositionX = "28.7%";
+            fontPositionX = "28.6%";
             break;
         case 57:
             position = "sb";
             positionY = "4.8%";
             positionX = "25.7%";
             fontPositionY = "7%";
-            fontPositionX = "41%";
+            fontPositionX = "28.6%";
             break;
         case 58:
             position = "sb";
             positionY = "-4.8%";
             positionX = "25.7%";
-            fontPositionY = "7%";
-            fontPositionX = "41%";
+            fontPositionY = "-2%";
+            fontPositionX = "28.6%";
             break;
         case 60:
             position = "as";

@@ -88,12 +88,12 @@ export class LightningSystem implements ISystem {
 // if no fake weather in params, check weather API
 function getWeather(weather: CurrentWeather) {
     const obj = Singleton.getInstance();
-    log('currentWeather: ', obj.currentWeather)
+    log('currentWeather: ', obj.currentweather)
     log('fakeWeather: ', fakeWeather)
     let newWeather: Weather = Weather.sun
     //let fakeWeather = "snow"
-    if (fakeWeather) {
-        newWeather = mapWeather(fakeWeather)
+    if (obj.currentweather) {
+        newWeather = mapWeather(obj.currentweather)
         log('calling setWeather')
         setWeather(weather, newWeather)
     } 

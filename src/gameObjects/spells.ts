@@ -109,7 +109,7 @@ const barricade: Ispell = {
     "spellshape": "BoxShape",
     "spellstart": 5,
     "spellend": 200,
-    "sound": resources.sounds.wardspell,
+    "sound": resources.sounds.elementalspell,
     "srcw": 122,
     "srch": 120,
     "price": 6
@@ -125,7 +125,7 @@ const blizzard: Ispell = {
     "dispellable": true,
     "name": "Blizzard",
     "spelltype": "Weather",
-    "skill": "Conjuration",
+    "skill": "snow",
     "recasttime": 3,
     "range": 3,
     "size": 3,
@@ -146,7 +146,44 @@ const blizzard: Ispell = {
     "spellshape": "BoxShape",
     "spellstart": 5,
     "spellend": 200,
-    "sound": resources.sounds.wardspell,
+    "sound": resources.sounds.snowspell,
+    "srcw": 122,
+    "srch": 120,
+    "price": 60
+}
+
+const sprinkle: Ispell = {
+    "mana": 12,
+    "casttime": 10,
+    "fizzleadj": 2,
+    "fizzletime": 1,
+    "location": "self",
+    "blockable": false,
+    "dispellable": true,
+    "name": "Sprinkle",
+    "spelltype": "Weather",
+    "skill": "rain",
+    "recasttime": 3,
+    "range": 3,
+    "size": 3,
+    "class": "Mage",
+    "level": 3,
+    "timeofdate": "any",
+    "deletable": false,
+    "focusable": false,
+    "interruptable": false,
+    "targettype": "self",
+    "desc": "Sprinkle",
+    "levelmsg": [{ "line1": "msg 2" }],
+    "oncastmsg": [{ "line1": "Rain begins to fall" }],
+    "ondropmsg": [{ "line1": "The rain stops falling" }],
+    "duration": 60000,
+    "image": new Texture("images/spells/heal-sky-2.png"),
+    "itemtype": "spell",
+    "spellshape": "BoxShape",
+    "spellstart": 5,
+    "spellend": 200,
+    "sound": resources.sounds.rainspell,
     "srcw": 122,
     "srch": 120,
     "price": 60
@@ -163,6 +200,7 @@ allspells["Minor Shielding I"] = minorShielding
 allspells["Amun's Shielding"] = amunsShielding
 allspells["Barricade"] = barricade
 allspells["Blizzard"] = blizzard
+allspells["Sprinkle"] = sprinkle
 
 export function getspells() {
     return allspells

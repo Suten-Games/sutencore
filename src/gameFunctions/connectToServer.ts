@@ -17,7 +17,8 @@ export async function connectToServer(ui: UI,json: PlayerState, player: Player) 
             ui.cl
         );
     } catch (error) {
-        writeToCl(ui, `:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
+        writeToCl(`:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
+        //writeToCl(ui, `:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
         //failedstart = true;
 
         return;

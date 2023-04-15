@@ -27,6 +27,8 @@ export function addSpellClick(image:UIImage, name:string) {
             log(`fetching spell called ${name} from the Spell Library`)
             let completespell = getspell(name);
             
+            log(`completespell.spelltype: ${completespell.spelltype}`)
+            
             let newspell = new Item(
                 completespell.image, slot, completespell.srcw, completespell.srch, completespell.desc,
                 completespell.spelltype, completespell.price, completespell.itemtype, completespell.spellshape, completespell.spellstart,
@@ -50,20 +52,20 @@ function querySlot(): number {
     const obj = Singleton.getInstance();
     let myactionbarcontents = obj.fetchactionbar()
     let found = 0
-    for (let i = 0; i < 9; i++) {
-        log(` On loop: ${i} - Checking ${obj.actionbarslots[i]} against ${myactionbarcontents[i].itemtype}`)
-        if (obj.actionbarslots[i] === 'filled' && myactionbarcontents[i].itemtype !== 'spell') {
+    for (let i = 1; i < 10; i++) {
+        //log(` On loop: ${i} - Checking ${obj.actionbarslots[i]} against ${myactionbarcontents[i].itemtype}`)
+        if (obj.actionbarslots[i] !== 'filled') { 
+            log(`in the querySlot method returning: ${i + 1}`)
+            return i + 1;
+        } else if (obj.actionbarslots[i] === 'filled' && myactionbarcontents[i].itemtype !== 'spell') {
             const poppeditem = myactionbarcontents.shift();
             obj.actionbarslots[i] = null;
             //this._myactionbarcontents.push(poppeditem);
-            log(`in the querySlot method returning 1 ${i + 1}`)
+            log(`in the querySlot method returning: ${i + 1}`)
             return i + 1;
-        } else if (obj.actionbarslots[i] !== 'filled') {
-            log(`in the querySlot method returning 2 ${i + 1}`)
-            return i + 1;
-        }
+        } 
     }
-    log(`in the querySlot method returning 4 ${found}`)
+    log(`in the querySlot method returning: ${found}`)
     return found
 
 }

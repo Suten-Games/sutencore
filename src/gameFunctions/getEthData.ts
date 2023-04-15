@@ -12,10 +12,12 @@ export async function getEthData(ui: UI, player:Player) {
     let userdata = await getUserData();
     
     if (userdata == null) {
-        writeToCl(ui, `:(  Userdata failed to load  :(`, `Please refresh/reload the scene`)
+        writeToCl(`:(  Userdata failed to load  :(`, `Please refresh/reload the scene`)
+        //writeToCl(ui, `:(  Userdata failed to load  :(`, `Please refresh/reload the scene`)
         return;
     } else if (!userdata.hasConnectedWeb3) {
-        writeToCl(ui, `Web3 must be connected`, `Please add '&ENABLE_WEB3' to URL`)
+        writeToCl(`Web3 must be connected`, `Please add '&ENABLE_WEB3' to URL`)
+        //writeToCl(ui, `Web3 must be connected`, `Please add '&ENABLE_WEB3' to URL`)
         return;
     }
     // //const balance = await matic.balance(address)
@@ -40,6 +42,7 @@ export async function getEthData(ui: UI, player:Player) {
     obj.backpack = ui.bp;
     obj.spellscroll = ui.ss;
     obj.spellbook = ui.sb;
+    obj.combatlog = ui.cl;
 
     return lowerCaseAddress
 }

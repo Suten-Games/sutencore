@@ -14,7 +14,8 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
     
     var obj = Singleton.getInstance();
 
-    writeToCl(ui, `You are a level 1 Adventurer`, `Press 'esc' to lock/unlock your mouse.`)
+    writeToCl(`You are a level 1 Adventurer`, `Press 'esc' to lock/unlock your mouse.`)
+    //writeToCl(ui, `You are a level 1 Adventurer`, `Press 'esc' to lock/unlock your mouse.`)
 
     obj.playerhp = 43;
     obj.playerclass = "Adventurer";

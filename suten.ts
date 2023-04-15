@@ -11,6 +11,18 @@ export const sQuestNpc = "https://sutenquestapi.azurewebsites.net/questnpc/loc/"
 export const sLoot = "https://sutenquestapi.azurewebsites.net/loot/";
 export const sMob = "https://sutenquestapi.azurewebsites.net/npc";
 
+export const fakeWeather: string = "snow"
+
+// LATITUDE AND LONGITUDE OF WEATHER CONDITIONS
+
+const lat: string = '37'
+const lon: string = '5'
+
+// FALLING SPEED OF RAIN AND SNOW
+
+export const rainSpeed = 4
+export const snowSpeed = 2
+
 
 //export var sutenBase = '-148,-124'; // These were the coordinates of the Riverlands
 

@@ -71,7 +71,7 @@ export class ParticleSystem {
     }
 
     public turnOn(spellshape: any, start: any, end: any) {
-        //log(`in ps.turnOn ${spellshape} ${start} ${end}`)
+        log(`in ps.turnOn ${spellshape} ${start} ${end}`)
         this._timer = 2
         this._fireBurning = true
         //log("Calling soundbox play()")

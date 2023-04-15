@@ -4,16 +4,30 @@ import { RotateSystem } from "./flakeRotation"
 import { SpawnSystem } from "./SpawnSystem"
 import { setTimeout } from "src/gameUtils/timeOut"
 import { Singleton } from "src/gameObjects/playerDetail"
+import { SoundBox } from "src/gameObjects/soundBox"
+import { Ispell } from "src/components/spellComponent"
+import { IsPrecip } from "src/components/precipitationComponent"
 
 // WEATHER CONTROLLER
 
 
-export function openHeavens(val:string) {
+export function openHeavens(completespell:Ispell, sound: AudioClip) {
     const obj = Singleton.getInstance();
-    log("setting currentWeather to ", val)
-    obj.currentWeather = val
+    obj.currentweather = completespell.skill
+    
+    obj.combatlog.text = completespell.oncastmsg[0].line1
+
+    log(`checking currentWeather in the obj: ${obj.currentweather}`)
     
     const weatherObject = new CurrentWeather()
+
+    const soundbox = new SoundBox(
+        new Transform({ position: Camera.instance.feetPosition }),
+        sound,
+        false
+    );
+
+    soundbox.play()
 
     // ADD HOUSE
 
@@ -68,8 +82,19 @@ export function openHeavens(val:string) {
 
     systems.forEach((system) => engine.addSystem(system));
 
-    setTimeout(10000, () => {
+    setTimeout(completespell.duration, () => {
+        const drops = engine.getComponentGroup(IsPrecip)
+        for (const drop of drops.entities) {
+            log('removing drop')
+            engine.removeEntity(drop)
+        }
         systems.forEach((system) => engine.removeSystem(system));
+        obj.combatlog.text = completespell.ondropmsg[0].line1
+        const flakes = engine.getComponentGroup(IsPrecip)
+        for (const flake of flakes.entities) {
+            log('removing flake')
+            engine.removeEntity(flake)
+        }
     });
 }
 

@@ -27,7 +27,9 @@ export default {
         sheathsword: new AudioClip("sounds/sheathsword.mp3"),
         corkpop: new AudioClip("sounds/corkpop.mp3"),
         wardspell: new AudioClip("sounds/279103-Magic-Game-Protection-Ward-Buff.wav"),
-        elementalspell: new AudioClip("sounds/407875-Elemental_-Good_Cast_Single_Protection-5.wav")
+        elementalspell: new AudioClip("sounds/407875-Elemental_-Good_Cast_Single_Protection-5.wav"),
+        rainspell: new AudioClip("sounds/rain-06.mp3"),
+        snowspell: new AudioClip("sounds/snowstorm-01.mp3")
     },
     animations: {
         riversWalkClip: new AnimationState("walking"),
@@ -147,7 +149,7 @@ export default {
         connectbutton: new Texture("images/dialogs/metamask.png"),
         combatlog: new Texture("images/vali/CombatLog.png"),
         closebutton: new Texture("images/vali/CloseButton.png"),
-        equipButton:     new Texture("images/equip_button.png"),
+        equipButton: new Texture("images/equip_button.png"),
         discardButton: new Texture("images/discard_button.png"),
         scribeButton: new Texture("images/scribe_button.png"),
         characterButton: new Texture("images/character_button.png"),
