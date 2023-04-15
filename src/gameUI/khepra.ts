@@ -26,11 +26,11 @@ export class Khepra {
         })
     }
 
-    public show() {
-        this._bp.visible = true;
-    }
+    // public show() {
+    //     this._bp.visible = true;
+    // }
 
-    public hide() {
-        this._bp.visible = false;
-    }
+    // public hide() {
+    //     this._bp.visible = false;
+    // }
 }

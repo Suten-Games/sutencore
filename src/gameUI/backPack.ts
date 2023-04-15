@@ -242,9 +242,6 @@ export class BackPack {
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
                     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
                 )
-                // let potion = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                //     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
-                //     element.lootwindow, element.npc)
 
                 this.setSlot(element.slot)
                 item.setslot = element.slot

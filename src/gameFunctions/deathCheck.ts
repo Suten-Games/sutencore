@@ -12,11 +12,9 @@ export function deathCheck(ui: UI,json: PlayerState,player: Player) {
 
     if (json.percentage == 0) {
         writeToCl(`${json.name} is a level ${json.level} ${json.characterclass}`, `You have died.`, `Make your way to the Duat.`, `Find and speak with Anpu.`)
-        //writeToCl(ui, `${json.name} is a level ${json.level} ${json.characterclass}`, `You have died.`, `Make your way to the Duat.`, `Find and speak with Anpu.`)
         killPlayer(json,player,ui)
     } else {
-        writeToCl(` `, `Welcome back!`, `You are a level ${json.level} ${json.characterclass}`)
-        //writeToCl(ui, ` `, `Welcome back!`, `You are a level ${json.level} ${json.characterclass}`)
+        writeToCl(`Welcome back!`, `You are a level ${json.level} ${json.characterclass}`)
         setHp(json, player)
         setCharClass(json)
         populatePlayer(player, json)

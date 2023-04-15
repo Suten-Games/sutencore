@@ -5,6 +5,7 @@ import { CombatLog } from "./combatLog";
 import { Khepra } from "./khepra";
 import { SpellBook } from "./spellBook";
 import { SpellScroll } from "./spellScroll";
+import { CharWindowHandler } from "./charWindowHandler";
 
 export class UI {
     private static instance: UI;
@@ -15,6 +16,7 @@ export class UI {
     private khepra: Khepra;
     private spellBook: SpellBook
     private spellScroll: SpellScroll
+    private charWindowHandler: CharWindowHandler
 
     constructor() {
         if (UI.instance) {
@@ -28,6 +30,7 @@ export class UI {
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.spellScroll = new SpellScroll(this.gameCanvas, resources.interface.spellScroll)
+        //this.charWindowHandler = new CharWindowHandler(this.gameCanvas, resources.interface.characterButton)
 
     }
 
