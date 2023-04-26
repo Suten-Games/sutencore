@@ -16,6 +16,7 @@ cp -R src/resources.ts $INIT_CWD/src
 cp -R src/components $INIT_CWD/src
 cp -R src/gameFunctions $INIT_CWD/src
 cp -R src/gameObjects $INIT_CWD/src
+cp -R src/gameServer $INIT_CWD/src
 cp -R src/gameSystems $INIT_CWD/src
 cp -R src/gameUI $INIT_CWD/src
 cp -R src/gameUtils $INIT_CWD/src
