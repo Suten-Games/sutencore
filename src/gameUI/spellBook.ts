@@ -143,7 +143,7 @@ export class SpellBook {
     }
 
     public bootLoadSpellBook(data: any[]) {
-        log(`debug: 13 Inside bootSpellBook `, data)
+        //log(`debug: 13 Inside bootSpellBook `, data)
 
         data.forEach(element => {
             if (element.slot) {

@@ -238,7 +238,7 @@ export class BackPack {
 
         data.forEach(element => {
             if (element.slot) {
-                log('actionBar:90 element ', JSON.stringify(element))
+                //log('actionBar:90 element ', JSON.stringify(element))
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
                     element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,
                 )

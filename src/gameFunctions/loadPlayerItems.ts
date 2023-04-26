@@ -8,6 +8,8 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
 
     var obj = Singleton.getInstance();
 
+    log(`loadPlayerItems:11: ${obj.player.name}`)
+
     ui.bp.playerclass = obj.playerclass
 
     ui.bp.resetCharWindow()
@@ -310,10 +312,10 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
 
     ui.bp.bootLoadBackPack(bp)
     //ui.bp.bootLoadBackPack(json.backpack);
-    ui.ab.bootLoadActionBar(json.actionbar);
-    //ui.ab.bootLoadActionBar(actions)
-    ui.sb.bootLoadSpellBook(json.spellbook)
-    //ui.sb.bootLoadSpellBook(sb)
+    //ui.ab.bootLoadActionBar(json.actionbar);
+    ui.ab.bootLoadActionBar(actions)
+    //ui.sb.bootLoadSpellBook(json.spellbook)
+    ui.sb.bootLoadSpellBook(sb)
     obj.actionbar = ui.ab;
     obj.backpack = ui.bp;
     obj.spellbook = ui.sb;

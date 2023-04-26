@@ -4,7 +4,7 @@ import { UI } from "src/gameUI/ui";
 let lowerCaseAddress: string = "";
 
 export async function createDefaultPlayer(ui:UI ) {
-    log(`debug: 2 Inside createPlayer`)
+    //log(`debug: 2 Inside createPlayer`)
 
     let player = new Player(
         lowerCaseAddress,

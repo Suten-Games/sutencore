@@ -10,6 +10,9 @@ import { CombatLog } from "../gameUI/combatLog";
 import { Item } from "../gameObjects/item";
 import { SoundBox } from "src/gameObjects/soundBox";
 import { Singleton } from "src/gameObjects/playerDetail";
+import { Npc } from "src/gameObjects/npc";
+import { NpcFSM } from "src/gameFunctions/npcFSM";
+import { NpcId } from "src/components/npcIdComponent";
 
 
 const updateInterval = 5; //10
@@ -45,32 +48,32 @@ export async function joinSocketsServer(
     combatLog: CombatLog
 ) {
 
-    // keep players in different realms in separate rooms for the ws server
-    //userData = await getUserData()
-    //alteredUserName = userData.displayName + Math.floor(Math.random() * 10000)
-
-    let realm = await getCurrentRealm(); // { displayName: 'pepito' } //
-
-    //    log(`You are in the realm: `, realm.displayName);
-    // connect to websockets server
-    //const socket = new WebSocket(server + realm.displayName + "-rivers");
     const socket = new WebSocket(server)
-    //log("socket connection to: ", server + realm.displayName + "-rivers");
 
     socket.onopen = async function (e) {
-        //log("wsConnection successful ", e);
         let good = "good";
     };
 
-    // for each ws message that arrives
     socket.onmessage = async function (event) {
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
             //log("in wsConnection - msg: ", msg);
 
+            if (mobs.entities.length == 0) {
+                handleGameMessage(msg);
+            } else {
+                for (let item in msg) {
+                    if (msg[item].gameover) {
+                        processGameoverMessage(msg[item]);
+                    } else {
+                        processNonGameoverMessage(msg, mobs);
+                    }
+                }
+            }
         } catch (error) {
-            log("ws error ", error);
+            //log("ws error ", error);
+            //log("ws error event: ", event)
         }
     };
 
@@ -81,33 +84,21 @@ export async function joinSocketsServer(
     socket.onclose = (res) => {
         log("DISCONNECTED FROM SERVER", socket.readyState);
         if (obj.gameover) {
-            //log(`Calling unloadVictory from wsConnection`)
             //unloadVictory()
         } else if (obj.inDuat) {
             log('Wait for reconnection')
         } else {
             log('calling reconnect')
-            // reconnect(gameCanvas,
-            //   actionBar,
-            //   backPack,
-            //   player,
-            //   combatLog)
-            //joinSocketsServer()
             combatLog.text = `The socket has disconnected`
-            //unloadLife()
-            //new NoEthScene(); 
         }
     };
 
     let obj = Singleton.getInstance();
     engine.addSystem(new pingSystem(socket));
     engine.addSystem(new updateSystem(socket));
-    //obj.closesock = new closeSocket(socket)
 
     return socket;
 }
-
-function intialize() { }
 
 
 export class closeSocket {
@@ -137,10 +128,6 @@ class pingSystem implements ISystem {
 
         if (this.npctimer >= 20) {
             this.npctimer = 0;
-            //Causing a bug where spawned mobs are not able to battle
-            //Commented out on 4/12/22 for now
-            //log('Quest NPC Check')
-            //new spawnNpcs()
         }
 
         if (this.timer >= 10) {
@@ -159,9 +146,8 @@ class pingSystem implements ISystem {
                     })
                 );
             } else {
-                log(`Syncing ALL`)
+                //log(`Syncing ALL`)
                 let backpack = obj.bpack.map((lootitem: Item) => {
-                    //return { image: lootitem.image().src, slot: lootitem.slot() };
                     return {
                         image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
                         desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
@@ -171,7 +157,6 @@ class pingSystem implements ISystem {
                 });
 
                 let actionbar = obj.abar.map((lootitem) => {
-                    //return { image: lootitem.image().src, slot: lootitem.slot() };
                     return {
                         image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
                         desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
@@ -188,15 +173,6 @@ class pingSystem implements ISystem {
                         spellend: lootitem.spellend(), sound: lootitem.sound()
                     }
                 });
-
-                // log('sutenBase ', sutenBase)
-                // log('hp ', obj.playerhp)
-                // log('address ', obj.playeraddress)
-                // log('backpack ', backpack)
-                // log('actionbar ', actionbar)
-                // log('spellbook ', spellbook)
-
-                //log(`sending player hp ${obj.playerhp} to playerdetailservice`)
 
                 this.socket.send(
                     JSON.stringify({
@@ -254,7 +230,6 @@ class updateSystem implements ISystem {
                 if (obj.localmobstate.length > 0) {
                     let exists = obj.localmobstate.map(x => x.mobdead).indexOf(true)
                     if (exists > -1) {
-                        //log(`Sent death update. Deleting ${exists} from ${JSON.stringify(obj.localmobstate)} now.`)
                         obj.localmobstate.splice(exists, 1)
                     }
                 }
@@ -266,4 +241,159 @@ class updateSystem implements ISystem {
     constructor(socket: WebSocket) {
         this.socket = socket;
     }
+}
+
+export function createNpc(element:any, path:any) {
+    return new Npc(
+        element.id,
+        element.name,
+        element.xp,
+        element.mobdead,
+        element.damage,
+        new AudioClip(element.sound),
+        new GLTFShape(element.shape),
+        element.hp,
+        element.percentage,
+        new Vector3(
+            element.spawnloc[0],
+            element.spawnloc[1],
+            element.spawnloc[2]
+        ),
+        Quaternion.Euler(
+            element.spawnrot[0],
+            element.spawnrot[1],
+            element.spawnrot[2]
+        ),
+        path,
+    );
+}
+
+export function createNpcFSM(npc:any, element:any) {
+    return new NpcFSM(
+        npc,
+        element.spawnloc,
+        element.spawnrot,
+        clicked,
+        PUNCH_TIME,
+    );
+}
+
+export function processGameoverMessage(item:Item) {
+    log('I won')
+    //obj.gameover = true;
+    //obj.winner = item.winnerslist[0];
+    //log(`${item.winnerslist[0]} has captured the flag!`);
+    // ui.displayAnnouncement(
+    //     `${item.winnerslist[0]} is victorious!!!! The Sand Orcs have fled the Ruins of Saqarra!!!!`,
+    //     180
+    // );
+    victory.play();
+    //socket.close();
+}
+
+export function processNonGameoverMessage(msg:any, mobs:any) {
+    for (let item in msg) {
+        for (let mob of mobs.entities) {
+            let mobstate = mob.getComponent(MobState);
+            let obj = Singleton.getInstance();
+            if (msg[item].id === mob.getComponent(NpcId).id) {
+                const isMostHatedPlayer = msg[item].mosthated == null || msg[item].mosthated === obj.playeraddress;
+                mobstate.anotherplayer = !isMostHatedPlayer;
+
+                if (isMostHatedPlayer) {
+                    handleLocalMobUpdates(msg[item], mobstate, obj);
+                } else {
+                    handleOtherPlayerEngaged(msg[item], mobstate, obj);
+                }
+            }
+        }
+    }
+}
+
+export function handleLocalMobUpdates(msgItem:any, mobstate:any, obj:any) {
+    // log(${msgItem.id} Manage updates of this mob: ${msgItem.id} locally);
+    if (obj.localmobstate.length > 0) {
+        let exists = obj.localmobstate.map((x: { id: any; }) => x.id).indexOf(msgItem.id);
+        if (exists > -1) {
+            //log(${ msgItem.id } Deleting ${ exists } from ${ obj.localmobstate } now.);
+            obj.localmobstate.splice(exists, 1);
+        }
+    }
+
+    if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === false) {
+        //log(${ msgItem.id } Setting MobDead to False);
+        mobstate.mobdead = msgItem.mobdead;
+        //log(${ msgItem.id } Setting MobRespawned to True);
+        mobstate.respawned = true;
+    } else if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === true) {
+        // Added to give the loop another tick to keep the orc from respawning too soon
+        mobstate.orcdead = false;
+    }
+}
+
+export function handleOtherPlayerEngaged(msgItem:any, mobstate:any, mob:any) {
+    let mobid = msgItem.id;
+    let obj = Singleton.getInstance()
+
+    if (msgItem.mobdead === true) {
+        //log(Setting mobdead for ${ mobid } to ${ msgItem.mobdead });
+        mob.getComponent(MobState).mobdead = msgItem.mobdead;
+        mob.getComponent(MobState).clicked = msgItem.clicked;
+        mob.getComponent(MobState).playerdead = msgItem.playerdead;
+        mob.getComponent(MobState).timeout = msgItem.timeout;
+        mob.getComponent(MobState).battle = false;
+        mob.getComponent(MobState).trackplayer = msgItem.trackplayer;
+        mob.getComponent(MobState).playerpos = msgItem.playerpos;
+        if (msgItem.currentloc === 3) {
+            mobstate.position = msgItem.currentloc;
+            mobstate.rotation = msgItem.currentrot;
+        }
+
+        let exists = obj.localmobstate
+            .map((x) => x.id)
+            .indexOf(mobid);
+        if (exists > -1) {
+            obj.localmobstate.splice(exists, 1, mobstate);
+        } else {
+            obj.localmobstate.push(mobstate);
+        }
+    } else {
+        mobstate.battle = msgItem.battle;
+        if (msgItem.currentloc.length === 3) {
+            mobstate.position = msgItem.currentloc;
+            mobstate.rotation = msgItem.currentrot;
+        } else {
+            log(`Unable to set position cause currentloc: ${msgItem.currentloc} is too short ${msgItem.currentloc.length}`);
+        }
+
+    }
+}
+
+
+export function handleGameMessage(msg:any) {
+    msg.forEach((element:any) => {
+        if (element.gameover) {
+            processGameoverMessage(element);
+        } else {
+            let mob;
+            if (element.path.length == 3) {
+                mob = createNpc(element, [
+                    new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
+                    new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
+                    new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
+                ]);
+            } else if (element.path.length == 4) {
+                mob = createNpc(element, [
+                    new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
+                    new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
+                    new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
+                    new Vector3(element.path[3][0], element.path[3][1], element.path[3][2]),
+                ]);
+            }
+            if (mob) {
+                engine.addSystem(createNpcFSM(mob, element));
+                mob.name = element.name;
+            }
+        }
+    });
 }

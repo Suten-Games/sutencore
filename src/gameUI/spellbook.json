@@ -1,6 +1,6 @@
 [
     {
-        "image": "images/spells/painterly-spell-icons-3/explosion-magenta-1.png",
+        "image": "images/spells/explosion-magenta-1.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Minor Shielding",
@@ -13,7 +13,7 @@
         "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
     },
     {
-        "image": "images/spells/painterly-spell-icons-1/protect-eerie-1.png",
+        "image": "images/spells/protect-eerie-1.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Amun's Shielding",
@@ -26,7 +26,7 @@
         "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
     },
     {
-        "image": "images/spells/painterly-spell-icons-1/fireball-sky-3.png",
+        "image": "images/spells/fireball-sky-3.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Fire Strike",
@@ -39,7 +39,7 @@
         "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
     },
     {
-        "image": "images/spells/painterly-spell-icons-1/enchant-acid-3.png",
+        "image": "images/spells/enchant-acid-3.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Acid Strike",
@@ -52,7 +52,7 @@
         "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
     },
     {
-        "image": "images/spells/painterly-spell-icons-1/enchant-orange-2.png",
+        "image": "images/spells/enchant-orange-2.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Fire Blade",
@@ -65,7 +65,7 @@
         "sound": "sounds/279103-Magic-Game-Protection-Ward-Buff.wav"
     },
     {
-        "image": "images/spells/painterly-spell-icons-1/evil-eye-eerie-3.png",
+        "image": "images/spells/evil-eye-eerie-3.png",
         "srcw": 256,
         "srch": 256,
         "desc": "Evil Eye",

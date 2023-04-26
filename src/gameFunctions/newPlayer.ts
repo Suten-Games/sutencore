@@ -10,7 +10,7 @@ const apiUrl = local
 
 export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
     log('could not find player')
-    log(`debug: 7 Inside  newPlayer`)
+    //log(`debug: 7 Inside  newPlayer`)
     
     var obj = Singleton.getInstance();
 
