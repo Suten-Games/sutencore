@@ -15,7 +15,7 @@ export function patrol(s:any,dt:number) {
 
     //log(`patrolts:12 - mobstate: ${JSON.stringify(mobstate)}`)
 
-    log(`patrol.ts:12 - Calling mobwalk`)
+    //log(`patrol.ts:12 - Calling mobwalk`)
     mob.mobwalk()
 
     if (mobstate.fraction < 1) {

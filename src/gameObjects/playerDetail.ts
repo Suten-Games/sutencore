@@ -10,11 +10,9 @@ import { Player } from "./player";
 import { SpellScroll } from "src/gameUI/spellScroll";
 import { SpellBook } from "src/gameUI/spellBook";
 import { CombatLog } from "src/gameUI/combatLog";
-//import { Ispell } from "src/components/spellComponent";
+import { LootWindow } from "src/gameUI/lootWindow";
+import { UIBar } from "src/gameUI/uiBar";
 //import { closeSocket } from "../gameFunctions/wsConnection";
-//import { LootWindow } from "src/gameUI/lootWindow";
-//import { CornerLabel, UIBar } from "node_modules/@suten-games/ui-utils/index";
-//import { Ispell } from "src/gameObjects/Ispell";
 
 
 export class Singleton {
@@ -40,8 +38,8 @@ export class Singleton {
     private _gameover: boolean = false;
     private _winner: string = "";
     private _localmobstate: Array<MobState> = [];
-    // private _lootwindows: Array<LootWindow> = [];
-    // private _healthbars: Array<UIBar> = [];
+    private _lootwindows: Array<LootWindow> = [];
+    private _healthbars: Array<UIBar> = [];
     // private _healthlabels: Array<CornerLabel> = [];
     private _balance: number = 0;
     private _manal1: number = 0
@@ -322,9 +320,9 @@ export class Singleton {
         return this._playeraddress
     }
 
-    // get hpbars() {
-    //     return this._healthbars
-    // }
+    get hpbars() {
+        return this._healthbars
+    }
 
     // set hpbars(val) {
     //     this._healthbars.push(val)
@@ -338,9 +336,9 @@ export class Singleton {
     //     this._healthlabels.push(val)
     // }
 
-    // get lootwindows() {
-    //     return this._lootwindows
-    // }
+    get lootwindows() {
+        return this._lootwindows
+    }
 
     // set lootwindows(val) {
     //     this._lootwindows.push(val);

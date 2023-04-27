@@ -32,7 +32,7 @@ export function addSpellClick(image:UIImage, name:string) {
             let newspell = new Item(
                 completespell.image, slot, completespell.srcw, completespell.srch, completespell.desc,
                 completespell.spelltype, completespell.price, completespell.itemtype, completespell.spellshape, completespell.spellstart,
-                completespell.spellend, completespell.sound
+                completespell.spellend, completespell.sound,null,null
             );
             //ui.ab.setSlot(slot)
             

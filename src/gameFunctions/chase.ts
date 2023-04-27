@@ -6,13 +6,17 @@ const player = Camera.instance
 
 export function chase(s:any, dt:number, dist:number) {
 
-    log(`Inside chase, dist: ${dist}`)
-    
-    
+    //log(`Inside chase, dist: ${dist}`)
+
     const mob = s.npc
     //const player = s.player
     const mobstate = mob.getComponent(MobState);
     let transform = mob.getComponent(Transform);
+
+    if (mobstate.faction >=  0) {
+        log(`chase.ts:19 - mob's primaryfaction: ${mob.primaryFaction}`)
+        return
+    }
 
     mob.mobwalk()
 
@@ -26,7 +30,7 @@ export function chase(s:any, dt:number, dist:number) {
         log(`Ditched the mob, turning off chase`)
         mobstate.trackplayer = false;
     } else {
-        log(`chase.ts:4 - Turning on trackplayer`)
+        //log(`chase.ts:4 - Turning on trackplayer`)
         mobstate.trackplayer = true;
     }
     

@@ -11,6 +11,7 @@ import { patrol } from "./patrol";
 import { attack } from "./attack";
 import { otherplayerattack } from "./otherplayerattack";
 import { writeToCl } from "./writeToCL";
+import { idle } from "./idle";
 
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -61,45 +62,58 @@ export class NpcFSM extends Entity {
         // this._canvas = canvas;
         //this._combatLog = combatlog;
 
+        let mobstate = this._npc.getComponent(MobState)
+        let hoverText
+
+        if(mobstate.faction > 0) {
+            hoverText = "Talk"
+        } else {
+            hoverText = "Attack"
+        }
+
         this._startPos = startPos;
         this._startRot = startRot;
 
-
-        log(`npcFSM:76 - Adding OnPointerDown (attack)`)
+        //log(`npcFSM:76 - Adding OnPointerDown (attack)`)
         this._npc.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
-                    //this._clicked = true;
                     let mobstate = this._npc.getComponent(MobState)
-                    mobstate.battle = true;
-                    mobstate.clicked = true;
-                    mobstate.playerdead = false;
-                    mobstate.timeout = false;
-                    mobstate.trackplayer = false;
+                    let faction = mobstate.faction
+                    if(faction > 0) {
+                        writeToCl("Lets have a conversation")
+                    } else {
+                        mobstate.battle = true;
+                        mobstate.clicked = true;
+                        mobstate.playerdead = false;
+                        mobstate.timeout = false;
+                        mobstate.trackplayer = false;
+                    }
                 },
                 {
                     button: ActionButton.PRIMARY,
                     showFeedback: true,
-                    hoverText: "Attack",
+                    hoverText: hoverText,
                 }
             )
         );
-        log(`npcFSM:ts - npcFSM is now added`)
+        //log(`npcFSM:ts - npcFSM is now added`)
     }
 
     orcid() {
     }
 
     update(dt: number) {
+        let state = this._npc.getComponent(MobState);
         this.transform = this._npc.getComponent(Transform);
         //let dist = ydistance(this.transform.position, camera.position, this._npc);
+
         const dist = Vector3.DistanceSquared(
             this.transform.position,
             camera.position
         ) 
-           
-        let state = this._npc.getComponent(MobState);
+        
         var obj = Singleton.getInstance();
 
         if (state.mobdead) {
@@ -137,9 +151,13 @@ export class NpcFSM extends Entity {
             otherplayerattack(scene, this._combatLog)
         } else {
             if (dist < 8) {
-                attack(scene, this._combatLog);
-                //log('npcFSM.ts:145 - attack (skipping for testing)')
-            } else if (state.trackplayer || dist < 30 && dist > 8) {
+                if(state.faction < 0) {
+                    attack(scene, this._combatLog);
+                     //log('npcFSM.ts:145 - attack (skipping for testing)')
+                } else {
+                    idle(scene, dt)
+                }
+            } else if (state.trackplayer || dist < 30 && dist > 8 && state.faction < 0) {
                 //log(`npcFSM.ts:147 - chase ${dist}`)
                 chase(scene, dt, dist);
             } else if (dist > 30) {

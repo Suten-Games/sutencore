@@ -24,7 +24,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
     //He hates me so we battlin'
     if (mobstate.mobdead || mobstate.playerdead || mobvisible == false) {
-        log("attack.ts: escaping out of attack.ts because the mob or the player is dead");
+        //log("attack.ts: escaping out of attack.ts because the mob or the player is dead");
 
         return;
     }
@@ -50,7 +50,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
         }
 
 
-        log(`attack.ts:97 - ${mobstate.id} turning on showhpbar1`);
+        //log(`attack.ts:97 - ${mobstate.id} turning on showhpbar1`);
         mob.showhpbar();
         //log(`Setting intial mob location`)
         mobstate.position = s.transform.position;
@@ -87,12 +87,12 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             mobstate.playerdead = false;
             mobstate.timeout = true;
 
-            log(`attack.ts: 109 faking damage for now`)
+            //log(`attack.ts: 109 faking damage for now`)
             //mobstate.damage = .00001
 
-            log(`mobstate.damage ${mobstate.damage}`)
+            //log(`mobstate.damage ${mobstate.damage}`)
 
-            log(`player name: ${s.player.name}`)
+            //log(`player name: ${s.player.name}`)
 
             soundbox3.play();
             s.player.damage(mobstate.damage);
@@ -110,7 +110,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             s.npc.addComponentOrReplace(new SecondaryTimeOut(PAUSE));
         }
     } else if (s.clicked) {
-        log(`attack.ts ${mob.id} has been clicked`);
+        //log(`attack.ts ${mob.id} has been clicked`);
         mob.mobhit()
 
         if (!s.npc.hasComponent(SecondaryTimeOut)) {
@@ -127,7 +127,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             ];
 
             if (s.player.basedamage === undefined) {
-                log('attack.ts: setting default basedamage for player ', s.player)
+                //log('attack.ts: setting default basedamage for player ', s.player)
                 s.player.basedamage = 1;
             }
 
@@ -157,7 +157,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             mobstate.clicked = false;
 
             if (mobhp <= 0) {
-                log(`attack.ts:196 - Calling mob.mobdead()`)
+                //log(`attack.ts:196 - Calling mob.mobdead()`)
                 mob.mobdead()
                 if (mobstate.mobname == 'Orc Chief') {
                     writeToCl(`You have defeated the Sand Orc Chief!!`)
@@ -176,10 +176,10 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
                 let id = mobstate?.id;
                 let exists = obj.localmobstate.map((x) => x.id).indexOf(id);
-                log(`id: ${mob.id} battle decided, pushing to mobstate`);
+                //log(`id: ${mob.id} battle decided, pushing to mobstate`);
 
                 if (exists > -1) {
-                    log(`id: ${s.npc.id} exists 2: ${exists}`);
+                    //log(`id: ${s.npc.id} exists 2: ${exists}`);
                     obj.localmobstate.splice(exists, 1, mobstate);
                 } else {
                     obj.localmobstate.push(mobstate);
@@ -215,7 +215,9 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                     writeToCl(`You have gained 20 experience!`)
                 }
 
-                log('orc.ts:267 attack.ts - hidehpbar')
+                writeToCl(`Your standing with ${mob.primaryFaction} has gotten worse`)
+
+                //log('orc.ts:267 attack.ts - hidehpbar')
                 s.npc.hidehpbar();
             } else {
                 mobstate.battle = true;

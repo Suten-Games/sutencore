@@ -8,7 +8,7 @@ const apiUrl = local
     : "https://sutenquestapi.azurewebsites.net/player";
 
 export async function fetchPlayer(lowerCaseAddress: string, ui: UI, player: Player) {
-    log(`debug: 5 Inside fetchPlayer`)
+    //log(`debug: 5 Inside fetchPlayer`)
     
     try {
         let response = await fetch(apiUrl + "/" + lowerCaseAddress);

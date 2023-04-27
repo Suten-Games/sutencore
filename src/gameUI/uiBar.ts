@@ -114,7 +114,7 @@ export class UIBar extends Entity {
     }
 
     public hide(): void {
-        log(`uiBar.ts:117 - Calling HIDE in uiBar.ts`)
+        //log(`uiBar.ts:117 - Calling HIDE in uiBar.ts`)
         this.background.visible = false
         this.bar.visible = false
     }
@@ -125,7 +125,7 @@ export class UIBar extends Entity {
     }
 
     public scale(): void {
-        log(`uiBar.ts:128 - in scale method`)
+        //log(`uiBar.ts:128 - in scale method`)
         this.fullWidth = 0.001
         this.background.width = 0.001
         this.background.height = 0.001

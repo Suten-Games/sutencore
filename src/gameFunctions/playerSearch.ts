@@ -10,17 +10,17 @@ import { populateObj } from "./populateObj";
 
 
 export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: string, player: Player) {
-    log(`debug: 6 Inside playerSearch`)
+    //log(`debug: 6 Inside playerSearch`)
 
-    log(`player.name: ${player.name}`)
+    //log(`player.name: ${player.name}`)
 
     //log(`playerSearch.ts: ${JSON.stringify(player)}`)
 
     if (json.message == "Could not find player by address") {
-        log(`Could not find player, calling newPlayer`)
+        //log(`Could not find player, calling newPlayer`)
         newPlayer(ui, lowerCaseAddress, player)
     } else {
-        log(`playerSearch.ts: 23`)
+        //log(`playerSearch.ts: 23`)
         connectToServer(ui,json,player)
         deathCheck(ui,json,player)
         populateObj(json, player)

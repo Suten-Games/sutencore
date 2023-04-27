@@ -1,7 +1,8 @@
 @Component('mobState')
 export class MobState {
-    id: string
-    damage: number = 2
+    id: string;
+    damage: number = 2;
+    faction: number = -100;
     battle: boolean = false
     mobname: string;
     mobdead: boolean = false

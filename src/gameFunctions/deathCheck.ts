@@ -8,8 +8,8 @@ import { setHp } from "./setHp";
 import { writeToCl } from "./writeToCL";
 
 export function deathCheck(ui: UI,json: PlayerState,player: Player) {
-    log(`debug: 9 Inside deathCheck`)
-    log(`deathCheck:12 - player.name: ${player.name}`)
+    // log(`debug: 9 Inside deathCheck`)
+    // log(`deathCheck:12 - player.name: ${player.name}`)
 
     if (json.percentage == 0) {
         writeToCl(`${json.name} is a level ${json.level} ${json.characterclass}`, `You have died.`, `Make your way to the Duat.`, `Find and speak with Anpu.`)

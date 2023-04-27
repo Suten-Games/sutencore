@@ -21,9 +21,9 @@ export function attack(s: SceneState, cl: CombatLog) {
         if (mobstate.battle == false) {
             heHatedSomebodyButTheyLeft(mobstate)
         } else {
-            log(`attack.ts:34 Exiting attack loop for now because he hates someone else`);
-            log(`TODO: Let me pop him but he won't pop me unless I hurt him more than who he popping`)
-            log(`TODO: then he'll hate me enough to pop me instead`)
+            // log(`attack.ts:34 Exiting attack loop for now because he hates someone else`);
+            // log(`TODO: Let me pop him but he won't pop me unless I hurt him more than who he popping`)
+            // log(`TODO: then he'll hate me enough to pop me instead`)
             return;
         }
     }

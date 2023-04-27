@@ -1,8 +1,6 @@
 import resources from "../resources";
 // import { loadDeathScape } from "../gameFunctions/loadDeath";
 // import { unloadLife } from "../gameFunctions/loadDeath";
-//import { BarStyles } from "../../node_modules/@suten-games/ui-utils/utils/types"
-//import * as ui from "../../node_modules/@suten-games/ui-utils/index"
 //import { QuestLog } from "../gameUI/questLog";
 import { sAggro, sLevel, sPlayer } from "suten";
 import { SoundBox } from "./soundBox";
@@ -15,6 +13,8 @@ import { Item } from "./item";
 import { UIBar } from "src/gameUI/uiBar";
 import { BarStyles } from "src/gameUtils/types";
 import { writeToCl } from "src/gameFunctions/writeToCL";
+import { CornerLabel } from "src/gameUI/cornerLabel";
+import { UICounter } from "src/gameUI/uiCounter";
 
 const orclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -54,23 +54,23 @@ export class Player {
         BarStyles.ROUNDWHITE,
         0.8
     );
-    // private healthLabel = new CornerLabel(
-    //     "HP",
-    //     -100,
-    //     490,
-    //     Color4.White(),
-    //     12,
-    //     true
-    // );
-    // private healthValue = new UICounter(0, 35, 490, Color4.Yellow(), 12, true);
-    // private xpLabel = new CornerLabel(
-    //     "XP",
-    //     -100,
-    //     470,
-    //     Color4.White(),
-    //     12,
-    //     true
-    // );
+    private healthLabel = new CornerLabel(
+        "HP",
+        -100,
+        490,
+        Color4.White(),
+        12,
+        true
+    );
+    private healthValue = new UICounter(0, 35, 490, Color4.Yellow(), 12, true);
+    private xpLabel = new CornerLabel(
+        "XP",
+        -100,
+        470,
+        Color4.White(),
+        12,
+        true
+    );
     private playerName: UIText;
     private playerLevel: UIText;
     private _aggroList: [];
@@ -113,7 +113,7 @@ export class Player {
         this.canvas = canvas;
         this.actionbar = actionbar;
         this.backpack = backpack;
-        //this.healthValue.set(startingHp);
+        this.healthValue.set(startingHp);
         //this._questlog = new QuestLog(this.canvas, resources.interface.questLog, combatlog, actionbar, backpack)
 
         this._leveledup = false;
@@ -173,7 +173,7 @@ export class Player {
             this._hp = val;
 
             //log(`setting healthValue to: ${val}`)
-            //this.healthValue.set(val);
+            this.healthValue.set(val);
         }
     }
 
@@ -312,7 +312,7 @@ export class Player {
                 await fetch(url, options)
                     .then((res) => res.json())
                     .then((res) => {
-                        log(`back from levels check: ${JSON.stringify(res)}`)
+                        //log(`back from levels check: ${JSON.stringify(res)}`)
                         if (res.level > currentlevel) {
                             var obj = Singleton.getInstance();
                             this.level = res.level;
@@ -507,11 +507,10 @@ export class Player {
             }
         }
 
-        //this.healthValue.set(obj.playerhp);
+        this.healthValue.set(obj.playerhp);
         let percentage = ((this.hp / this.maxhp) * 100).toFixed(0);
-        //this.initialhp(Number(percentage) / 100);
+        this.initialhp(Number(percentage) / 100);
         writeToCl(`You have been healed for ${amount} hp.`)
-        //this._combatLog.text = `You have been healed for ${amount} hp.`;
 
         if (Number(percentage) > 50) {
             this.abouttodie.stop();
@@ -519,89 +518,89 @@ export class Player {
     }
 
     damage(amount: number) {
-        log('player.ts: in player damage')
+        //log('player.ts: in player damage')
         let url = this.apiUrl + "/" + this.address;
         var obj = Singleton.getInstance();
 
-        log(`in damage: amount ${amount} current hp ${this.hp} maxhp ${this.maxhp}`)
+        //log(`in damage: amount ${amount} current hp ${this.hp} maxhp ${this.maxhp}`)
 
-        // if (this.shieldhp > 0) {
-        //     log('The shield is being attacked')
-        //     log('current shieldhp: ', this.shieldhp)
-        //     this._shieldhp -= amount;
-        //     if (this.shieldhp <= 0) {
-        //         log('The shield has been destroyed');
-        //         //this._combatLog.text = `The shield has been destroyed`;
-        //         //this.shieldhp = 0;
-        //         log('calling setShield with 0 and text');
-        //         this.setShield(0, 'The shield has been destroyed');
-        //     }
-        // } else {
-        //     if (this.hp > 0) {
-        //         if (this.hp - amount > 0) {
-        //             log(
-        //                 `playerhp: ${this.hp} damageamount: ${amount} playernewhp: ${this.hp - amount
-        //                 }`
-        //             );
-        //             this.hp -= amount;
-        //             obj.playerhp = this.hp;
-        //         } else {
-        //             log(`setting playerhp to zero`);
-        //             this.hp = 0;
-        //             obj.playerhp = this.hp;
-        //         }
-        //     }
-        // }
-
-
-
-        // //log(`this.hp ${this.hp} / this.maxhp ${this.maxhp} * 100 gives percentage of ${(this.hp / this.maxhp) * 100}`)
-        // //this.healthValue.set(obj.playerhp);
-
-        // let percentage = ((this.hp / this.maxhp) * 100).toFixed(0);
-        // //this.initialhp(Number(percentage) / 100);
-        // //this.healthcheck(Number(percentage) / 100);
-
-        // if (Number(percentage) < 30) {
-        //     this.abouttodie.play();
-        // }
-
-        // if (this.hp <= 0) {
-        //     orclaugh.play();
+        if (this.shieldhp > 0) {
+            log('The shield is being attacked')
+            log('current shieldhp: ', this.shieldhp)
+            this._shieldhp -= amount;
+            if (this.shieldhp <= 0) {
+                //log('The shield has been destroyed');
+                writeToCl(`The shield has been destroyed`)
+                this.shieldhp = 0;
+                log('calling setShield with 0 and text');
+                this.setShield(0, 'The shield has been destroyed');
+            }
+        } else {
+            if (this.hp > 0) {
+                if (this.hp - amount > 0) {
+                    // log(
+                    //     `playerhp: ${this.hp} damageamount: ${amount} playernewhp: ${this.hp - amount
+                    //     }`
+                    // );
+                    this.hp -= amount;
+                    obj.playerhp = this.hp;
+                } else {
+                    //log(`setting playerhp to zero`);
+                    this.hp = 0;
+                    obj.playerhp = this.hp;
+                }
+            }
+        }
 
 
-            // log('lootwindows length: ', obj.lootwindows.length);
-            // obj.lootwindows.forEach((x) => {
-            //     log('Calling hide on lootwindows')
-            //     x.hide()
-            // })
 
-            // obj.hpbars.forEach((x) => {
-            //     log('Calling hide on hpbars')
-            //     x.hide()
-            // })
+        //log(`this.hp ${this.hp} / this.maxhp ${this.maxhp} * 100 gives percentage of ${(this.hp / this.maxhp) * 100}`)
+        this.healthValue.set(obj.playerhp);
+
+        let percentage = ((this.hp / this.maxhp) * 100).toFixed(0);
+        this.initialhp(Number(percentage) / 100);
+        this.healthcheck(Number(percentage) / 100);
+
+        if (Number(percentage) < 30) {
+            this.abouttodie.play();
+        }
+
+        if (this.hp <= 0) {
+            orclaugh.play();
+
+
+            log('lootwindows length: ', obj.lootwindows.length);
+            obj.lootwindows.forEach((x) => {
+                log('Calling hide on lootwindows')
+                x.hide()
+            })
+
+            obj.hpbars.forEach((x) => {
+                log('Calling hide on hpbars')
+                x.hide()
+            })
 
             // obj.healthlabels.forEach((x) => {
             //     log('Calling hide on healthlabels')
             //     x.set(' ');
             // })
 
-        //     obj.localmobstate.forEach((x) => {
-        //         if (x.mosthated == this.address) {
-        //             x.playerdead = true;
-        //         }
-        //     });
-        //     this.abouttodie.stop();
-        //     this.deathsound.play();
-        //     this._combatLog.text = `You have died.`;
-        //     this._combatLog.text = `Make your way to the Duat.`;
-        //     this._combatLog.text = `Seek out Anpu.`;
-        //     obj.inDuat = true;
-        //     this.alive = false;
-        //     log('calling unloadLife from player.ts')
-        //     //unloadLife();
-        //     log('calling loadDeath from player.ts')
-        //     //loadDeathScape(this.canvas, this.actionbar, this.backpack, this, this._combatLog, this.tradewindow)
+            obj.localmobstate.forEach((x) => {
+                if (x.mosthated == this.address) {
+                    x.playerdead = true;
+                }
+            });
+            this.abouttodie.stop();
+            this.deathsound.play();
+            this._combatLog.text = `You have died.`;
+            this._combatLog.text = `Make your way to the Duat.`;
+            this._combatLog.text = `Seek out Anpu.`;
+            obj.inDuat = true;
+            this.alive = false;
+            log('calling unloadLife from player.ts')
+            //unloadLife();
+            log('calling loadDeath from player.ts')
+            //loadDeathScape(this.canvas, this.actionbar, this.backpack, this, this._combatLog, this.tradewindow)
 
 
             // loadDeath(
@@ -612,6 +611,6 @@ export class Player {
             //   this.backpack,
             //   obj.tradewindow
             // );
-        // }
+        }
     }
 }

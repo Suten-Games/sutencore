@@ -78,6 +78,44 @@ const minorShielding: Ispell = {
 
 }
 
+const jadeShielding: Ispell = {
+    "mana": 12,
+    "casttime": 3,
+    "fizzleadj": 2,
+    "fizzletime": 1,
+    "location": "self",
+    "blockable": false,
+    "dispellable": false,
+    "name": "Jade Shielding",
+    "spelltype": "Shield",
+    "skill": "Abjuration",
+    "recasttime": 3,
+    "range": 3,
+    "size": 3,
+    "class": "Mage",
+    "level": 1,
+    "timeofdate": "any",
+    "deletable": false,
+    "focusable": false,
+    "interruptable": false,
+    "targettype": "self",
+    "desc": "Minor Shielding I",
+    "levelmsg": [{ "line1": "msg 2" }],
+    "oncastmsg": [{ "line1": "Your skin shines" }],
+    "ondropmsg": [{ "line1": "Your skin loses its luster" }],
+    "duration": 60000,
+    "image": new Texture("images/spells/explosion-magenta-1.png"),
+    "itemtype": "spell",
+    "spellshape": "SphereShape",
+    "spellstart": 5,
+    "spellend": 200,
+    "sound": resources.sounds.wardspell,
+    "srcw": 122,
+    "srch": 120,
+    "price": 5
+
+}
+
 const barricade: Ispell = {
     "mana": 12,
     "casttime": 3,
@@ -189,15 +227,12 @@ const sprinkle: Ispell = {
     "price": 60
 }
 
-//let scores: Record<string, number> = {};
-//scores.bill = 10; // ✔️ - no type error
-//scores.trevor = "10"; // 💥 - Type 'string' is not assignable to type 'number'
-
 let allspells: Record<string, Ispell> = {}
 
 allspells["Minor Shielding"] = minorShielding
 allspells["Minor Shielding I"] = minorShielding
 allspells["Amun's Shielding"] = amunsShielding
+allspells["Jade Shielding"] = jadeShielding
 allspells["Barricade"] = barricade
 allspells["Blizzard"] = blizzard
 allspells["Sprinkle"] = sprinkle

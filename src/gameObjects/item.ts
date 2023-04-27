@@ -12,6 +12,8 @@ import { SpellScroll } from "src/gameUI/spellScroll";
 import { spellAction } from "src/gameFunctions/spellAction";
 import { getspell } from "./spells";
 import { Ispell } from "src/components/spellComponent";
+import { LootWindow } from "src/gameUI/lootWindow";
+import { Npc } from "./npc";
 
 
 export class Item {
@@ -42,6 +44,7 @@ export class Item {
     private _sound;
     private _npc: { hideOrc: () => void; } | null;
     private _tradewindow;
+    private _lootwindow:LootWindow;
     private _itemtype;
 
     private _isquestloot;
@@ -79,6 +82,8 @@ export class Item {
         spellend: number | null = null,
         sound: AudioClip | null = null,
         tradewindow: TradeWindow | null = null,
+        lootwindow: LootWindow | null,
+        npc: Npc | null = null
     ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
@@ -91,6 +96,10 @@ export class Item {
         this._activespellimage = new UIImage(this._canvas, this._image);
         this._activespellimage.visible = false;
 
+        if (npc) {
+            this._npc = npc
+        }
+
         this._tradewindow = null
 
         if (tradewindow) {
@@ -99,6 +108,10 @@ export class Item {
             }
 
             this._tradewindow = tradewindow
+        }
+
+        if(lootwindow) {
+            this._lootwindow = lootwindow
         }
 
         this._desc = new UIText(this._canvas);
@@ -225,21 +238,22 @@ export class Item {
     }
 
     public show() {
-        log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
+        //log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
         
         if (this.isLootWindow) {
+            //log('in item show, its a lootwindow')
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this.isMerchant) {
-            log('in item merchant show')
+            //log('in item merchant show')
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this._backPack) {
-            log('in backpack')
+            //log('in backpack')
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else {
-            log('setting desc to visible')
+            //log('setting desc to visible')
             this._lootimage.visible = true;
             this._desc.visible = true;
         }
@@ -369,18 +383,18 @@ export class Item {
         }
         this._lootimage.onClick = new OnPointerDown(() => {
             if (this._player == undefined || !this._player.alive) {
-                log('item.ts:354 - you cant heal if you are dead')
+                //log('item.ts:354 - you cant heal if you are dead')
                 return
             }
-            log('in item.ts:435')
+            //log('in item.ts:435')
 
             if (this._isscroll) {
-                log('item.ts:360 - Clicked on the scroll')
+                //log('item.ts:360 - Clicked on the scroll')
                 this._spellScroll.setSpell(this._desc.value, this)
 
                 return
             }
-            log('in item.ts:445')
+            //log('in item.ts:445')
 
             if (this._isweapon) {
                 if (this._image.src.split('/')[2] == 'rustysword.png') {
@@ -449,7 +463,12 @@ export class Item {
     }
 
     public sendToBackpack() {
-        let slot = this._actionBar.selectSlot(this);
+        let obj = Singleton.getInstance()
+        let myactionbarcontents = obj.fetchactionbar()
+        //let slot = this._actionBar.selectSlot(this);
+        let slot = this._actionBar.checkSlot()
+
+        //log(`item.ts:455 - slot ${slot}`)
 
         if (slot === 0) {
             slot = this._backPack.selectSlot(this);
@@ -463,6 +482,10 @@ export class Item {
             this._slot = slot;
             const slotPosition = slotPicker(slot);
             this.setSlotProperties(slotPosition);
+            this._actionBar.setSlot(slot)
+            this.updateLoc(slot)
+            //this.setslot = slot
+            myactionbarcontents.push(this)
 
             if (slot === 0) {
                 if (!this._backPack.bpopen) {
@@ -473,6 +496,11 @@ export class Item {
                 this.isActionBar = true;
                 this._lootimage.visible = true;
                 this._desc.visible = false;
+            }
+            if (this._lootwindow) {
+                this._lootwindow.hidelootwindow();
+                this._lootwindow.looted = true;
+                this._npc?.hideOrc()
             }
             this.backpacksound.play();
         }

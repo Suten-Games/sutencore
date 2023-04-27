@@ -5,8 +5,8 @@ import { writeToCl } from "../gameFunctions/writeToCL";
 import { joinSocketsServer } from "./wsConnection";
 
 export async function connectToServer(ui: UI,json: PlayerState, player: Player) {
-    log(`debug: 8 Inside connectToServer`)
-    log(`connectToServer - player.name: ${player.name}`)
+    // log(`debug: 8 Inside connectToServer`)
+    // log(`connectToServer - player.name: ${player.name}`)
 
     try {
         //log('joining socket server')

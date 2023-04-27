@@ -2,7 +2,7 @@ import resources from "../resources";
 import { Singleton } from "./playerDetail";
 import { MobState } from "src/components/mobStateComponent";
 import { NpcId } from "src/components/npcIdComponent";
-import { FollowsPlayer } from "src/components/followsPlayerComponent";
+//import { FollowsPlayer } from "src/components/followsPlayerComponent";
 import { LifeItem } from "src/components/lifeItemComponent";
 import { VictoryItem } from "src/components/victoryItemComponent";
 import { NpcName } from "src/components/npcNameComponent";
@@ -10,7 +10,8 @@ import { NpcName } from "src/components/npcNameComponent";
 import { followData } from "../gameSystems/followSystem";
 import { UIBar } from "src/gameUI/uiBar";
 import { BarStyles } from "src/gameUtils/types";
-// import { LootWindow } from "../gameUI/lootWindow";
+import { LootWindow } from "src/gameUI/lootWindow";
+import { CornerLabel } from "src/gameUI/cornerLabel";
 
 export class Npc extends Entity {
     private _id: string;
@@ -18,14 +19,14 @@ export class Npc extends Entity {
     private _xp: number;
     private _hp: number;
     private _percentage: number;
-    private _battle: boolean = false;
+    //private _battle: boolean = false;
     private _startinghp: number;
-    //private _lootWindow: LootWindow;
+    private _lootWindow: LootWindow;
     //private _canvas;
     public walk: AnimationState;
     public walk_: AnimationState;
     public turnAround: AnimationState;
-    public turnAround_: AnimationState;
+    public turnAround_: AnimationState; 
     public turnLeft: AnimationState;
     public turnLeft_: AnimationState;
     public idle: AnimationState;
@@ -44,9 +45,11 @@ export class Npc extends Entity {
     public death2_: AnimationState;
     private hpbar:UIBar;
     private hpbar2:UIBar;
+    public healthLabel: CornerLabel = new CornerLabel('', -10, 310, Color4.White(), 12);
     private update2: any;
     private npcUrl = "https://sutenquestapi.azurewebsites.net/npc";
-    private scatterRadius = 6;
+    //private scatterRadius = 6;
+    public primaryFaction = "Orcish Empire"
 
     constructor(
         id: string,
@@ -69,6 +72,7 @@ export class Npc extends Entity {
         super();
 
         //log('attempting to create a new orc')
+        const obj = Singleton.getInstance()
 
         this.addComponent(model);
         this.addComponent(new LifeItem())
@@ -117,7 +121,7 @@ export class Npc extends Entity {
         }
 
         this._percentage = percentage;
-        this.addComponent(new FollowsPlayer());
+        //this.addComponent(new FollowsPlayer());
         this.addComponent(new NpcId());
         this.getComponent(NpcId).id = this._id;
         this.addComponentOrReplace(new NpcName());
@@ -176,22 +180,22 @@ export class Npc extends Entity {
         npcAnimator.addClip(this.turnLeft);
         npcAnimator.addClip(this.turnLeft_)
 
-        this.getComponent(FollowsPlayer).defaultHeight = 0.1;
-        this.getComponent(FollowsPlayer).speed = 0.1;
-        this.getComponent(FollowsPlayer).elapsedTime = Math.random() * 0.5;
-        this.getComponent(FollowsPlayer).randomOffsetX =
-            (Math.random() * 2 - 1) * this.scatterRadius;
-        this.getComponent(FollowsPlayer).randomOffsetZ =
-            (Math.random() * 2 - 1) * this.scatterRadius;
+        // this.getComponent(FollowsPlayer).defaultHeight = 0.1;
+        // this.getComponent(FollowsPlayer).speed = 0.1;
+        // this.getComponent(FollowsPlayer).elapsedTime = Math.random() * 0.5;
+        // this.getComponent(FollowsPlayer).randomOffsetX =
+        //     (Math.random() * 2 - 1) * this.scatterRadius;
+        // this.getComponent(FollowsPlayer).randomOffsetZ =
+        //     (Math.random() * 2 - 1) * this.scatterRadius;
 
-        // this._lootWindow = new LootWindow(
-        //     canvas,
-        //     resources.interface.blueLootWindow,
-        //     actionBar,
-        //     backpack,
-        //     player,
-        //     this
-        // );
+        this._lootWindow = new LootWindow(
+            obj.canvas,
+            resources.interface.blueLootWindow,
+            obj.actionbar,
+            obj.backpack,
+            obj.player,
+            this
+        );
 
 
         engine.addEntity(this);
@@ -282,6 +286,32 @@ export class Npc extends Entity {
         }
     }
 
+    mobidle() {
+        if(!this.idle.playing) {
+            this.walk.stop()
+            this.idle.play()
+        } else {
+            this.idle.playing = true;
+            this.idle_.playing = true;
+            this.boxing.playing = false;
+            this.boxing_.playing = false;
+            this.death2.playing = false;
+            this.death2_.playing = false;
+            this.walk.playing = false;
+            this.walk_.playing = false;
+            this.turnLeft.playing = false;
+            this.turnLeft_.playing = false;
+            this.hit1.playing = false;
+            this.hit1_.playing = false;
+            this.hit2.playing = false;
+            this.hit2_.playing = false;
+            this.death1.playing = false;
+            this.death1_.playing = false;
+            this.death1.looping = false;
+            this.death1_.looping = false;
+        }
+    }
+
     mobdead() {
         //this.death1.playing = true;
         // if(!this.death1.playing) {
@@ -347,7 +377,7 @@ export class Npc extends Entity {
     }
 
     initialhp(val: number) {
-        log('npc.ts:331 - Setting orc initialhp')
+        //log('npc.ts:331 - Setting orc initialhp')
         if (this.update2) {
             if (this.hpbar2) {
                 if (val > 0) {
@@ -364,24 +394,24 @@ export class Npc extends Entity {
     }
 
     healthcheck(val:number) {
-        log('npc.ts:337 - in healthcheck')
-        // if (this.update2) {
-        //     if (val > 0) {
-        //         this.hpbar2.set(val)
-        //     }
-        // } else {
-        //     if (val > 0) {
-        //         this.hpbar.set(val)
-        //     }
-        // }
+        //log('npc.ts:337 - in healthcheck')
+        if (this.update2) {
+            if (val > 0) {
+                this.hpbar2.set(val)
+            }
+        } else {
+            if (val > 0) {
+                this.hpbar.set(val)
+            }
+        }
     }
 
     addlootclick() {
         this.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
-                    log('clicked addlootclick')
-                    //this._lootWindow.flip()
+                    //log('clicked addlootclick')
+                    this._lootWindow.flip()
                 },
                 {
                     button: ActionButton.PRIMARY,
@@ -396,8 +426,8 @@ export class Npc extends Entity {
         this.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
-                    log('clicked lootadll')
-                    //this._lootWindow.sendtobp()
+                    //log('clicked lootadll')
+                    this._lootWindow.sendtobp()
                 },
                 {
                     button: ActionButton.SECONDARY,
@@ -409,32 +439,28 @@ export class Npc extends Entity {
     }
 
     showhpbar() {
-        log('npc.ts:393 - inshowhpbar')
+        //log('npc.ts:393 - inshowhpbar')
+        this.healthLabel.set(' ');
         let top = 300
         if (!this.hpbar) {
-           log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
+           //log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
            this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
-           //this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
+            this.healthLabel.set(this.mobname);
         } else if (this.hpbar.read() == 0) {
-            log(`npc.ts:400 - rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
+            //log(`npc.ts:400 - rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
             this.hpbar2 = new UIBar(this.percentage / 100, -30, top - 30, Color4.Blue(), BarStyles.ROUNDSILVER, .8)
             this.update2 = true;
         }
     }
 
     hidehpbar() {
-        log('npc.ts:407 - in hidehpbar')
+        //log('npc.ts:407 - in hidehpbar')
         this.hpbar.set(0)
         this.hpbar.hide()
-        //engine.removeEntity(this.hpbar)
-        // this.hpbar
-        //this.hpbar = null
+        this.healthLabel.set('');
         if (this.hpbar2 != null) {
             this.hpbar2.set(0)
-            //this.hpbar2 = null
             this.hpbar2.hide()
-            //engine.removeEntity(this.hpbar2)
-            //this.hpbar2 = null
         }
     }
 
@@ -460,7 +486,7 @@ export class Npc extends Entity {
     }
 
     takedamage(amount: number, loc:any, rot:any) {
-        log(`npc.ts:429 - inside takedamage()`)
+        //log(`npc.ts:429 - inside takedamage()`)
         //let url = this.npcUrl + "/" + this._id;
         const obj = Singleton.getInstance()
         let mobstate = this.getComponent(MobState)
@@ -476,11 +502,11 @@ export class Npc extends Entity {
         }
 
         //log(`this.hp ${this.hp} / this.maxhp ${this._startinghp} * 100 gives percentage of ${(this.hp / this._startinghp) * 100}`)
-        log(`npc.ts:445 - takedamage()`)
+        //log(`npc.ts:445 - takedamage()`)
         let percentage = ((this.hp / this._startinghp) * 100).toFixed(0)
-        log(`npc:447 - initialhp()`)
+        //log(`npc:447 - initialhp()`)
         this.initialhp(Number(percentage) / 100)
-        log(`npc:449 - healthcheck()`)
+        //log(`npc:449 - healthcheck()`)
         this.healthcheck(Number(percentage) / 100)
 
         let id = this._id
