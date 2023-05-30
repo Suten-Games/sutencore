@@ -157,6 +157,8 @@ export default {
         spellBook: new Texture("images/vali/SpellBook.png"),
         spellScroll: new Texture("images/spells/spellpage.png"),
         deleteSpell: new Texture("images/vali/DeleteSpell.png"),
-        deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png")
+        deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png"),
+        scrollUpBtn: new Texture("images/vali/cltop.png"),
+        scrollDownBtn: new Texture("images/vali/clbottom.png")
     }
 }

@@ -4,10 +4,53 @@ import { ActionWindow } from "./actionWindow";
 export class CombatLog {
     private _combatlogs: UIText[];
     private _displayarray: string[];
+    private _scrollUp
+    private _scrollDown
+    private _startIndex: number;
+
 
     constructor(canvas: UICanvas) {
 
         new ActionWindow(canvas, resources.interface.combatlog);
+        this._scrollDown = new UIImage(canvas, resources.interface.scrollDownBtn);
+        this._scrollDown.hAlign = "center"
+        this._scrollDown.vAlign = "bottom";
+        this._scrollDown.width = "2%";
+        this._scrollDown.height = "2%";
+        this._scrollDown.positionY = "16%";
+        this._scrollDown.positionX = "14.2%";
+        this._scrollDown.sourceWidth = 38;
+        this._scrollDown.sourceHeight = 13;
+
+        this._scrollDown.onClick = new OnPointerDown(
+            (e) => {
+                this.scrolldown()
+            },
+            {
+                button: ActionButton.PRIMARY,
+                hoverText: "Scroll Down",
+            }
+        );
+
+        this._scrollUp = new UIImage(canvas, resources.interface.scrollUpBtn);
+        this._scrollUp.hAlign = "center"
+        this._scrollUp.vAlign = "bottom";
+        this._scrollUp.width = "2%";
+        this._scrollUp.height = "2%";
+        this._scrollUp.positionY = "24.5%";
+        this._scrollUp.positionX = "14.2%";
+        this._scrollUp.sourceWidth = 38;
+        this._scrollUp.sourceHeight = 13;
+
+        this._scrollUp.onClick = new OnPointerDown(
+            (e) => {
+                this.scrollup()
+            },
+            {
+                button: ActionButton.PRIMARY,
+                hoverText: "Scroll Up",
+            }
+        );
 
         this._combatlogs = [];
 
@@ -24,6 +67,7 @@ export class CombatLog {
         }
 
         this._displayarray = [];
+        this._startIndex = 0;
     }
 
     set text(val: string) {
@@ -50,11 +94,23 @@ export class CombatLog {
     }
 
     public scrollup() {
-        if (this._displayarray.length > 5) {
-            this._displayarray.pop();
+        // Ensure we're not at the beginning of the log array
+        if (this._startIndex > 0) {
+            this._startIndex--;
             this._combatlogs.forEach((log, index) => {
-                log.value = this._displayarray[index] || "";
+                log.value = this._displayarray[this._startIndex + index] || "";
             });
         }
+    }
+
+    public scrolldown() {
+        // Ensure we're not at the end of the log array
+        if (this._startIndex + 5 < this._displayarray.length) {
+            this._startIndex++;
+            this._combatlogs.forEach((log, index) => {
+                log.value = this._displayarray[this._startIndex + index] || "";
+            });
+        }
+
     }
 }
