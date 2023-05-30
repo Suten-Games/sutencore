@@ -1,5 +1,3 @@
-import { getUserData } from "@decentraland/Identity";
-import { getCurrentRealm } from "@decentraland/EnvironmentAPI";
 import { MobState } from "../components/mobStateComponent";
 import resources from "../resources";
 import { sutenBase } from "../../suten"
@@ -16,7 +14,6 @@ import { NpcId } from "src/components/npcIdComponent";
 
 
 const updateInterval = 5; //10
-
 const local: boolean = false;
 const PUNCH_TIME = 2.2;
 let clicked = false;
@@ -27,7 +24,6 @@ const victory = new SoundBox(
     false
 );
 
-// types of data sent over websockets
 export enum dataType {
     REGISTER,
     PING,
@@ -58,7 +54,7 @@ export async function joinSocketsServer(
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
-            //log("in wsConnection - msg: ", msg);
+            log("in wsConnection - msg: ", msg);
 
             if (mobs.entities.length == 0) {
                 handleGameMessage(msg);
@@ -101,6 +97,7 @@ export async function joinSocketsServer(
 }
 
 
+
 export class closeSocket {
     socket: WebSocket
 
@@ -113,8 +110,6 @@ export class closeSocket {
         this.socket = socket
     }
 }
-
-
 
 class pingSystem implements ISystem {
     timer: number = 0;
@@ -133,7 +128,7 @@ class pingSystem implements ISystem {
         if (this.timer >= 10) {
             this.timer = 0;
 
-            if(obj.bpack.length == 0 && obj.abar.length == 0 && obj.sbook.length == 0) {
+            if (obj.bpack.length == 0 && obj.abar.length == 0 && obj.sbook.length == 0) {
                 log(`Syncing HP Only`)
                 this.socket.send(
                     JSON.stringify({
@@ -146,7 +141,7 @@ class pingSystem implements ISystem {
                     })
                 );
             } else {
-                //log(`Syncing ALL`)
+                log(`Syncing ALL`)
                 let backpack = obj.bpack.map((lootitem: Item) => {
                     return {
                         image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
@@ -174,6 +169,8 @@ class pingSystem implements ISystem {
                     }
                 });
 
+                log(`wsConnection type: ${sutenBase}`)
+
                 this.socket.send(
                     JSON.stringify({
                         event: "events",
@@ -189,13 +186,14 @@ class pingSystem implements ISystem {
                 );
             }
 
-            
+
         }
     }
     constructor(socket: WebSocket) {
         this.socket = socket;
     }
 }
+
 
 class updateSystem implements ISystem {
     interval: number = updateInterval;
@@ -209,12 +207,7 @@ class updateSystem implements ISystem {
             let obj = Singleton.getInstance();
             if (obj.localmobstate && obj.localmobstate.length > 0) {
                 //Only send a sync if there is something in localmobstate to send
-                // log(`sending an updateSystem call to the server`)
-                // log(`sending obj.localmobstate ${JSON.stringify(obj.localmobstate)}`)
-
                 this.interval = updateInterval;
-                //log('sending  ', JSON.stringify(obj.localmobstate))
-
                 this.socket.send(
                     JSON.stringify({
                         event: "battle",
@@ -243,32 +236,49 @@ class updateSystem implements ISystem {
     }
 }
 
-export function createNpc(element:any, path:any) {
+
+export function createNpc(element: any, path: any) {
     return new Npc(
         element.id,
         element.name,
         element.xp,
-        element.mobdead,
         element.damage,
-        new AudioClip(element.sound),
-        new GLTFShape(element.shape),
+        element.maxhp,
         element.hp,
         element.percentage,
+        new AudioClip(element.sound),
+        new GLTFShape(element.shape),
         new Vector3(
-            element.spawnloc[0],
-            element.spawnloc[1],
-            element.spawnloc[2]
+            element.currentloc[0],
+            element.currentloc[1],
+            element.currentloc[2]
         ),
         Quaternion.Euler(
-            element.spawnrot[0],
-            element.spawnrot[1],
-            element.spawnrot[2]
+            element.currentrot[0],
+            element.currentrot[1],
+            element.currentrot[2]
         ),
         path,
+        element.level,
+        element.boss,
+        element.portrait,
+        element.width,
+        element.height,
+        element.personality,
+        element.wallet,
+        element.deity,
+        element.goaltree,
+        element.currentgoal,
+        element.patron,
+        element.faction,
+        element.dead
     );
 }
 
-export function createNpcFSM(npc:any, element:any) {
+
+
+
+export function createNpcFSM(npc: any, element: any) {
     return new NpcFSM(
         npc,
         element.spawnloc,
@@ -278,20 +288,15 @@ export function createNpcFSM(npc:any, element:any) {
     );
 }
 
-export function processGameoverMessage(item:Item) {
+
+
+export function processGameoverMessage(item: Item) {
     log('I won')
-    //obj.gameover = true;
-    //obj.winner = item.winnerslist[0];
-    //log(`${item.winnerslist[0]} has captured the flag!`);
-    // ui.displayAnnouncement(
-    //     `${item.winnerslist[0]} is victorious!!!! The Sand Orcs have fled the Ruins of Saqarra!!!!`,
-    //     180
-    // );
     victory.play();
-    //socket.close();
 }
 
-export function processNonGameoverMessage(msg:any, mobs:any) {
+
+export function processNonGameoverMessage(msg: any, mobs: any) {
     for (let item in msg) {
         for (let mob of mobs.entities) {
             let mobstate = mob.getComponent(MobState);
@@ -310,28 +315,27 @@ export function processNonGameoverMessage(msg:any, mobs:any) {
     }
 }
 
-export function handleLocalMobUpdates(msgItem:any, mobstate:any, obj:any) {
-    // log(${msgItem.id} Manage updates of this mob: ${msgItem.id} locally);
+
+
+export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
     if (obj.localmobstate.length > 0) {
         let exists = obj.localmobstate.map((x: { id: any; }) => x.id).indexOf(msgItem.id);
         if (exists > -1) {
-            //log(${ msgItem.id } Deleting ${ exists } from ${ obj.localmobstate } now.);
             obj.localmobstate.splice(exists, 1);
         }
     }
 
     if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === false) {
-        //log(${ msgItem.id } Setting MobDead to False);
         mobstate.mobdead = msgItem.mobdead;
-        //log(${ msgItem.id } Setting MobRespawned to True);
         mobstate.respawned = true;
     } else if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === true) {
-        // Added to give the loop another tick to keep the orc from respawning too soon
         mobstate.orcdead = false;
     }
 }
 
-export function handleOtherPlayerEngaged(msgItem:any, mobstate:any, mob:any) {
+
+
+export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) {
     let mobid = msgItem.id;
     let obj = Singleton.getInstance()
 
@@ -370,8 +374,9 @@ export function handleOtherPlayerEngaged(msgItem:any, mobstate:any, mob:any) {
 }
 
 
-export function handleGameMessage(msg:any) {
-    msg.forEach((element:any) => {
+
+export function handleGameMessage(msg: any) {
+    msg.forEach((element: any) => {
         if (element.gameover) {
             processGameoverMessage(element);
         } else {

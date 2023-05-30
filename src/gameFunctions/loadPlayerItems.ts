@@ -310,12 +310,14 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     //log('in loadPlayerItems - spellbook ', json.spellbook)
         
 
-    ui.bp.bootLoadBackPack(bp)
-    //ui.bp.bootLoadBackPack(json.backpack);
-    //ui.ab.bootLoadActionBar(json.actionbar);
-    ui.ab.bootLoadActionBar(actions)
-    //ui.sb.bootLoadSpellBook(json.spellbook)
-    ui.sb.bootLoadSpellBook(sb)
+    // ui.bp.bootLoadBackPack(bp)
+    // ui.ab.bootLoadActionBar(actions)
+    // ui.sb.bootLoadSpellBook(sb)
+
+    ui.bp.bootLoadBackPack(json.backpack);
+    ui.ab.bootLoadActionBar(json.actionbar);
+    ui.sb.bootLoadSpellBook(json.spellbook)
+    
     obj.actionbar = ui.ab;
     obj.backpack = ui.bp;
     obj.spellbook = ui.sb;
