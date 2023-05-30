@@ -2,7 +2,6 @@ import resources from "../resources";
 import { Singleton } from "./playerDetail";
 import { MobState } from "src/components/mobStateComponent";
 import { NpcId } from "src/components/npcIdComponent";
-//import { FollowsPlayer } from "src/components/followsPlayerComponent";
 import { LifeItem } from "src/components/lifeItemComponent";
 import { VictoryItem } from "src/components/victoryItemComponent";
 import { NpcName } from "src/components/npcNameComponent";
@@ -18,15 +17,13 @@ export class Npc extends Entity {
     private _name: string;
     private _xp: number;
     private _hp: number;
+    private _maxhp: number;
     private _percentage: number;
-    //private _battle: boolean = false;
-    private _startinghp: number;
     private _lootWindow: LootWindow;
-    //private _canvas;
     public walk: AnimationState;
     public walk_: AnimationState;
     public turnAround: AnimationState;
-    public turnAround_: AnimationState; 
+    public turnAround_: AnimationState;
     public turnLeft: AnimationState;
     public turnLeft_: AnimationState;
     public idle: AnimationState;
@@ -43,89 +40,63 @@ export class Npc extends Entity {
     public death1_: AnimationState;
     public death2: AnimationState;
     public death2_: AnimationState;
-    private hpbar:UIBar;
-    private hpbar2:UIBar;
+    private hpbar: UIBar;
+    private hpbar2: UIBar;
     public healthLabel: CornerLabel = new CornerLabel('', -10, 310, Color4.White(), 12);
     private update2: any;
     private npcUrl = "https://sutenquestapi.azurewebsites.net/npc";
-    //private scatterRadius = 6;
     public primaryFaction = "Orcish Empire"
+    private _shape: any
+    private _level: number
+    private _spawnloc: any
+    private _spawnrot: any
+    private _boss: boolean
+    private _width: number
+    private _height: number
+    private _personality: string
+    private _wallet: string
+    private _deity: string
+    private _currentgoal: string
+    private _patron: string
+    private _faction: string
+    private _dead: any
+    private _portrait: string
+    private _goaltree: any
 
     constructor(
         id: string,
         name: string,
         xp: number,
-        dead: boolean,
         damage: number,
-        sound: AudioClip,
-        model: GLTFShape,
-        startingHp: number,
+        maxhp: number,
+        hp: number,
         percentage: number,
-        start: Vector3,
-        rotation: Quaternion,
+        sound: AudioClip,
+        shape: GLTFShape,
+        currentloc: Vector3,
+        currentrot: Quaternion,
         path: any,
-        // canvas: any,
-        // actionBar: any,
-        // backpack: any,
-        // player: any
+        level: number = 1,
+        boss: boolean,
+        portrait: string = "",
+        width: number = 256,
+        height: number = 256,
+        personality: string = "",
+        wallet: string = "",
+        deity: string = "",
+        goaltree: any = [],
+        currentgoal: string = "",
+        patron: string = "",
+        faction: string = "",
+        dead: boolean,
     ) {
         super();
 
-        //log('attempting to create a new orc')
+        this.initializeComponents(id, name, xp, damage, dead, maxhp, hp, percentage, sound, shape, currentloc, currentrot, path, level, boss, portrait, width, height, personality, wallet, deity, goaltree, currentgoal, patron, faction)
+        // this.initializeAnimations();
+
+        log('attempting to create a new orc')
         const obj = Singleton.getInstance()
-
-        this.addComponent(model);
-        this.addComponent(new LifeItem())
-        this.addComponent(new VictoryItem())
-        if (name == "Orc Chief") {
-            this.addComponent(
-                new Transform({
-                    position: start,
-                    rotation: rotation,
-                    scale: new Vector3(2, 2, 2),
-                })
-            );
-
-        } else {
-            this.addComponent(
-                new Transform({
-                    position: start,
-                    rotation: rotation,
-                })
-            );
-        }
-
-
-        //this._canvas = canvas;
-        this.addComponent(new AudioSource(sound));
-        this.addComponent(new MobState());
-        this.addComponent(new followData());
-        this.getComponent(MobState).array = path;
-        this._id = id;
-        this.getComponent(MobState).id = this._id;
-        this.getComponent(MobState).damage = damage;
-        this._name = name;
-        this._xp = xp;
-        //log(`setting mobstate.mobname to ${name}`)
-        this.getComponent(MobState).mobname = name;
-        this._hp = startingHp;
-        this._startinghp = startingHp;
-
-        if (name == undefined) {
-            log(`Unable to set name for orc: ${this._id}`)
-        }
-
-        if (dead) {
-            log(`In ${this._id} Orc Creation, setting mobdead to true`)
-            this.getComponent(MobState).mobdead = true;
-        }
-
-        this._percentage = percentage;
-        //this.addComponent(new FollowsPlayer());
-        this.addComponent(new NpcId());
-        this.getComponent(NpcId).id = this._id;
-        this.addComponentOrReplace(new NpcName());
-        this.getComponent(NpcName).name = this._name;
 
         let npcAnimator = new Animator();
         this.addComponent(npcAnimator);
@@ -180,14 +151,6 @@ export class Npc extends Entity {
         npcAnimator.addClip(this.turnLeft);
         npcAnimator.addClip(this.turnLeft_)
 
-        // this.getComponent(FollowsPlayer).defaultHeight = 0.1;
-        // this.getComponent(FollowsPlayer).speed = 0.1;
-        // this.getComponent(FollowsPlayer).elapsedTime = Math.random() * 0.5;
-        // this.getComponent(FollowsPlayer).randomOffsetX =
-        //     (Math.random() * 2 - 1) * this.scatterRadius;
-        // this.getComponent(FollowsPlayer).randomOffsetZ =
-        //     (Math.random() * 2 - 1) * this.scatterRadius;
-
         this._lootWindow = new LootWindow(
             obj.canvas,
             resources.interface.blueLootWindow,
@@ -205,6 +168,7 @@ export class Npc extends Entity {
         this.getComponent(GLTFShape).visible = false
     }
 
+
     public playAudio() {
         this.getComponent(AudioSource).playOnce();
     }
@@ -213,9 +177,14 @@ export class Npc extends Entity {
         return this._id;
     }
 
+    get level() {
+        return this._level;
+    }
+
     get hp() {
         return this._hp;
     }
+
 
     get xp() {
         return this._xp;
@@ -237,12 +206,11 @@ export class Npc extends Entity {
     }
 
     get mobname() {
-        //log(`${this.id} returning mobname ${this._name}`)
         return this._name
     }
 
     mobwalk() {
-        if(!this.walk.playing){
+        if (!this.walk.playing) {
             this.walk.play()
         } else {
             this.walk.playing = true
@@ -254,7 +222,7 @@ export class Npc extends Entity {
     }
 
     mobturn() {
-        if(!this.turnLeft.playing) {
+        if (!this.turnLeft.playing) {
             this.turnLeft.play()
             this.hit1.stop()
         } else {
@@ -267,7 +235,7 @@ export class Npc extends Entity {
     }
 
     mobfight() {
-        if(!this.boxing.playing) {
+        if (!this.boxing.playing) {
             this.boxing.play()
             this.turnLeft.stop()
             this.walk.stop()
@@ -277,7 +245,7 @@ export class Npc extends Entity {
     }
 
     mobhit() {
-        if(!this.hit1.playing) {
+        if (!this.hit1.playing) {
             this.hit1.play()
             this.boxing.stop()
             this.walk.stop()
@@ -287,7 +255,7 @@ export class Npc extends Entity {
     }
 
     mobidle() {
-        if(!this.idle.playing) {
+        if (!this.idle.playing) {
             this.walk.stop()
             this.idle.play()
         } else {
@@ -313,15 +281,6 @@ export class Npc extends Entity {
     }
 
     mobdead() {
-        //this.death1.playing = true;
-        // if(!this.death1.playing) {
-        //     this.death1.play()
-        //     this.boxing.playing = false;
-        //     this.walk.playing = false;
-        //     this.turnLeft.playing = false;
-        // } else {
-        //     this.death1.playing = true;
-        // }
         this.idle.playing = false;
         this.idle_.playing = false;
         this.boxing.playing = false;
@@ -376,6 +335,7 @@ export class Npc extends Entity {
         );
     }
 
+
     initialhp(val: number) {
         //log('npc.ts:331 - Setting orc initialhp')
         if (this.update2) {
@@ -393,7 +353,15 @@ export class Npc extends Entity {
         }
     }
 
-    healthcheck(val:number) {
+    // initialhp(val: number) {
+    //     if (val <= 0) return;
+
+    //     this.update2 && this.hpbar2 ? this.hpbar2.set(val)
+    //         : this.hpbar ? this.hpbar.set(val)
+    //             : null;
+    // }
+
+    healthcheck(val: number) {
         //log('npc.ts:337 - in healthcheck')
         if (this.update2) {
             if (val > 0) {
@@ -405,6 +373,16 @@ export class Npc extends Entity {
             }
         }
     }
+
+    // healthcheck(val: number) {
+    //     if (val <= 0) return;
+
+    //     this.update2 && this.hpbar2 ? this.hpbar2.set(val)
+    //         : this.hpbar ? this.hpbar.set(val)
+    //             : null;
+    // }
+
+
 
     addlootclick() {
         this.addComponentOrReplace(
@@ -438,13 +416,14 @@ export class Npc extends Entity {
         )
     }
 
+
     showhpbar() {
         //log('npc.ts:393 - inshowhpbar')
         this.healthLabel.set(' ');
         let top = 300
         if (!this.hpbar) {
-           //log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
-           this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
+            //log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
+            this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
             this.healthLabel.set(this.mobname);
         } else if (this.hpbar.read() == 0) {
             //log(`npc.ts:400 - rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
@@ -464,30 +443,60 @@ export class Npc extends Entity {
         }
     }
 
+    // heal(amount: number) {
+    //     if (amount <= 0 || this.hp >= this._maxhp) return;
+
+    //     this.hp = this.hp + amount < this._maxhp ? this.hp + amount : this._maxhp;
+    //     let percentage = ((this.hp / this._maxhp) * 100).toFixed(0);
+    //     this.initialhp(Number(percentage) / 100);
+    // }
+
+
     heal(amount: number) {
         let url = this.npcUrl + "/" + this._id;
 
         if (amount > 0) {
-            if (this.hp < this._startinghp) {
-                if (this.hp + amount < this._startinghp) {
-                    //log(`Adding health ${amount}  ${this.name}`)
+            if (this.hp < this._maxhp) {
+                if (this.hp + amount < this._maxhp) {
                     this.hp += amount
                 } else {
-                    //log(`setting hp: ${this.hp} to maxhp: ${this._startinghp}`)
-                    this.hp = this._startinghp
-                    //log(`set hp: ${this.hp} to maxhp: ${this._startinghp}`) 
+                    this.hp = this._maxhp
                 }
             }
         }
 
-        let percentage = ((this.hp / this._startinghp) * 100).toFixed(0)
+        let percentage = ((this.hp / this._maxhp) * 100).toFixed(0)
         this.initialhp(Number(percentage) / 100)
 
     }
 
-    takedamage(amount: number, loc:any, rot:any) {
-        //log(`npc.ts:429 - inside takedamage()`)
-        //let url = this.npcUrl + "/" + this._id;
+    // takedamage(amount: number, loc: any, rot: any) {
+    //     const obj = Singleton.getInstance();
+    //     let mobstate = this.getComponent(MobState);
+    //     mobstate.rotation = rot;
+    //     mobstate.position = loc;
+
+    //     if (this.hp > 0) {
+    //         this.hp = this.hp - amount > 0 ? this.hp - amount : 0;
+    //     }
+
+    //     let percentage = ((this.hp / this._maxhp) * 100).toFixed(0);
+    //     this.initialhp(Number(percentage) / 100);
+    //     this.healthcheck(Number(percentage) / 100);
+
+    //     let id = this._id;
+    //     let exists = obj.localmobstate.map(x => x.id).indexOf(id);
+
+    //     if (exists > -1) {
+    //         obj.localmobstate.splice(exists, 1, mobstate);
+    //     } else {
+    //         obj.localmobstate.push(mobstate);
+    //     }
+
+    //     return this.hp;
+    // }
+
+    takedamage(amount: number, loc: any, rot: any) {
         const obj = Singleton.getInstance()
         let mobstate = this.getComponent(MobState)
         mobstate.rotation = rot
@@ -501,23 +510,15 @@ export class Npc extends Entity {
             }
         }
 
-        //log(`this.hp ${this.hp} / this.maxhp ${this._startinghp} * 100 gives percentage of ${(this.hp / this._startinghp) * 100}`)
-        //log(`npc.ts:445 - takedamage()`)
-        let percentage = ((this.hp / this._startinghp) * 100).toFixed(0)
-        //log(`npc:447 - initialhp()`)
+        let percentage = ((this.hp / this._maxhp) * 100).toFixed(0)
         this.initialhp(Number(percentage) / 100)
-        //log(`npc:449 - healthcheck()`)
         this.healthcheck(Number(percentage) / 100)
 
         let id = this._id
         let exists = obj.localmobstate.map(x => x.id).indexOf(id)
-        //log('updating mobstate in the singleton')
-        //log('1 updating mobstate ', JSON.stringify(mobstate))
 
         if (exists > -1) {
-            //log(`id: ${this._id} exists 4: ${exists}`)
             obj.localmobstate.splice(exists, 1, mobstate)
-            //log(`localmobstate: ${obj.localmobstate}`)
         } else {
             obj.localmobstate.push(mobstate)
         }
@@ -535,14 +536,153 @@ export class Npc extends Entity {
 
             try {
                 fetch(url, options).then((res) => res);
-                // .then((res) => res.json())
-                // .then((res) => {
-                //   log('after delete ')
-                // })
             } catch (error) {
                 log("failed to delete npc ", error);
             }
         });
     }
 
+    private initializeComponents(
+        id: string,
+        name: string,
+        xp: number,
+        damage: number,
+        dead: boolean,
+        maxhp: number,
+        hp: number,
+        percentage: number,
+        sound: AudioClip,
+        shape: GLTFShape,
+        currentloc: Vector3,
+        currentrot: Quaternion,
+        path: any,
+        level: number,
+        boss: boolean,
+        portrait: string,
+        width: number,
+        height: number,
+        personality: string,
+        wallet: string,
+        deity: string,
+        goaltree: any,
+        currentgoal: string,
+        patron: string,
+        faction: string
+    ) {
+        this.addComponent(shape);
+        this.addComponent(new LifeItem())
+        this.addComponent(new VictoryItem())
+        this.addComponent(
+            new Transform({
+                position: currentloc,
+                rotation: currentrot,
+                scale: boss ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1),
+            })
+        );
+
+        this._maxhp = maxhp;
+        this._portrait = portrait;
+        this._goaltree = goaltree;
+        this._level = level;
+        this._boss = boss;
+        this._width = width;
+        this._height = height;
+        this._personality = personality;
+        this._wallet = wallet;
+        this._deity = deity;
+        this._currentgoal = currentgoal;
+        this._patron = patron;
+        this._faction = faction;
+
+        this.addComponent(new AudioSource(sound));
+        this.addComponent(new MobState());
+        this.addComponent(new followData());
+
+        this.getComponent(MobState).array = path;
+        this._id = id;
+        this.getComponent(MobState).id = this._id;
+        this.getComponent(MobState).damage = damage;
+        this._name = name;
+        this.getComponent(MobState).mobname = name;
+        this._xp = xp;
+        this._hp = hp;
+        this._percentage = percentage;
+        this.getComponent(MobState).mobdead = dead;
+
+        this.addComponent(new NpcId());
+        this.getComponent(NpcId).id = this._id;
+        this.addComponentOrReplace(new NpcName());
+        this.getComponent(NpcName).name = this._name;
+    }
+
+    //private animationStatesMap: { [key: string]: AnimationState } = {};
+
+    // private initializeAnimations() {
+    //     let npcAnimator = new Animator();
+    //     this.addComponent(npcAnimator);
+
+    //     const animationStates = [
+    //         "a-walking", "walking",
+    //         "b-idle", "idle",
+    //         "c-punch", "punch",
+    //         "d-kick", "kick",
+    //         "e-hitInHead", "hitInHead",
+    //         "f-hitInKidney", "hitInKidney",
+    //         "g-turnAround", "turnAround",
+    //         "h-death1", "death1",
+    //         "i-death2", "death2"
+    //     ];
+
+    //     animationStates.forEach(state => {
+    //         this.animationStatesMap[state] = new AnimationState(state);
+    //         npcAnimator.addClip(this.animationStatesMap[state]);
+    //     });
+
+    // }
+
+    // private stopAnimation(animation: AnimationState) {
+    //     //if (animation.playing) {
+    //         animation.stop();
+    //    // }
+    // }
+
+    // private pauseAnimation(animation:AnimationState) {
+    //     animation.pause()
+    // }
+
+    // private playAnimation(animation: AnimationState) {
+    //     //if (!animation.playing) {
+    //         animation.play();
+    //     //}
+    // }
+
+    // mobAction(action: 'walk' | 'idle' | 'turn' | 'fight' | 'hit' | 'dead') {
+    //     this.stopAnimation(this.idle);
+    //     this.stopAnimation(this.walk);
+    //     this.stopAnimation(this.turnLeft);
+    //     this.stopAnimation(this.boxing);
+    //     this.stopAnimation(this.hit1);
+    //     this.stopAnimation(this.death1);
+
+    //     switch (action) {
+    //         case 'walk':
+    //             this.playAnimation(this.walk);
+    //             break;
+    //         case 'idle':
+    //             this.playAnimation(this.idle);
+    //             break;
+    //         case 'turn':
+    //             this.playAnimation(this.turnLeft);
+    //             break;
+    //         case 'fight':
+    //             this.playAnimation(this.boxing);
+    //             break;
+    //         case 'hit':
+    //             this.playAnimation(this.hit1);
+    //             break;
+    //         case 'dead':
+    //             this.playAnimation(this.death1);
+    //             break;
+    //     }
+    // }
 }

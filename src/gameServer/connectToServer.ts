@@ -6,10 +6,8 @@ import { joinSocketsServer } from "./wsConnection";
 
 export async function connectToServer(ui: UI,json: PlayerState, player: Player) {
     // log(`debug: 8 Inside connectToServer`)
-    // log(`connectToServer - player.name: ${player.name}`)
 
     try {
-        //log('joining socket server')
         let socket = await joinSocketsServer(
             ui.gc,
             ui.ab,
@@ -19,8 +17,6 @@ export async function connectToServer(ui: UI,json: PlayerState, player: Player) 
         );
     } catch (error) {
         writeToCl(`:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
-        //writeToCl(ui, `:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
-        //failedstart = true;
 
         return;
     }

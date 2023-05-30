@@ -17,7 +17,6 @@ export async function registerPlayer(ui: UI, player:Player, tradeWindow: TradeWi
           
         } catch (error:any) {
             writeToCl(`Unable to access ETH Accounts!`, `Web3 Must be connected to play`, `Please add '&ENABLE_WEB3' to URL`);
-            //writeToCl(ui, `Unable to access ETH Accounts!`, `Web3 Must be connected to play`, `Please add '&ENABLE_WEB3' to URL`);
         }
     });
 }

@@ -247,4 +247,3 @@ export function getspell(val: string) {
     //log('with parens ', allspells[val])
     return allspells[val]
 }
-
