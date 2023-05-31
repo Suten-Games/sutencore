@@ -43,6 +43,7 @@ export class Npc extends Entity {
     private hpbar: UIBar;
     private hpbar2: UIBar;
     public healthLabel: CornerLabel = new CornerLabel('', -10, 310, Color4.White(), 12);
+    public levelLabel: CornerLabel = new CornerLabel('', -70, 305, Color4.Blue(), 18, false);
     private update2: any;
     private npcUrl = "https://sutenquestapi.azurewebsites.net/npc";
     public primaryFaction = "Orcish Empire"
@@ -97,6 +98,8 @@ export class Npc extends Entity {
 
         log('attempting to create a new orc')
         const obj = Singleton.getInstance()
+
+        this._level = level;
 
         let npcAnimator = new Animator();
         this.addComponent(npcAnimator);
@@ -420,11 +423,13 @@ export class Npc extends Entity {
     showhpbar() {
         //log('npc.ts:393 - inshowhpbar')
         this.healthLabel.set(' ');
+        this.levelLabel.set(' ')
         let top = 300
         if (!this.hpbar) {
             //log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
             this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
             this.healthLabel.set(this.mobname);
+            this.levelLabel.set(this._level.toString())
         } else if (this.hpbar.read() == 0) {
             //log(`npc.ts:400 - rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
             this.hpbar2 = new UIBar(this.percentage / 100, -30, top - 30, Color4.Blue(), BarStyles.ROUNDSILVER, .8)
@@ -437,6 +442,7 @@ export class Npc extends Entity {
         this.hpbar.set(0)
         this.hpbar.hide()
         this.healthLabel.set('');
+        this.levelLabel.set('');
         if (this.hpbar2 != null) {
             this.hpbar2.set(0)
             this.hpbar2.hide()
