@@ -29,10 +29,6 @@ const levelupbox = new SoundBox(
 export class NpcFSM extends Entity {
     private _player: Player;
     private _npc: Npc;
-    // private _clicked = false;
-    // private _battlepause: number;
-    // private _punchpause: number = 2;
-
     private _combatLog: CombatLog;
     private _canvas: UICanvas;
     private showHealthBar = false;
@@ -41,6 +37,7 @@ export class NpcFSM extends Entity {
     private _startPos;
     private _startRot;
     private _patrol = true;
+    public factionvalue: number;
 
     constructor(
         npc: Npc,
@@ -62,10 +59,22 @@ export class NpcFSM extends Entity {
         // this._canvas = canvas;
         //this._combatLog = combatlog;
 
+        let mobfaction = this._npc.faction
+        let playerfaction = this._player.factions
+        let matchingFaction = playerfaction.find((faction: { name: string; }) => faction.name === mobfaction);
+
+        if (matchingFaction) {
+            this.factionvalue = matchingFaction.value
+            //log(`Found matching faction with value: ${matchingFaction.value}`);
+        } else {
+            this.factionvalue = 0
+            //log(`No matching faction found`);
+        }
+
         let mobstate = this._npc.getComponent(MobState)
         let hoverText
 
-        if(mobstate.faction > 0) {
+        if (this.factionvalue > 0) {
             hoverText = "Talk"
         } else {
             hoverText = "Attack"
@@ -80,9 +89,9 @@ export class NpcFSM extends Entity {
                 (e) => {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
                     let mobstate = this._npc.getComponent(MobState)
-                    let faction = mobstate.faction
-                    if(faction > 0) {
-                        writeToCl("Lets have a conversation")
+                    //let faction = mobstate.faction
+                    if (this.factionvalue > 0) {
+                        writeToCl(`Lets have a conversation: ${this.factionvalue}`)
                     } else {
                         mobstate.battle = true;
                         mobstate.clicked = true;
@@ -112,8 +121,8 @@ export class NpcFSM extends Entity {
         const dist = Vector3.DistanceSquared(
             this.transform.position,
             camera.position
-        ) 
-        
+        )
+
         var obj = Singleton.getInstance();
 
         if (state.mobdead) {
@@ -151,19 +160,19 @@ export class NpcFSM extends Entity {
             otherplayerattack(scene, this._combatLog)
         } else {
             if (dist < 8) {
-                if(state.faction < 0) {
+                if (this.factionvalue < 0) {
                     attack(scene, this._combatLog);
-                     //log('npcFSM.ts:145 - attack (skipping for testing)')
+                    //log('npcFSM.ts:145 - attack (skipping for testing)')
                 } else {
                     idle(scene, dt)
                 }
-            } else if (state.trackplayer || dist < 30 && dist > 8 && state.faction < 0) {
+            } else if (state.trackplayer || dist < 30 && dist > 8 && this.factionvalue < 0) {
                 //log(`npcFSM.ts:147 - chase ${dist}`)
                 chase(scene, dt, dist);
             } else if (dist > 30) {
                 //log(`npcFSM.ts:150 ${this._npc.id} - patrol ${dist}`)
-                patrol(scene,dt);
-             } 
+                patrol(scene, dt);
+            }
         }
     }
 

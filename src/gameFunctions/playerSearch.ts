@@ -6,6 +6,7 @@ import { deathCheck } from "./deathCheck";
 import { loadPlayerItems } from "./loadPlayerItems";
 import { newPlayer } from "./newPlayer";
 import { populateObj } from "./populateObj";
+import { loadPlayerFactions } from "./loadPlayerFactions";
 
 
 
@@ -21,9 +22,10 @@ export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: 
         newPlayer(ui, lowerCaseAddress, player)
     } else {
         //log(`playerSearch.ts: 23`)
-        connectToServer(ui,json,player)
-        deathCheck(ui,json,player)
+        connectToServer(ui, json, player)
+        deathCheck(ui, json, player)
         populateObj(json, player)
-        loadPlayerItems(ui,json)
+        loadPlayerItems(ui, json)
+        loadPlayerFactions(player, json)
     }
 }

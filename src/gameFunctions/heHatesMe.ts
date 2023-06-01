@@ -8,6 +8,12 @@ import { Singleton } from "src/gameObjects/playerDetail";
 import { createSoundBox } from "./createSoundBox";
 import resources from "src/resources";
 import { SpawnTimeOut } from "src/components/spawnTimerComponent";
+import { Player } from "src/gameObjects/player";
+
+const local: boolean = false;
+const apiUrl = local
+    ? "http://localhost:8080/player/"
+    : "https://sutenquestapi.azurewebsites.net/player/";
 
 
 const soundbox3 = createSoundBox(7, 0, 8, resources.sounds.playerHit2, false);
@@ -17,6 +23,7 @@ const PUNCH_TIME = 2.2;
 const PAUSE = 2.2;
 const obj = Singleton.getInstance();
 
+
 export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneState) {
     const mobvisible = s.npc.getComponent(GLTFShape).visible;
     const camera = Camera.instance;
@@ -24,8 +31,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
     //He hates me so we battlin'
     if (mobstate.mobdead || mobstate.playerdead || mobvisible == false) {
-        //log("attack.ts: escaping out of attack.ts because the mob or the player is dead");
-
         return;
     }
 
@@ -50,9 +55,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
         }
 
 
-        //log(`attack.ts:97 - ${mobstate.id} turning on showhpbar1`);
         mob.showhpbar();
-        //log(`Setting intial mob location`)
         mobstate.position = s.transform.position;
         mobstate.rotation = s.transform.rotation;
 
@@ -60,7 +63,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
         let exists = obj.localmobstate.map((x) => x.id).indexOf(id);
 
         if (exists > -1) {
-            //log(`${mobstate?.id} exists 1 ${exists}`);
             obj.localmobstate.splice(exists, 1, mobstate);
         } else {
             obj.localmobstate.push(mobstate);
@@ -68,7 +70,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
     }
 
     //Keeping mobstate location synced
-
     if (!s.clicked) {
         if (
             !mob.hasComponent(SecondaryTimeOut) &&
@@ -87,13 +88,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             mobstate.playerdead = false;
             mobstate.timeout = true;
 
-            //log(`attack.ts: 109 faking damage for now`)
-            //mobstate.damage = .00001
-
-            //log(`mobstate.damage ${mobstate.damage}`)
-
-            //log(`player name: ${s.player.name}`)
-
             soundbox3.play();
             s.player.damage(mobstate.damage);
 
@@ -103,10 +97,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 writeToCl(`An ${s.npc.mobname} hits YOU for ${mobstate.damage} points of damage`)
             }
 
-
-            //log(`currently being hit by ${s.npc.id}`)
-            //log(`got popped for ${mobstate.damage} hp`)
-            //log(`adding a timeout of ${PAUSE} for punch delay to ${s.npc.id}`);
             s.npc.addComponentOrReplace(new SecondaryTimeOut(PAUSE));
         }
     } else if (s.clicked) {
@@ -179,7 +169,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 //log(`id: ${mob.id} battle decided, pushing to mobstate`);
 
                 if (exists > -1) {
-                    //log(`id: ${s.npc.id} exists 2: ${exists}`);
                     obj.localmobstate.splice(exists, 1, mobstate);
                 } else {
                     obj.localmobstate.push(mobstate);
@@ -208,14 +197,16 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 //log(`calling achievement check with 20 and ${s.player.level}`)
                 //This is a setting that shouuld change from NPC to NPC. The XP Gained from a kill.
                 if (mob.xp) {
-                    s.player.achievementcheck(s.npc.xp, s.player.level);
+                    //s.player.achievementcheck(s.npc.xp, s.player.level);
+                    s.player.achievementcheck(mob.xp, s.player.level)
                     writeToCl(`You have gained ${s.npc.xp} experience!`)
                 } else {
                     s.player.achievementcheck(20, s.player.level);
                     writeToCl(`You have gained 20 experience!`)
                 }
 
-                writeToCl(`Your standing with ${mob.primaryFaction} has gotten worse`)
+                updateFaction(mob.faction, s.player, -1)
+                writeToCl(`Your standing with ${mob.faction} has gotten worse`)
 
                 //log('orc.ts:267 attack.ts - hidehpbar')
                 s.npc.hidehpbar();
@@ -228,4 +219,29 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             }
         }
     }
+}
+
+export function updateFaction(factionName: string, player: Player, change: number) {
+
+    let factionUrl = apiUrl + player.address + '/factions'
+
+    const factions = {
+        factionName1: factionName,
+        factionValue1: change
+    };
+
+    const options = {
+        method: "PATCH",
+        body: JSON.stringify(factions),
+        headers: {
+            "Content-Type": "application/json",
+        },
+    };
+
+    fetch(factionUrl, options)
+        .then((res) => res.json())
+        .then(() => {
+            log(`Faction updated`)
+        });
+
 }

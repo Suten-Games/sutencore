@@ -4,7 +4,7 @@ const ROT_SPEED = 1
 const MOVE_SPEED = .8
 const player = Camera.instance
 
-export function chase(s:any, dt:number, dist:number) {
+export function chase(s: any, dt: number, dist: number) {
 
     //log(`Inside chase, dist: ${dist}`)
 
@@ -12,11 +12,6 @@ export function chase(s:any, dt:number, dist:number) {
     //const player = s.player
     const mobstate = mob.getComponent(MobState);
     let transform = mob.getComponent(Transform);
-
-    if (mobstate.faction >=  0) {
-        log(`chase.ts:19 - mob's primaryfaction: ${mob.primaryFaction}`)
-        return
-    }
 
     mob.mobwalk()
 
@@ -30,10 +25,9 @@ export function chase(s:any, dt:number, dist:number) {
         log(`Ditched the mob, turning off chase`)
         mobstate.trackplayer = false;
     } else {
-        //log(`chase.ts:4 - Turning on trackplayer`)
         mobstate.trackplayer = true;
     }
-    
+
     //s.player.updateaggro("add", s.npc.id);
 
     const lookAtTarget = new Vector3(
@@ -52,6 +46,6 @@ export function chase(s:any, dt:number, dist:number) {
     const forwardVector = Vector3.Forward().rotate(transform.rotation)
     const increment = forwardVector.scale(dt * MOVE_SPEED)
     transform.translate(increment)
-    
-    
+
+
 }

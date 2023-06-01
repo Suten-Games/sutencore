@@ -101,6 +101,8 @@ export class Npc extends Entity {
 
         this._level = level;
 
+        this._faction = faction;
+
         let npcAnimator = new Animator();
         this.addComponent(npcAnimator);
 
@@ -176,6 +178,10 @@ export class Npc extends Entity {
         this.getComponent(AudioSource).playOnce();
     }
 
+    get faction() {
+        return this._faction;
+    }
+
     get id() {
         return this._id;
     }
@@ -187,7 +193,6 @@ export class Npc extends Entity {
     get hp() {
         return this._hp;
     }
-
 
     get xp() {
         return this._xp;

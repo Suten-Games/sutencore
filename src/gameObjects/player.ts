@@ -37,6 +37,7 @@ export class Player {
     private _startinghp: number;
     private _inbatttle: boolean;
     private _shieldhp: number;
+    private _factions: any
 
     private hpBar = new UIBar(
         1,
@@ -133,6 +134,14 @@ export class Player {
 
     set name(val: string) {
         this._name = val;
+    }
+
+    get factions() {
+        return this._factions
+    }
+
+    set factions(val) {
+        this._factions = val;
     }
 
     get level() {

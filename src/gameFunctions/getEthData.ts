@@ -6,24 +6,20 @@ import { UI } from "src/gameUI/ui";
 import { writeToCl } from "./writeToCL";
 
 export async function getEthData(ui: UI, player:Player) {
-    //log('calling getUserAccount()')
     let lowerCaseAddress: string = "";
     let address = await getUserAccount();
     let userdata = await getUserData();
     
     if (userdata == null) {
         writeToCl(`:(  Userdata failed to load  :(`, `Please refresh/reload the scene`)
-        //writeToCl(ui, `:(  Userdata failed to load  :(`, `Please refresh/reload the scene`)
         return;
     } else if (!userdata.hasConnectedWeb3) {
         writeToCl(`Web3 must be connected`, `Please add '&ENABLE_WEB3' to URL`)
-        //writeToCl(ui, `Web3 must be connected`, `Please add '&ENABLE_WEB3' to URL`)
         return;
     }
     // //const balance = await matic.balance(address)
     const balance = 0
     var obj = Singleton.getInstance();
-    // obj.maticbalance = balance.l2
     obj.maticbalance = 0
     if (address) {
         lowerCaseAddress = address.toLowerCase();
