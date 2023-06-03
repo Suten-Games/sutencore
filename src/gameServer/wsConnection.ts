@@ -1,6 +1,6 @@
 import { MobState } from "../components/mobStateComponent";
 import resources from "../resources";
-import { sutenBase } from "../../suten"
+import { sutenBase, local } from "../../suten"
 import { Player } from "../gameObjects/player";
 import { ActionBar } from "../gameUI/actionBar";
 import { BackPack } from "../gameUI/backPack";
@@ -14,7 +14,6 @@ import { NpcId } from "src/components/npcIdComponent";
 
 
 const updateInterval = 5; //10
-const local: boolean = false;
 const PUNCH_TIME = 2.2;
 let clicked = false;
 
@@ -54,15 +53,20 @@ export async function joinSocketsServer(
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
-            log("in wsConnection - msg: ", msg);
+            // log("in wsConnection - msg: ", msg);
+           
 
             if (mobs.entities.length == 0) {
+                log(`Calling handleGame Message`)
                 handleGameMessage(msg);
             } else {
+                log(`Not calling handleGameMessage`)
                 for (let item in msg) {
+                    log(`In choice for gameover`)
                     if (msg[item].gameover) {
                         processGameoverMessage(msg[item]);
                     } else {
+                        log(`Calling processNonGameOverMessage`)
                         processNonGameoverMessage(msg, mobs);
                     }
                 }
@@ -129,7 +133,7 @@ class pingSystem implements ISystem {
             this.timer = 0;
 
             if (obj.bpack.length == 0 && obj.abar.length == 0 && obj.sbook.length == 0) {
-                log(`Syncing HP Only`)
+                //log(`Syncing HP Only`)
                 this.socket.send(
                     JSON.stringify({
                         event: "events",
@@ -141,7 +145,7 @@ class pingSystem implements ISystem {
                     })
                 );
             } else {
-                log(`Syncing ALL`)
+                //log(`Syncing ALL`)
                 let backpack = obj.bpack.map((lootitem: Item) => {
                     return {
                         image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
@@ -169,7 +173,7 @@ class pingSystem implements ISystem {
                     }
                 });
 
-                log(`wsConnection type: ${sutenBase}`)
+                //log(`wsConnection type: ${sutenBase}`)
 
                 this.socket.send(
                     JSON.stringify({
@@ -271,7 +275,7 @@ export function createNpc(element: any, path: any) {
         element.currentgoal,
         element.patron,
         element.faction,
-        element.dead
+        element.mobdead
     );
 }
 
@@ -297,11 +301,18 @@ export function processGameoverMessage(item: Item) {
 
 
 export function processNonGameoverMessage(msg: any, mobs: any) {
+    //log(`In processNonGameoverMessage`)
+
     for (let item in msg) {
+        let isMobExists = mobs.entities.some((mob:any) => mob.getComponent(NpcId).id === msg[item].id);
+
         for (let mob of mobs.entities) {
+            //log(`Process mob: ${mob.id}`)
             let mobstate = mob.getComponent(MobState);
             let obj = Singleton.getInstance();
+
             if (msg[item].id === mob.getComponent(NpcId).id) {
+                //log(`IDs Match`)
                 const isMostHatedPlayer = msg[item].mosthated == null || msg[item].mosthated === obj.playeraddress;
                 mobstate.anotherplayer = !isMostHatedPlayer;
 
@@ -310,6 +321,11 @@ export function processNonGameoverMessage(msg: any, mobs: any) {
                 } else {
                     handleOtherPlayerEngaged(msg[item], mobstate, obj);
                 }
+            } else {
+                if (!isMobExists && msg[item].mobdead == false) {
+                    //log(`Should be creating this mob: ${JSON.stringify(msg[item])} `)
+                    handleGameMessage(msg);
+                }
             }
         }
     }
@@ -317,7 +333,10 @@ export function processNonGameoverMessage(msg: any, mobs: any) {
 
 
 
+
 export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
+    //log(`handlLocalMobUpdates.ts:320 msgItem.mobded ${msgItem.mobdead} mobstate.mobdead: ${mobstate.mobdead}`)
+    //log(`handlLocalMobUpdates.ts:320 msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
     if (obj.localmobstate.length > 0) {
         let exists = obj.localmobstate.map((x: { id: any; }) => x.id).indexOf(msgItem.id);
         if (exists > -1) {
@@ -325,17 +344,22 @@ export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
         }
     }
 
-    if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === false) {
-        mobstate.mobdead = msgItem.mobdead;
+    if(msgItem.mobdead == false && mobstate.mobdead == true) {
+        //log(`SHOULD RESPAWN: wsConnection.ts:329 - Setting respawned to true on mobstate`) 
+        //log(`ID CHECK ID: msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
+        if(msgItem.id !== mobstate.id) {
+            //log(`The IDs do not match, so sending ${JSON.stringify(msgItem)} to handleGameMessage(msgItem) to make a new mob`)
+            handleGameMessage(msgItem)
+        }
+        mobstate.mobdead = false;
         mobstate.respawned = true;
-    } else if (msgItem.mobdead === false && mobstate.mobdead === true && mobstate.orcdead === true) {
-        mobstate.orcdead = false;
     }
 }
 
 
 
 export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) {
+    //log(`In handlOtherPlayerEngaged`)
     let mobid = msgItem.id;
     let obj = Singleton.getInstance()
 
@@ -376,28 +400,32 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
 
 
 export function handleGameMessage(msg: any) {
+    //log(`HANDLE GAME MESSAGE`)
     msg.forEach((element: any) => {
         if (element.gameover) {
             processGameoverMessage(element);
         } else {
             let mob;
-            if (element.path.length == 3) {
-                mob = createNpc(element, [
-                    new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
-                    new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
-                    new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
-                ]);
-            } else if (element.path.length == 4) {
-                mob = createNpc(element, [
-                    new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
-                    new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
-                    new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
-                    new Vector3(element.path[3][0], element.path[3][1], element.path[3][2]),
-                ]);
-            }
-            if (mob) {
-                engine.addSystem(createNpcFSM(mob, element));
-                mob.name = element.name;
+            if(!element.mobdead) {
+                //log(`RESPAWN: The element being passed to createNPC ${JSON.stringify(element)}`)
+                if (element.path.length == 3) {
+                    mob = createNpc(element, [
+                        new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
+                        new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
+                        new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
+                    ]);
+                } else if (element.path.length == 4) {
+                    mob = createNpc(element, [
+                        new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
+                        new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
+                        new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
+                        new Vector3(element.path[3][0], element.path[3][1], element.path[3][2]),
+                    ]);
+                }
+                if (mob) {
+                    engine.addSystem(createNpcFSM(mob, element));
+                    mob.name = element.name;
+                }
             }
         }
     });

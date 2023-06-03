@@ -2,8 +2,8 @@ import { Player } from "src/gameObjects/player";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { UI } from "src/gameUI/ui";
 import { writeToCl } from "./writeToCL";
+import { local } from "suten";
 
-const local: boolean = false;
 const apiUrl = local
     ? "http://localhost:8080/player"
     : "https://sutenquestapi.azurewebsites.net/player";

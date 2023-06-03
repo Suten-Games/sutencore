@@ -1,9 +1,14 @@
 import resources from "../resources";
 import { LifeItem } from "../components/lifeItemComponent";
 import { Item } from "../gameObjects/item";
-import { sLoot, lLoot } from "suten";
+import { local } from "suten";
 import { Npc } from "src/gameObjects/npc";
 import { Singleton } from "src/gameObjects/playerDetail";
+
+
+const server = local
+    ? "http://localhost:8080/loot/"
+    : "https://sutenquestapi.azurewebsites.net/loot/";
 
 export class LootWindow extends Entity {
     private _canvas;
@@ -17,6 +22,8 @@ export class LootWindow extends Entity {
     private _activeloot: any;
     private _looted = false
     private _npc
+
+    
 
     constructor(canvas: any, image: any, actionBar: any, backPack: any, player: any, orc: Npc) {
         super()
@@ -49,7 +56,7 @@ export class LootWindow extends Entity {
         this._closebutton.visible = false;
         this._closebutton.onClick = new OnPointerDown(
             (e) => {
-                log('lootwindow close button has been clicked')
+                //log('lootwindow close button has been clicked')
                 this.hide()
                 this._closebutton.visible = false;
             },
@@ -61,12 +68,12 @@ export class LootWindow extends Entity {
     }
 
     async getloot() {
-        log(`lootWindow:64 - in the getLoot Method`)
+        //log(`lootWindow:64 - in the getLoot Method`)
         if (this._looted) {
             this._looted = false;
         }
 
-        log(`lootWindow.ts:69 - mob name: ${this._npc.mobname}`)
+        //log(`lootWindow.ts:69 - mob name: ${this._npc.mobname}`)
 
         let json
         let mobtier: number
@@ -81,21 +88,17 @@ export class LootWindow extends Entity {
         var obj = Singleton.getInstance();
         let actionbar = obj.actionbar
         obj.lootwindows.push(this)
-        log(`lootWindows.ts:107 - actionbar: ${actionbar}`)
 
-        //Commenting out the API call to fetch the loot for now
-        //Done of 4/12/22 for testing
         let lootfetched = true;
-        let looturl = sLoot + mobtier + '/' + this._player.address
-        log(`lootWindow.ts:119 - looturl ${looturl}`)
+        let looturl = server + mobtier + '/' + this._player.address
+
+        //log(`RESPAWN: Calling looturl ${looturl}`)
+
         try {
-            //let response = await fetch(sLoot + mobtier + '/' + 123456)
             let response = await fetch(looturl)
             json = await response.json();
-            log(`lootWindow.ts:125 - json ${JSON.stringify(json)}`)
             lootfetched = true
         } catch (error) {
-            log(`lootWindow.ts:127 - fetch error: ${error}`);
             lootfetched = false
         }
 
@@ -106,13 +109,10 @@ export class LootWindow extends Entity {
             if (json.shape.includes("images")) {
                 lootimg = json.shape
             } else {
-                //log('Adding images/looticons to the shape')
                 lootimg = "images/looticons/" + json.shape
             }
 
-            //let lootimg = "images/looticons/" + json.shape
-            log(`lootWindow.ts:134 - Calling new Item(${lootimg})`)
-            //log(`lootWindow.ts:204 - JSON.sound(${json.sound})`)
+            //log(`lootWindow.ts:134 - Calling new Item(${lootimg})`)
             this._lootitem = new Item(
                 new Texture(lootimg), //image
                 40,                   //slog
@@ -131,7 +131,7 @@ export class LootWindow extends Entity {
                 this._npc
             )
         } else if (!lootfetched) {
-            log('lootWindow.ts:154 - Failed to fetch loot. Creating an Empty Vial')
+            //log('lootWindow.ts:154 - Failed to fetch loot. Creating an Empty Vial')
             this._lootitem = new Item(
                 new Texture("images/looticons/manavial.png"),
                 40,
@@ -191,7 +191,7 @@ export class LootWindow extends Entity {
     }
 
     public flip(item = null) {
-        log(`lootWindow.ts:214 in flip`)
+        //log(`lootWindow.ts:214 in flip`)
         if (this._loot.visible) {
             this.hide()
         } else {
@@ -216,17 +216,17 @@ export class LootWindow extends Entity {
     }
 
     public show(item = null) {
-        log('lootWindow:239 - in lootWindow show method')
+        //log('lootWindow:239 - in lootWindow show method')
         this._closebutton.visible = true;
         this._loot.visible = true;
         if (item) {
-            log('lootWindow:243 - in lootWindow, we have an item, creating a new lootItem')
-            log(`lootWindow:244 - the item ${item}`)
+            //log('lootWindow:243 - in lootWindow, we have an item, creating a new lootItem')
+            //log(`lootWindow:244 - the item ${item}`)
             this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 40, 122, 120, "Mana Vial", "consumable", 50, "consumable",
                 null, null, null, null, null, this)
             this._lootitem.show()
         } else {
-            log('lootWindow:249 in lootWindow we do not have an item so calling getLoot')
+            //log('lootWindow:249 in lootWindow we do not have an item so calling getLoot')
             this.getloot()
         }
 

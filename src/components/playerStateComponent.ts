@@ -25,4 +25,5 @@ export class PlayerState {
     armor: number;
     primaryweapon: string; 
     message:string;
+    factions: any;
 }

@@ -7,10 +7,10 @@ import { SecondaryTimeOut } from "src/components/secondaryTimeOutComponent";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { createSoundBox } from "./createSoundBox";
 import resources from "src/resources";
-import { SpawnTimeOut } from "src/components/spawnTimerComponent";
+//import { SpawnTimeOut } from "src/components/spawnTimerComponent";
 import { Player } from "src/gameObjects/player";
+import { local } from "suten";
 
-const local: boolean = false;
 const apiUrl = local
     ? "http://localhost:8080/player/"
     : "https://sutenquestapi.azurewebsites.net/player/";
@@ -149,6 +149,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             if (mobhp <= 0) {
                 //log(`attack.ts:196 - Calling mob.mobdead()`)
                 mob.mobdead()
+
                 if (mobstate.mobname == 'Orc Chief') {
                     writeToCl(`You have defeated the Sand Orc Chief!!`)
                     writeToCl(`You have captured the Sand Orc flag!!`)
@@ -157,6 +158,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 }
 
                 mobstate.battle = false;
+                log(`RESPAWN: Setting mobstate.mobdead to TRUE`)
                 mobstate.mobdead = true;
                 mobstate.clicked = false;
                 mobstate.playerdead = false;
@@ -175,7 +177,10 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 }
 
                 //log(`in attack mob ${s.npc.id} hp is 0, setting SpawnTimeout to 90`)
-                mob.addComponentOrReplace(new SpawnTimeOut(9000));
+
+                // log(`RESPAWN: adding SpawnTimeout of 9000 to the mob`)
+                // mob.addComponentOrReplace(new SpawnTimeOut(9000));
+
                 let aggarray = [];
                 aggarray = s.player.aggro;
                 // if (aggarray != undefined && aggarray.length > 0) {
