@@ -95,10 +95,6 @@ export class ActionBar {
         if (i !== -1) {
             this._myactionbarcontents.splice(i, 1)
         }
-        // const index = this._myactionbarcontents.findIndex(item => item.slot() === slot);
-        // if (index !== -1) {
-        //     this._myactionbarcontents.splice(index, 1);
-        // }
     }
 
     public checkSlot(): number {
@@ -106,14 +102,6 @@ export class ActionBar {
         const obj = Singleton.getInstance();
         let found = 0
         for (let i = 1; i < 10; i++) {
-            //log(`actionBar.ts:109 - checkSlot() - i: ${i} this._slots[i]: ${this._slots[i]}`)
-            //log(` On loop: ${i} - Checking ${this._slots[i]} against ${this._myactionbarcontents[i].itemtype}`)
-            // if (this._slots[i] === 'filled') {
-            //     log(`actionBar.ts:112 - checkSlot() ${i} is filled, so changing i to: ${i + 1}`)
-            // } else if (this._slots[i] !== 'filled') {
-            //     log(`actionBar.ts:114 - checkSlot() ${i} is not filled so returning i: ${i}`)
-            //     return i;
-            // }
             if (this._slots[i] !== 'filled') {
                 return i;
             }

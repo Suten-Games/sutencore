@@ -12,6 +12,8 @@ import { attack } from "./attack";
 import { otherplayerattack } from "./otherplayerattack";
 import { writeToCl } from "./writeToCL";
 import { idle } from "./idle";
+import { chunkSentence, fetchQuest, writeChunks } from "./fetchQuest";
+import { UI } from "src/gameUI/ui";
 
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -46,18 +48,12 @@ export class NpcFSM extends Entity {
         clicked: boolean,
         battlepause: number,
     ) {
-        //log(`npcFSM:ts - Loading up npcFSM`)
         super();
         var obj = Singleton.getInstance();
         this.addComponent(new BattleId(npc.id));
         this.getComponent(BattleId).id = npc.id;
-        // this._player = player;
         this._player = obj.player
         this._npc = npc;
-        // // this._clicked = clicked;
-        // // this._battlepause = battlepause;
-        // this._canvas = canvas;
-        //this._combatLog = combatlog;
 
         let mobfaction = this._npc.faction
         let playerfaction = this._player.factions
@@ -65,10 +61,8 @@ export class NpcFSM extends Entity {
 
         if (matchingFaction) {
             this.factionvalue = matchingFaction.value
-            //log(`Found matching faction with value: ${matchingFaction.value}`);
         } else {
             this.factionvalue = 0
-            //log(`No matching faction found`);
         }
 
         let mobstate = this._npc.getComponent(MobState)
@@ -89,9 +83,23 @@ export class NpcFSM extends Entity {
                 (e) => {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
                     let mobstate = this._npc.getComponent(MobState)
-                    //let faction = mobstate.faction
                     if (this.factionvalue > 0) {
-                        writeToCl(`Lets have a conversation: ${this.factionvalue}`)
+                        fetchQuest(this._npc, this._player).then(res => {
+                            const chunks = chunkSentence(res.giving, 7);
+                            writeChunks(chunks).then(() => {
+                                writeToCl(
+                                    "I accept!",
+                                    "",
+                                    "",
+                                    "",
+                                    () => {
+                                        log(`tell me clicked`)
+                                        this.openQuestWindow(res.accepting)  // replace with actual function and arguments
+                                    }
+                                );
+                            })
+                        })
+                       
                     } else {
                         mobstate.battle = true;
                         mobstate.clicked = true;
@@ -110,8 +118,13 @@ export class NpcFSM extends Entity {
         //log(`npcFSM:ts - npcFSM is now added`)
     }
 
-    orcid() {
+    openQuestWindow(val:string) {
+        log(`passing ${val} to the questLog`)
+        var ui = UI.getInstance();
+        ui.ql.openQuestWindow(val)
+        
     }
+
 
     update(dt: number) {
         let state = this._npc.getComponent(MobState);

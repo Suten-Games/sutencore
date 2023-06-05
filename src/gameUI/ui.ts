@@ -6,6 +6,7 @@ import { Khepra } from "./khepra";
 import { SpellBook } from "./spellBook";
 import { SpellScroll } from "./spellScroll";
 import { CharWindowHandler } from "./charWindowHandler";
+import { QuestWindow } from "./questWindow";
 
 export class UI {
     private static instance: UI;
@@ -17,6 +18,8 @@ export class UI {
     private spellBook: SpellBook
     private spellScroll: SpellScroll
     private charWindowHandler: CharWindowHandler
+    private quest: QuestWindow;
+        
 
     constructor() {
         if (UI.instance) {
@@ -28,6 +31,7 @@ export class UI {
         this.actionBar = new ActionBar(this.gameCanvas, resources.interface.blueActionBar);
         this.backPack = new BackPack(this.gameCanvas, resources.interface.blueBackpack);
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
+        this.quest = new QuestWindow(this.gameCanvas, resources.interface.questLog);
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.spellScroll = new SpellScroll(this.gameCanvas, resources.interface.spellScroll)
         //this.charWindowHandler = new CharWindowHandler(this.gameCanvas, resources.interface.characterButton)
@@ -65,6 +69,10 @@ export class UI {
 
     get kp() {
         return this.khepra;
+    }
+
+    get ql() {
+        return this.quest;
     }
 
 }

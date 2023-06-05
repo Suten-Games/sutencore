@@ -3,6 +3,8 @@ import { ActionWindow } from "./actionWindow";
 
 export class CombatLog {
     private _combatlogs: UIText[];
+    private _clickableOverlays: any[];
+    public _clickableCallbacks: Array<() => void>;
     private _displayarray: string[];
     private _scrollUp
     private _scrollDown
@@ -53,6 +55,8 @@ export class CombatLog {
         );
 
         this._combatlogs = [];
+        this._clickableOverlays = [];
+        this._clickableCallbacks = [];
 
         for (let index = 0; index < 5; index++) {
             const log = new UIText(canvas);
@@ -64,6 +68,24 @@ export class CombatLog {
             log.opacity = 0.8;
             log.visible = true;
             this._combatlogs.push(log);
+
+            const overlay = new UIImage(canvas, new Texture(""));
+            overlay.vAlign = "bottom";
+            overlay.hAlign = "center";
+            overlay.width = "70%"; // Set this to the width of your text boxes
+            overlay.height = "5%"; // Set this to the height of your text boxes
+            overlay.positionY = `${25 - index * 2}%`; // This should be same as your text boxes
+            overlay.sourceWidth = 1;
+            overlay.sourceHeight = 1;
+            overlay.visible = false;
+
+            // // Add click event
+            overlay.onClick = new OnPointerDown(()=> {
+                this.clickedLine(index)
+            })
+
+            this._clickableCallbacks.push(() => { });  // Add a default do-nothing function
+            this._clickableOverlays.push(overlay);
         }
 
         this._displayarray = [];
@@ -78,6 +100,11 @@ export class CombatLog {
         this._combatlogs.forEach((log, index) => {
             log.value = displayMessages[index] || "";
         });
+
+        // Make the clickable overlay for the last line visible
+        if (this._clickableOverlays.length > 0) {
+            this._clickableOverlays[this._clickableOverlays.length - 1].visible = true;
+        }
     }
 
     public clearlog() {
@@ -87,10 +114,12 @@ export class CombatLog {
 
     public show() {
         this._combatlogs.forEach(log => log.visible = true);
+        this._clickableOverlays.forEach(overlay => overlay.visible = true);
     }
 
     public hide() {
         this._combatlogs.forEach(log => log.visible = false);
+        this._clickableOverlays.forEach(overlay => overlay.visible = false);
     }
 
     public scrollup() {
@@ -101,7 +130,28 @@ export class CombatLog {
                 log.value = this._displayarray[this._startIndex + index] || "";
             });
         }
+
+        this._combatlogs.forEach((log, index) => {
+            log.value = this._displayarray[this._startIndex + index] || "";
+        });
+
+        this._clickableOverlays.forEach((overlay, index) => {
+            overlay.visible = !!this._combatlogs[index].value;
+        });
     }
+
+    public clickedLine(index: number) {
+        this._clickableCallbacks[this._startIndex + index]();
+    }
+    // public clickedLine(index: number) {
+    //     const line = this._displayarray[this._startIndex + index];
+    //     log(`Line ${index + 1} has been clicked: ${line}`);
+    //     if (line) {
+    //         log(`Line ${index + 1} has been clicked: ${line}`);
+    //     } else {
+    //         log(`Line ${index + 1} is empty.`);
+    //     }
+    // }
 
     public scrolldown() {
         // Ensure we're not at the end of the log array
@@ -111,6 +161,14 @@ export class CombatLog {
                 log.value = this._displayarray[this._startIndex + index] || "";
             });
         }
+
+        this._combatlogs.forEach((log, index) => {
+            log.value = this._displayarray[this._startIndex + index] || "";
+        });
+        
+        this._clickableOverlays.forEach((overlay, index) => {
+            overlay.visible = !!this._combatlogs[index].value;
+        });
 
     }
 }
