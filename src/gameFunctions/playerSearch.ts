@@ -7,6 +7,7 @@ import { loadPlayerItems } from "./loadPlayerItems";
 import { newPlayer } from "./newPlayer";
 import { populateObj } from "./populateObj";
 import { loadPlayerFactions } from "./loadPlayerFactions";
+import { fetchPlayerQuests } from "./fetchPlayerQuests";
 
 
 
@@ -27,5 +28,6 @@ export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: 
         populateObj(json, player)
         loadPlayerItems(ui, json)
         loadPlayerFactions(player, json)
+        fetchPlayerQuests(player)
     }
 }

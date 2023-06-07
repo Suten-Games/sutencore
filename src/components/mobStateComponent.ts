@@ -26,4 +26,6 @@ export class MobState {
     suppresslootwindow: boolean = false;
     suppresshealthbar: boolean = false;
     lootwindow: boolean = false;
+    idle: boolean = false;
+    idletimeout: number = 0;
 }

@@ -12,7 +12,7 @@ import { attack } from "./attack";
 import { otherplayerattack } from "./otherplayerattack";
 import { writeToCl } from "./writeToCL";
 import { idle } from "./idle";
-import { chunkSentence, fetchQuest, writeChunks } from "./fetchQuest";
+import { acceptQuest, chunkSentence, fetchQuest, writeChunks } from "./fetchQuest";
 import { UI } from "src/gameUI/ui";
 
 const npclaugh = new SoundBox(
@@ -74,6 +74,8 @@ export class NpcFSM extends Entity {
             hoverText = "Attack"
         }
 
+        //log(`in npcFSM.ts show player.quests: ${this._player.quests}`)
+
         this._startPos = startPos;
         this._startRot = startRot;
 
@@ -85,19 +87,32 @@ export class NpcFSM extends Entity {
                     let mobstate = this._npc.getComponent(MobState)
                     if (this.factionvalue > 0) {
                         fetchQuest(this._npc, this._player).then(res => {
-                            const chunks = chunkSentence(res.giving, 7);
-                            writeChunks(chunks).then(() => {
-                                writeToCl(
-                                    "I accept!",
-                                    "",
-                                    "",
-                                    "",
-                                    () => {
-                                        log(`tell me clicked`)
-                                        this.openQuestWindow(res.accepting)  // replace with actual function and arguments
-                                    }
-                                );
-                            })
+                            let chunks 
+
+                            //log(`in npcFSM.ts, what is the res._id ${res._id}`)
+                            //log(`in npcFSM.ts show player.quests: ${this._player.quests}`)
+                            const isQuestExists = this._player.quests.indexOf(res._id) !== -1;
+                            //log(`in npcFSM.ts Does the quest exist? ${isQuestExists}`)
+
+                            if (isQuestExists) {
+                                chunks = chunkSentence(res.dialogue.accepting, 7);
+                                writeChunks(chunks)
+                            } else {
+                                chunks = chunkSentence(res.dialogue.giving, 7);
+                                writeChunks(chunks).then(() => {
+                                    writeToCl(
+                                        "I accept!",
+                                        "",
+                                        "",
+                                        "",
+                                        () => {
+                                            log(`I accept clicked`)
+                                            this.acceptQuest(res)
+                                            this.openQuestWindow(res.dialogue.accepting, res)  // replace with actual function and arguments
+                                        }
+                                    );
+                                })
+                            }
                         })
                        
                     } else {
@@ -118,11 +133,18 @@ export class NpcFSM extends Entity {
         //log(`npcFSM:ts - npcFSM is now added`)
     }
 
-    openQuestWindow(val:string) {
+    openQuestWindow(val:string, res:any) {
         log(`passing ${val} to the questLog`)
+        //fetch the reward from res.rewards[0]
+        log(`fetch the reward using ${res.rewards[0]}`)
         var ui = UI.getInstance();
         ui.ql.openQuestWindow(val)
         
+    }
+
+    acceptQuest(quest:any) {
+        log(`quest id ${quest._id}`)
+        acceptQuest(quest._id, this._player)
     }
 
 

@@ -1,7 +1,4 @@
 import resources from "../resources";
-// import { loadDeathScape } from "../gameFunctions/loadDeath";
-// import { unloadLife } from "../gameFunctions/loadDeath";
-//import { QuestLog } from "../gameUI/questLog";
 import { sAggro, sLevel, sPlayer } from "suten";
 import { SoundBox } from "./soundBox";
 import { CombatLog } from "src/gameUI/combatLog";
@@ -38,6 +35,7 @@ export class Player {
     private _inbatttle: boolean;
     private _shieldhp: number;
     private _factions: any
+    private _activequests: string[];
 
     private hpBar = new UIBar(
         1,
@@ -94,7 +92,6 @@ export class Player {
         resources.sounds.abouttodie,
         true
     );
-    //private _questlog
 
     constructor(
         address: string,
@@ -115,9 +112,16 @@ export class Player {
         this.actionbar = actionbar;
         this.backpack = backpack;
         this.healthValue.set(startingHp);
-        //this._questlog = new QuestLog(this.canvas, resources.interface.questLog, combatlog, actionbar, backpack)
-
+        this._activequests = [];
         this._leveledup = false;
+    }
+
+    set quest(val: string) {
+        this._activequests.push(val)
+    }
+
+    get quests(): string[] {
+        return this._activequests;
     }
 
     get alive() {

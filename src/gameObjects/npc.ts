@@ -76,7 +76,7 @@ export class Npc extends Entity {
         shape: GLTFShape,
         currentloc: Vector3,
         currentrot: Quaternion,
-        path: any,
+        path: any = [],
         level: number = 1,
         boss: boolean,
         portrait: string = "",
@@ -218,6 +218,9 @@ export class Npc extends Entity {
     }
 
     mobwalk() {
+        const mobState = this.getComponent(MobState);
+        if (mobState && mobState.idle) return;  // Don't walk while idling
+
         if (!this.walk.playing) {
             this.walk.play()
         } else {
@@ -263,29 +266,30 @@ export class Npc extends Entity {
     }
 
     mobidle() {
-        if (!this.idle.playing) {
-            this.walk.stop()
-            this.idle.play()
-        } else {
-            this.idle.playing = true;
-            this.idle_.playing = true;
-            this.boxing.playing = false;
-            this.boxing_.playing = false;
-            this.death2.playing = false;
-            this.death2_.playing = false;
-            this.walk.playing = false;
-            this.walk_.playing = false;
-            this.turnLeft.playing = false;
-            this.turnLeft_.playing = false;
-            this.hit1.playing = false;
-            this.hit1_.playing = false;
-            this.hit2.playing = false;
-            this.hit2_.playing = false;
-            this.death1.playing = false;
-            this.death1_.playing = false;
-            this.death1.looping = false;
-            this.death1_.looping = false;
-        }
+        // log(`calling this.walk.pause in mobidle`)
+        // this.walk.pause()
+        // log(`calling this.walk.stop in mobidle`)
+        this.walk.stop()
+        log(`calling this.idle.play in mobidle`)
+        this.idle.play()
+        // this.idle.playing = true;
+        // this.idle_.playing = true;
+        // this.boxing.playing = false;
+        // this.boxing_.playing = false;
+        // this.death2.playing = false;
+        // this.death2_.playing = false;
+        // this.walk.playing = false;
+        // this.walk_.playing = false;
+        // this.turnLeft.playing = false;
+        // this.turnLeft_.playing = false;
+        // this.hit1.playing = false;
+        // this.hit1_.playing = false;
+        // this.hit2.playing = false;
+        // this.hit2_.playing = false;
+        // this.death1.playing = false;
+        // this.death1_.playing = false;
+        // this.death1.looping = false;
+        // this.death1_.looping = false;
     }
 
     mobdead() {

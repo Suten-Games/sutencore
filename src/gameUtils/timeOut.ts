@@ -1,3 +1,4 @@
+import { ITimerComponent } from "@dcl/ecs-scene-utils"
 import { Delay } from "./delay"
 
 /**

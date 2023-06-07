@@ -421,6 +421,8 @@ export function handleGameMessage(msg: any) {
                         new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
                         new Vector3(element.path[3][0], element.path[3][1], element.path[3][2]),
                     ]);
+                } else {
+                    mob = createNpc(element, [])
                 }
                 if (mob) {
                     engine.addSystem(createNpcFSM(mob, element));

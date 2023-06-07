@@ -130,9 +130,6 @@ export default {
         mana: new Texture("images/looticons/mana.png"),
         crackedstaff: new Texture("images/looticons/crackedstaff.png")
     },
-    spells: {
-        shield: new Texture("images/spells/painterly-spell-icons-1/protect-royal-1.png")
-    },
     interface: {
         questLog: new Texture("images/vali/QuestLogScreen.png"),
         mageScreen: new Texture("images/vali/MageCharacterScreen.png"),
@@ -159,6 +156,7 @@ export default {
         deleteSpell: new Texture("images/vali/DeleteSpell.png"),
         deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png"),
         scrollUpBtn: new Texture("images/vali/cltop.png"),
-        scrollDownBtn: new Texture("images/vali/clbottom.png")
+        scrollDownBtn: new Texture("images/vali/clbottom.png"),
+        questBook: new Texture("images/vali/cover.jpg")
     }
 }

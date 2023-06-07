@@ -1,25 +1,33 @@
 import resources from "src/resources";
+import { QuestWindow } from "./questWindow";
 
-export class QuestWindow {
+export class QuestBook {
     private _canvas: any;
     private _image: Texture;
     private _bp;
     private _questText: UIText;
     private _closebutton;
 
-    constructor(canvas: any, image: Texture) {
+    constructor(canvas: any, image: Texture, questwindow: QuestWindow) {
         this._canvas = canvas;
         this._image = image;
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "right"
-        this._bp.vAlign = "center";
-        this._bp.width = "35%";
-        this._bp.height = "80%";
+        this._bp.vAlign = "bottom";
+        this._bp.width = "3%";
+        this._bp.height = "10%";
         this._bp.positionY = "1%";
-        this._bp.positionX = "-2%";
-        this._bp.sourceWidth = 1053;
-        this._bp.sourceHeight = 1712;
-        this._bp.visible = false;
+        this._bp.positionX = "-29%";
+        this._bp.sourceWidth = 1140;
+        this._bp.sourceHeight = 1327;
+        this._bp.visible = true;
+        this._bp.onClick = new OnPointerDown(() => {
+            if (questwindow.visible) {
+                questwindow.hide()
+            } else {
+                questwindow.show()
+            }
+        })
 
         // Initialize the UIText instance
         this._questText = new UIText(this._canvas);
@@ -83,9 +91,6 @@ export class QuestWindow {
         this._closebutton.visible = true;
     }
 
-    get visible() {
-        return this._bp.visible
-    }
 
     public show() {
         this._bp.visible = true;

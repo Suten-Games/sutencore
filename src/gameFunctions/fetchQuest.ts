@@ -12,10 +12,41 @@ export async function fetchQuest(npc: Npc, player: Player) {
     try {
         let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
-        return json.dialogue
+        log(`passing json ${JSON.stringify(json)} to the npcFSM`)
+        return json
 
     } catch (error) {
         log(`fetchQuests.ts:22: Fetch Quests by npc and player failed ${error} `);
+    }
+}
+
+export async function acceptQuest(quest: any, player: Player) {
+
+    let playerQuestUrl = apiUrl + "/playerquest";
+
+    const status = {
+        "playerId":player.address,
+        "questId":quest,
+        "status":"NOT_STARTED"
+    }
+
+    const options = {
+        method: "POST",
+        body: JSON.stringify(status),
+        headers: {
+            "Content-Type":"application/json"
+        }
+    }
+
+    try {
+        fetch(playerQuestUrl, options)
+            .then((res) => res.json())
+            .then((data) => {
+                log(`Player Quest Added`)
+                player.quest = data.questId
+            })
+    } catch (error) {
+        log(`acceptQuest.ts:22: Accept Quest failed ${JSON.stringify(error)} `);
     }
 }
 
