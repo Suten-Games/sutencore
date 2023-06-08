@@ -61,15 +61,27 @@ else
       echo "}" >>$INIT_CWD/src/baseScene.ts
       echo "}" >>$INIT_CWD/src/baseScene.ts
     else
-      echo "Updating game.ts"
-      cp -R src/game.ts $INIT_CWD/src/game.ts
-      echo "This might be a DCL init build"
-      touch $INIT_CWD/src/baseScene.ts
-      echo "export class BaseScene extends Entity {" >>$INIT_CWD/src/baseScene.ts
-      echo "constructor() {" >>$INIT_CWD/src/baseScene.ts
-      echo "super()" >>$INIT_CWD/src/baseScene.ts
-      echo "}" >>$INIT_CWD/src/baseScene.ts
-      echo "}" >>$INIT_CWD/src/baseScene.ts
+      grep -q addComponent $INIT_CWD/src/game.ts
+      rc=$?
+      if [[ ${rc} == 0 ]];then
+        cp $INIT_CWD/src/game.ts $INIT_CWD/src/oldgame.ts
+        touch $INIT_CWD/src/baseScene.ts
+        echo "export class BaseScene extends Entity {" >>$INIT_CWD/src/baseScene.ts
+        echo "constructor() {" >>$INIT_CWD/src/baseScene.ts
+        echo "super()" >>$INIT_CWD/src/baseScene.ts
+        echo "}" >>$INIT_CWD/src/baseScene.ts
+        echo "}" >>$INIT_CWD/src/baseScene.ts 
+      else
+        grep 
+        echo "Updating game.ts"
+        cp -R src/game.ts $INIT_CWD/src/game.ts
+        echo "This might be a DCL init build"
+        touch $INIT_CWD/src/baseScene.ts
+        echo "export class BaseScene extends Entity {" >>$INIT_CWD/src/baseScene.ts
+        echo "constructor() {" >>$INIT_CWD/src/baseScene.ts
+        echo "super()" >>$INIT_CWD/src/baseScene.ts
+        echo "}" >>$INIT_CWD/src/baseScene.ts
+        echo "}" >>$INIT_CWD/src/baseScene.ts
     fi
   fi
 fi
