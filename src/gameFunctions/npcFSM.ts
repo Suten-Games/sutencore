@@ -85,6 +85,7 @@ export class NpcFSM extends Entity {
                 (e) => {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
                     let mobstate = this._npc.getComponent(MobState)
+                    log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${this.factionvalue}`)
                     if (this.factionvalue > 0) {
                         fetchQuest(this._npc, this._player).then(res => {
                             let chunks 
