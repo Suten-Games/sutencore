@@ -25,7 +25,7 @@ export function patrol(s:any,dt:number) {
 
     if (!mobstate.idle) {
         if (mobstate.array && mobstate.array.length > 0) {
-            log(`calling mob.mobwalk in the patrol.ts`)
+            //log(`calling mob.mobwalk in the patrol.ts`)
             mob.mobwalk();
             // The rest of the patrolling code...
             if (mobstate.fraction < 1) {

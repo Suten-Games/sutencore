@@ -14,8 +14,8 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
     
     var obj = Singleton.getInstance();
 
-    writeToCl(`You are a level 1 Adventurer`, `Press 'esc' to lock/unlock your mouse.`)
-    //writeToCl(ui, `You are a level 1 Adventurer`, `Press 'esc' to lock/unlock your mouse.`)
+    writeToCl(`Welcome to SutenQuest!`)
+    writeToCl(`You are a level 1 Adventurer`, `Right click to unlock your mouse.`)
 
     obj.playerhp = 43;
     obj.playerclass = "Adventurer";
@@ -38,7 +38,21 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
         wisdom: 5,
         charisma: 5,
         armor: 0,
-        characterclass: 'Adventurer'
+        characterclass: 'Adventurer',
+        factions: [
+            {
+                "name": "Elven Alliance",
+                "value": -1
+            },
+            {
+                "name": "Orcish Empire",
+                "value": -1
+            },
+            {
+                "name": "Elvish Empire",
+                "value": -1
+            }
+        ]
     };
 
     const options = {

@@ -270,7 +270,7 @@ export class Npc extends Entity {
         // this.walk.pause()
         // log(`calling this.walk.stop in mobidle`)
         this.walk.stop()
-        log(`calling this.idle.play in mobidle`)
+        //log(`calling this.idle.play in mobidle`)
         this.idle.play()
         // this.idle.playing = true;
         // this.idle_.playing = true;
@@ -404,7 +404,7 @@ export class Npc extends Entity {
                     this._lootWindow.flip()
                 },
                 {
-                    button: ActionButton.PRIMARY,
+                    button: ActionButton.SECONDARY,
                     showFeedback: true,
                     hoverText: "Loot Corpse"
                 }

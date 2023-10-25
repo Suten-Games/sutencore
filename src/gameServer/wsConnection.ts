@@ -57,16 +57,16 @@ export async function joinSocketsServer(
            
 
             if (mobs.entities.length == 0) {
-                log(`Calling handleGame Message`)
+                //log(`Calling handleGame Message`)
                 handleGameMessage(msg);
             } else {
-                log(`Not calling handleGameMessage`)
+                //log(`Not calling handleGameMessage`)
                 for (let item in msg) {
-                    log(`In choice for gameover`)
+                    //log(`In choice for gameover`)
                     if (msg[item].gameover) {
                         processGameoverMessage(msg[item]);
                     } else {
-                        log(`Calling processNonGameOverMessage`)
+                        //log(`Calling processNonGameOverMessage`)
                         processNonGameoverMessage(msg, mobs);
                     }
                 }
