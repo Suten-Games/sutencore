@@ -314,7 +314,7 @@ export class Player {
         if (this.levelup) {
             this.levelupbox.play();
             this.levelupbox.play();
-            writeToCl(`You have reached a new level! You are now level ${this._player.level}`)
+            writeToCl(`You have reached a new level! You are now level ${this.level}`)
             writeToCl(`You have gotten stronger and tougher!`)
             this.levelup = false;
         }
