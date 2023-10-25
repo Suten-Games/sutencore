@@ -93,6 +93,12 @@ export class Player {
         true
     );
 
+    private levelupbox = new SoundBox(
+        new Transform({ position: new Vector3(7, 0, 8) }),
+        resources.sounds.levelup,
+        false
+    );
+
     constructor(
         address: string,
         startingHp: number,
@@ -304,6 +310,16 @@ export class Player {
         this.levelBar.set(val);
     }
 
+    levelupnotice() {
+        if (this.levelup) {
+            this.levelupbox.play();
+            this.levelupbox.play();
+            writeToCl(`You have reached a new level! You are now level ${this._player.level}`)
+            writeToCl(`You have gotten stronger and tougher!`)
+            this.levelup = false;
+        }
+    }
+
     achievementcheck(xp: number, currentlevel: number) {
         let url = this.levelUrl + "/" + this.address;
         let leveledup = false;
@@ -342,6 +358,7 @@ export class Player {
                             obj.playerhp = res.hp;
                             this.xpcheck();
                             this.healthcheck(100 / 100);
+                            this.levelupnotice()
                         }
                         this.currentxp = res.currentxp;
                         this.levelmax = res.levelmax;

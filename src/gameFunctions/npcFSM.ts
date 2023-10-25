@@ -212,15 +212,15 @@ export class NpcFSM extends Entity {
         }
     }
 
-    levelupcheck() {
-        if (this._player.levelup) {
-            levelupbox.play();
-            levelupbox.play();
-            writeToCl(`You have reached a new level! You are now level ${this._player.level}`)
-            writeToCl(`You have gotten stronger and tougher!`)
-            this._player.levelup = false;
-        }
-    }
+    // levelupcheck() {
+    //     if (this._player.levelup) {
+    //         levelupbox.play();
+    //         levelupbox.play();
+    //         writeToCl(`You have reached a new level! You are now level ${this._player.level}`)
+    //         writeToCl(`You have gotten stronger and tougher!`)
+    //         this._player.levelup = false;
+    //     }
+    // }
 }
 
 // function distance(pos1: Vector3, pos2: Vector3) {
