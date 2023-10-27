@@ -49,24 +49,43 @@ export class NpcFSM extends Entity {
         battlepause: number,
     ) {
         super();
+        //log(`npcFSM.ts: In the npcFSM constructor`)
+
         var obj = Singleton.getInstance();
+        //log(`npcFSM.ts: In the npcFSM constructor - line 55`)
         this.addComponent(new BattleId(npc.id));
+        //log(`npcFSM.ts: In the npcFSM constructor - line 57`)
         this.getComponent(BattleId).id = npc.id;
+        //log(`npcFSM.ts: In the npcFSM constructor - line 59`)
         this._player = obj.player
+        //log(`npcFSM.ts: In the npcFSM constructor - line 61`)
         this._npc = npc;
-
+        //log(`npcFSM.ts: In the npcFSM constructor line 63`)
         let mobfaction = this._npc.faction
+        //log(`npcFSM.ts: In the npcFSM constructor line 65 ${mobfaction}`)
         let playerfaction = this._player.factions
-        let matchingFaction = playerfaction.find((faction: { name: string; }) => faction.name === mobfaction);
 
-        if (matchingFaction) {
-            this.factionvalue = matchingFaction.value
+        if (playerfaction) {
+            //log(`npcFSM.ts: In the npcFSM constructor line 67 ${JSON.stringify(playerfaction)}`)
+            let matchingFaction = playerfaction.find((faction: { name: string; }) => faction.name === mobfaction);
+            //log(`npcFSM.ts: In the npcFSM constructor line 69 ${JSON.stringify(matchingFaction)}`)
+
+            if (matchingFaction) {
+                this.factionvalue = matchingFaction.value
+            } else {
+                this.factionvalue = 0
+            }
         } else {
-            this.factionvalue = 0
+            this.factionvalue = -1
         }
+
+
+        //log(`npcFSM.ts: In the npcFSM constructor line 77`)
 
         let mobstate = this._npc.getComponent(MobState)
         let hoverText
+
+        //log(`npcFSM.ts: In the npcFSM constructor line 79`)
 
         if (this.factionvalue > 0) {
             hoverText = "Talk"
@@ -74,27 +93,23 @@ export class NpcFSM extends Entity {
             hoverText = "Attack"
         }
 
-        //log(`in npcFSM.ts show player.quests: ${this._player.quests}`)
+        //log(`npcFSM.ts: In the npcFSM constructor line 91`)
 
         this._startPos = startPos;
         this._startRot = startRot;
 
-        //log(`npcFSM:76 - Adding OnPointerDown (attack)`)
+        //log(`npcFSM.ts: ABout to add the pointer clicky`)
+
         this._npc.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
                     let mobstate = this._npc.getComponent(MobState)
-                    log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${this.factionvalue}`)
+                    //log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${this.factionvalue}`)
                     if (this.factionvalue > 0) {
                         fetchQuest(this._npc, this._player).then(res => {
-                            let chunks 
-
-                            //log(`in npcFSM.ts, what is the res._id ${res._id}`)
-                            //log(`in npcFSM.ts show player.quests: ${this._player.quests}`)
+                            let chunks
                             const isQuestExists = this._player.quests.indexOf(res._id) !== -1;
-                            //log(`in npcFSM.ts Does the quest exist? ${isQuestExists}`)
-
                             if (isQuestExists) {
                                 chunks = chunkSentence(res.dialogue.accepting, 7);
                                 writeChunks(chunks)
@@ -115,7 +130,7 @@ export class NpcFSM extends Entity {
                                 })
                             }
                         })
-                       
+
                     } else {
                         mobstate.battle = true;
                         mobstate.clicked = true;
@@ -134,22 +149,23 @@ export class NpcFSM extends Entity {
         //log(`npcFSM:ts - npcFSM is now added`)
     }
 
-    openQuestWindow(val:string, res:any) {
+    openQuestWindow(val: string, res: any) {
         log(`passing ${val} to the questLog`)
         //fetch the reward from res.rewards[0]
         log(`fetch the reward using ${res.rewards[0]}`)
         var ui = UI.getInstance();
         ui.ql.openQuestWindow(val)
-        
+
     }
 
-    acceptQuest(quest:any) {
+    acceptQuest(quest: any) {
         log(`quest id ${quest._id}`)
         acceptQuest(quest._id, this._player)
     }
 
 
     update(dt: number) {
+        //log(`In the update loop for ${this._npc.name}`)
         let state = this._npc.getComponent(MobState);
         this.transform = this._npc.getComponent(Transform);
         //let dist = ydistance(this.transform.position, camera.position, this._npc);
@@ -212,15 +228,6 @@ export class NpcFSM extends Entity {
         }
     }
 
-    // levelupcheck() {
-    //     if (this._player.levelup) {
-    //         levelupbox.play();
-    //         levelupbox.play();
-    //         writeToCl(`You have reached a new level! You are now level ${this._player.level}`)
-    //         writeToCl(`You have gotten stronger and tougher!`)
-    //         this._player.levelup = false;
-    //     }
-    // }
 }
 
 // function distance(pos1: Vector3, pos2: Vector3) {

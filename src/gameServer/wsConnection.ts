@@ -43,6 +43,8 @@ export async function joinSocketsServer(
     combatLog: CombatLog
 ) {
 
+    //log(`in joinSocketServer`)
+
     const socket = new WebSocket(server)
 
     socket.onopen = async function (e) {
@@ -57,7 +59,7 @@ export async function joinSocketsServer(
            
 
             if (mobs.entities.length == 0) {
-                //log(`Calling handleGame Message`)
+                //log(`Calling handleGame Message, length is 0`)
                 handleGameMessage(msg);
             } else {
                 //log(`Not calling handleGameMessage`)
@@ -281,7 +283,6 @@ export function createNpc(element: any, path: any) {
 
 
 
-
 export function createNpcFSM(npc: any, element: any) {
     return new NpcFSM(
         npc,
@@ -295,7 +296,7 @@ export function createNpcFSM(npc: any, element: any) {
 
 
 export function processGameoverMessage(item: Item) {
-    log('I won')
+    //log('I won')
     victory.play();
 }
 
@@ -330,8 +331,6 @@ export function processNonGameoverMessage(msg: any, mobs: any) {
         }
     }
 }
-
-
 
 
 export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
@@ -400,7 +399,7 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
 
 
 export function handleGameMessage(msg: any) {
-    //log(`HANDLE GAME MESSAGE`)
+    //log(`In Handle Game Message`)
     msg.forEach((element: any) => {
         if (element.gameover) {
             processGameoverMessage(element);
