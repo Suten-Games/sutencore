@@ -407,20 +407,12 @@ export class Player {
     }
 
     trinket(text: string, desc: string, slot: number, lootitem: Item) {
-        //log('inside the player trinket method')
-        // this._questlog.quest(text, desc);
-        // log('calling questlog.setabandon')
-        // this._questlog.setabandon(slot, lootitem);
-        // this._questlog.flip()
-
-        if (desc == 'Orc Tooth') {
-            writeToCl(`You have picked up an Orc Tooth. Interesting.`)
-            //this._combatLog.text = `You have picked up an Orc Tooth. Interesting.`;
+        if (text) {
+            writeToCl(text)
+            log(`in trinket, desc: ${desc} slot: ${slot} lootitem: ${lootitem}`)
         } else {
             writeToCl(`Why was he carrying this trinket? Interesting.`)
-            //this._combatLog.text = `Why was he carrying this trinket? Interesting.`;
         }
-        //this._combatLog.text = `The item disintegrates in your hand`;
     }
 
     unusable() {
