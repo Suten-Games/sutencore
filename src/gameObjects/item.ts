@@ -14,6 +14,7 @@ import { getspell } from "./spells";
 import { Ispell } from "src/components/spellComponent";
 import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
+import { trinketAction } from "src/gameFunctions/trinketAction";
 
 
 export class Item {
@@ -432,6 +433,7 @@ export class Item {
             }
 
             if (this._isquestloot) {
+                trinketAction(this)
                 if (this._image.src.split('/')[2] == 'sandbeetle.png') {
                     this._isquestloot = true;
                     this._player.trinket("It looks like a petrified beetle shell", "Beetle Shell", slot, this)
