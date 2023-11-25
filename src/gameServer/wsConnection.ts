@@ -294,38 +294,42 @@ export function createNpcFSM(npc: any, element: any) {
 }
 
 
-
 export function processGameoverMessage(item: Item) {
     //log('I won')
     victory.play();
 }
 
-
 export function processNonGameoverMessage(msg: any, mobs: any) {
-    //log(`In processNonGameoverMessage`)
+    //log(`NPC: In processNonGameoverMessage mobs`)
+    //log('NPC: msg: ', msg)
 
     for (let item in msg) {
-        let isMobExists = mobs.entities.some((mob:any) => mob.getComponent(NpcId).id === msg[item].id);
+        //log(`NPC: Entered for loop`)
+        let isMobExists = mobs.entities.some((mob: any) => mob.getComponent(NpcId).id === msg[item].id);
 
+        if (!isMobExists && msg[item].mobdead == false) {
+            //log(`NPC: Should be creating this mob: ${JSON.stringify(msg[item])} `)
+            handleGameMessage([msg[item]]); // Pass only the current message item as an array
+            continue; // Skip processing this item further as it's a new mob
+        }
+
+        // Process existing mobs
         for (let mob of mobs.entities) {
-            //log(`Process mob: ${mob.id}`)
+            //log(`NPC: Process mob: ${mob.id}`)
             let mobstate = mob.getComponent(MobState);
             let obj = Singleton.getInstance();
 
             if (msg[item].id === mob.getComponent(NpcId).id) {
-                //log(`IDs Match`)
+                //log(`NPC: IDs Match`)
                 const isMostHatedPlayer = msg[item].mosthated == null || msg[item].mosthated === obj.playeraddress;
                 mobstate.anotherplayer = !isMostHatedPlayer;
 
                 if (isMostHatedPlayer) {
+                    //log(`NPC: calling handleLocalMobUpdates`)
                     handleLocalMobUpdates(msg[item], mobstate, obj);
                 } else {
+                    //log(`NPC: Calling handleOtherPlayerEngaged`)
                     handleOtherPlayerEngaged(msg[item], mobstate, obj);
-                }
-            } else {
-                if (!isMobExists && msg[item].mobdead == false) {
-                    //log(`Should be creating this mob: ${JSON.stringify(msg[item])} `)
-                    handleGameMessage(msg);
                 }
             }
         }
