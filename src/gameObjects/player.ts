@@ -547,7 +547,6 @@ export class Player {
         new OkPrompt(
             'You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.',
             () => {
-                log(`accepted`)
                 const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
                 openExternalURL(dclWorldUrl);
             },
@@ -593,21 +592,14 @@ export class Player {
         } else {
             if (this.hp > 0) {
                 if (this.hp - amount > 0) {
-                    // log(
-                    //     `playerhp: ${this.hp} damageamount: ${amount} playernewhp: ${this.hp - amount
-                    //     }`
-                    // );
                     this.hp -= amount;
                     obj.playerhp = this.hp;
                 } else {
-                    //log(`setting playerhp to zero`);
                     this.hp = 0;
                     obj.playerhp = this.hp;
                 }
             }
         }
-
-
 
         //log(`this.hp ${this.hp} / this.maxhp ${this.maxhp} * 100 gives percentage of ${(this.hp / this.maxhp) * 100}`)
         this.healthValue.set(obj.playerhp);
@@ -652,11 +644,6 @@ export class Player {
             this._combatLog.text = `Seek out Anpu.`;
             obj.inDuat = true;
             this.alive = false;
-            log('calling unloadLife from player.ts')
-            //unloadLife();
-            log('calling loadDeath from player.ts')
-
-            //loadDeathScape(this.canvas, this.actionbar, this.backpack, this, this._combatLog, this.tradewindow)
 
             this.unloadLife()
             this.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");

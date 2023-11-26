@@ -45,6 +45,33 @@ export class DeathScene extends Entity {
             );
         }
 
+        const anpuartifact = new Entity('anpuartifact')
+        anpuartifact.addComponent(new DeathItem())
+        engine.addEntity(anpuartifact)
+        anpuartifact.addComponent(resources.models.anpuartifact)
+        anpuartifact.addComponent(
+            new Transform({
+                position: new Vector3(60, 1.5, 60),
+                rotation: Quaternion.Euler(0, 90, 0),
+                scale: new Vector3(1, 1, 1)
+            })
+        )
+        anpuartifact.addComponentOrReplace(
+            new OnPointerDown(
+                (e) => {
+                    log('Finding Anpu ')
+                    const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
+                    openExternalURL(dclWorldUrl);
+                },
+                {
+                    button: ActionButton.PRIMARY,
+                    showFeedback: true,
+                    hoverText: 'Locate Anpu',
+                    distance: 30
+                }
+            )
+        )
+
     }
 
     public randomNum(num: number) {

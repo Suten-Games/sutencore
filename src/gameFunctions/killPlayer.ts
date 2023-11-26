@@ -2,9 +2,10 @@
 import { PlayerState } from "src/components/playerStateComponent";
 import { Player } from "src/gameObjects/player";
 import { Singleton } from "src/gameObjects/playerDetail";
+import { DeathScene } from "src/gameUI/loadDeathScape";
 import { UI } from "src/gameUI/ui";
 
-export function killPlayer(json:PlayerState, player:Player, ui:UI) {
+export function killPlayer(json: PlayerState, player: Player, ui: UI) {
     var obj = Singleton.getInstance();
     player.level = json.level;
     player.basedamage = json.basedamage;
@@ -19,4 +20,8 @@ export function killPlayer(json:PlayerState, player:Player, ui:UI) {
     }
     obj.playerhp = 0;
     ui.bp.playerclass = obj.playerclass
+
+    player.unloadLife()
+    player.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");
+    let deathscene = new DeathScene()
 }
