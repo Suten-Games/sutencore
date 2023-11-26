@@ -12,6 +12,10 @@ import { BarStyles } from "src/gameUtils/types";
 import { writeToCl } from "src/gameFunctions/writeToCL";
 import { CornerLabel } from "src/gameUI/cornerLabel";
 import { UICounter } from "src/gameUI/uiCounter";
+import { OkPrompt } from "src/gameUI/okPrompt";
+import { LifeItem } from "src/components/lifeItemComponent";
+import { MobState } from "src/components/mobStateComponent";
+import { DeathScene } from "src/gameUI/loadDeathScape";
 
 const orclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -539,6 +543,35 @@ export class Player {
         }
     }
 
+    showDuatPrompt(title: string, message: string) {
+        new OkPrompt(
+            'You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.',
+            () => {
+                log(`accepted`)
+                const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
+                openExternalURL(dclWorldUrl);
+            },
+            'Search',
+            true
+        )
+    }
+
+    unloadLife() {
+        log('loadDeath.ts:21 -  Unloading Life 1')
+        //unloadSystems()
+        const mobs = engine.getComponentGroup(MobState);
+        while (mobs.entities.length) {
+            //   log('children 1: ', JSON.stringify(mobs.entities[0].children))
+            //   log('removing entity: ', mobs.entities[0].uuid)
+            engine.removeEntity(mobs.entities[0]);
+        }
+
+        const items = engine.getComponentGroup(LifeItem);
+        while (items.entities.length) {
+            engine.removeEntity(items.entities[0]);
+        }
+    }
+
     damage(amount: number) {
         //log('player.ts: in player damage')
         let url = this.apiUrl + "/" + this.address;
@@ -622,17 +655,13 @@ export class Player {
             log('calling unloadLife from player.ts')
             //unloadLife();
             log('calling loadDeath from player.ts')
+
             //loadDeathScape(this.canvas, this.actionbar, this.backpack, this, this._combatLog, this.tradewindow)
 
+            this.unloadLife()
+            this.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");
 
-            // loadDeath(
-            //   this.canvas,
-            //   this,
-            //   this._combatLog,
-            //   this.actionbar,
-            //   this.backpack,
-            //   obj.tradewindow
-            // );
+            let deathscene = new DeathScene()
         }
     }
 }

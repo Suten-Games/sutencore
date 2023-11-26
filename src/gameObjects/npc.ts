@@ -266,30 +266,8 @@ export class Npc extends Entity {
     }
 
     mobidle() {
-        // log(`calling this.walk.pause in mobidle`)
-        // this.walk.pause()
-        // log(`calling this.walk.stop in mobidle`)
         this.walk.stop()
-        //log(`calling this.idle.play in mobidle`)
         this.idle.play()
-        // this.idle.playing = true;
-        // this.idle_.playing = true;
-        // this.boxing.playing = false;
-        // this.boxing_.playing = false;
-        // this.death2.playing = false;
-        // this.death2_.playing = false;
-        // this.walk.playing = false;
-        // this.walk_.playing = false;
-        // this.turnLeft.playing = false;
-        // this.turnLeft_.playing = false;
-        // this.hit1.playing = false;
-        // this.hit1_.playing = false;
-        // this.hit2.playing = false;
-        // this.hit2_.playing = false;
-        // this.death1.playing = false;
-        // this.death1_.playing = false;
-        // this.death1.looping = false;
-        // this.death1_.looping = false;
     }
 
     mobdead() {
@@ -365,14 +343,6 @@ export class Npc extends Entity {
         }
     }
 
-    // initialhp(val: number) {
-    //     if (val <= 0) return;
-
-    //     this.update2 && this.hpbar2 ? this.hpbar2.set(val)
-    //         : this.hpbar ? this.hpbar.set(val)
-    //             : null;
-    // }
-
     healthcheck(val: number) {
         //log('npc.ts:337 - in healthcheck')
         if (this.update2) {
@@ -385,16 +355,6 @@ export class Npc extends Entity {
             }
         }
     }
-
-    // healthcheck(val: number) {
-    //     if (val <= 0) return;
-
-    //     this.update2 && this.hpbar2 ? this.hpbar2.set(val)
-    //         : this.hpbar ? this.hpbar.set(val)
-    //             : null;
-    // }
-
-
 
     addlootclick() {
         this.addComponentOrReplace(
@@ -437,11 +397,15 @@ export class Npc extends Entity {
         if (!this.hpbar) {
             //log(`npc.ts:396 - Turning on top orc ${this._id} hpbar`)
             this.hpbar = new UIBar(this.percentage / 100, 0, top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
+            this.hpbar.addComponent(new LifeItem())
             this.healthLabel.set(this.mobname);
+            this.healthLabel.addComponent(new LifeItem())
             this.levelLabel.set(this._level.toString())
+            this.levelLabel.addComponent(new LifeItem())
         } else if (this.hpbar.read() == 0) {
             //log(`npc.ts:400 - rc hp bar: ${this.hpbar.read()} is not null, so one probably exists: ${this._id} `)
             this.hpbar2 = new UIBar(this.percentage / 100, -30, top - 30, Color4.Blue(), BarStyles.ROUNDSILVER, .8)
+            this.hpbar2.addComponent(new LifeItem())
             this.update2 = true;
         }
     }
@@ -457,15 +421,6 @@ export class Npc extends Entity {
             this.hpbar2.hide()
         }
     }
-
-    // heal(amount: number) {
-    //     if (amount <= 0 || this.hp >= this._maxhp) return;
-
-    //     this.hp = this.hp + amount < this._maxhp ? this.hp + amount : this._maxhp;
-    //     let percentage = ((this.hp / this._maxhp) * 100).toFixed(0);
-    //     this.initialhp(Number(percentage) / 100);
-    // }
-
 
     heal(amount: number) {
         let url = this.npcUrl + "/" + this._id;
@@ -484,32 +439,6 @@ export class Npc extends Entity {
         this.initialhp(Number(percentage) / 100)
 
     }
-
-    // takedamage(amount: number, loc: any, rot: any) {
-    //     const obj = Singleton.getInstance();
-    //     let mobstate = this.getComponent(MobState);
-    //     mobstate.rotation = rot;
-    //     mobstate.position = loc;
-
-    //     if (this.hp > 0) {
-    //         this.hp = this.hp - amount > 0 ? this.hp - amount : 0;
-    //     }
-
-    //     let percentage = ((this.hp / this._maxhp) * 100).toFixed(0);
-    //     this.initialhp(Number(percentage) / 100);
-    //     this.healthcheck(Number(percentage) / 100);
-
-    //     let id = this._id;
-    //     let exists = obj.localmobstate.map(x => x.id).indexOf(id);
-
-    //     if (exists > -1) {
-    //         obj.localmobstate.splice(exists, 1, mobstate);
-    //     } else {
-    //         obj.localmobstate.push(mobstate);
-    //     }
-
-    //     return this.hp;
-    // }
 
     takedamage(amount: number, loc: any, rot: any) {
         const obj = Singleton.getInstance()
@@ -629,75 +558,4 @@ export class Npc extends Entity {
         this.addComponentOrReplace(new NpcName());
         this.getComponent(NpcName).name = this._name;
     }
-
-    //private animationStatesMap: { [key: string]: AnimationState } = {};
-
-    // private initializeAnimations() {
-    //     let npcAnimator = new Animator();
-    //     this.addComponent(npcAnimator);
-
-    //     const animationStates = [
-    //         "a-walking", "walking",
-    //         "b-idle", "idle",
-    //         "c-punch", "punch",
-    //         "d-kick", "kick",
-    //         "e-hitInHead", "hitInHead",
-    //         "f-hitInKidney", "hitInKidney",
-    //         "g-turnAround", "turnAround",
-    //         "h-death1", "death1",
-    //         "i-death2", "death2"
-    //     ];
-
-    //     animationStates.forEach(state => {
-    //         this.animationStatesMap[state] = new AnimationState(state);
-    //         npcAnimator.addClip(this.animationStatesMap[state]);
-    //     });
-
-    // }
-
-    // private stopAnimation(animation: AnimationState) {
-    //     //if (animation.playing) {
-    //         animation.stop();
-    //    // }
-    // }
-
-    // private pauseAnimation(animation:AnimationState) {
-    //     animation.pause()
-    // }
-
-    // private playAnimation(animation: AnimationState) {
-    //     //if (!animation.playing) {
-    //         animation.play();
-    //     //}
-    // }
-
-    // mobAction(action: 'walk' | 'idle' | 'turn' | 'fight' | 'hit' | 'dead') {
-    //     this.stopAnimation(this.idle);
-    //     this.stopAnimation(this.walk);
-    //     this.stopAnimation(this.turnLeft);
-    //     this.stopAnimation(this.boxing);
-    //     this.stopAnimation(this.hit1);
-    //     this.stopAnimation(this.death1);
-
-    //     switch (action) {
-    //         case 'walk':
-    //             this.playAnimation(this.walk);
-    //             break;
-    //         case 'idle':
-    //             this.playAnimation(this.idle);
-    //             break;
-    //         case 'turn':
-    //             this.playAnimation(this.turnLeft);
-    //             break;
-    //         case 'fight':
-    //             this.playAnimation(this.boxing);
-    //             break;
-    //         case 'hit':
-    //             this.playAnimation(this.hit1);
-    //             break;
-    //         case 'dead':
-    //             this.playAnimation(this.death1);
-    //             break;
-    //     }
-    // }
 }

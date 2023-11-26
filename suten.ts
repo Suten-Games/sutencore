@@ -24,5 +24,3 @@ export const rainSpeed = 4
 export const snowSpeed = 2
 
 export const local: boolean = false;
-
-//export var sutenBase = '-148,-124'; // These were the coordinates of the Riverlands
