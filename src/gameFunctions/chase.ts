@@ -1,15 +1,13 @@
 import { MobState } from "../components/mobStateComponent";
 
 const ROT_SPEED = 1
-const MOVE_SPEED = .8
+const MOVE_SPEED = .9
 const player = Camera.instance
 
 export function chase(s: any, dt: number, dist: number) {
-
     //log(`Inside chase, dist: ${dist}`)
 
     const mob = s.npc
-    //const player = s.player
     const mobstate = mob.getComponent(MobState);
     let transform = mob.getComponent(Transform);
 
@@ -24,11 +22,12 @@ export function chase(s: any, dt: number, dist: number) {
     if (dist > 200) {
         log(`Ditched the mob, turning off chase`)
         mobstate.trackplayer = false;
+        mobstate.battle = false;
+        s.player.disengageFromBattle(mob.id);
     } else {
         mobstate.trackplayer = true;
+        s.player.engageInBattle(mob.id)
     }
-
-    //s.player.updateaggro("add", s.npc.id);
 
     const lookAtTarget = new Vector3(
         player.position.x,
@@ -46,6 +45,4 @@ export function chase(s: any, dt: number, dist: number) {
     const forwardVector = Vector3.Forward().rotate(transform.rotation)
     const increment = forwardVector.scale(dt * MOVE_SPEED)
     transform.translate(increment)
-
-
 }

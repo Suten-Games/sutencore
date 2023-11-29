@@ -40,6 +40,7 @@ export class Player {
     private _shieldhp: number;
     private _factions: any
     private _activequests: string[];
+    private _activeBattles = 0;
 
     private hpBar = new UIBar(
         1,
@@ -65,7 +66,7 @@ export class Player {
         12,
         true
     );
-    private healthValue = new UICounter(0, 35, 490, Color4.Yellow(), 12, true);
+    public healthValue = new UICounter(0, 35, 490, Color4.Yellow(), 12, true);
     private xpLabel = new CornerLabel(
         "XP",
         -100,
@@ -275,6 +276,35 @@ export class Player {
         this._inbatttle = val;
     }
 
+    private _engagedNPCs: any = {};
+
+    engageInBattle(npcId: string) {
+        this._engagedNPCs[npcId] = true;
+        this._inbatttle = true;
+        log(`engage: this.battle is now: ${this.battle}`)
+    }
+
+    disengageFromBattle(npcId: string) {
+        delete this._engagedNPCs[npcId];
+        if (Object.keys(this._engagedNPCs).length === 0) {
+            this._inbatttle = false;
+            log(`disengage: this.battle is now: ${this.battle}`)
+        }
+    }
+
+    // updateBattleStatus(engaged: boolean) {
+    //     log(`in updateBattleStatus, ${engaged}`)    
+    //     if (engaged) {
+    //         this._activeBattles++;
+    //     } else {
+    //         this._activeBattles = Math.max(0, this._activeBattles - 1);
+    //         log(`activebattle count ${this._activeBattles}`)
+    //     }
+    //     this._inbatttle = this._activeBattles > 0;
+    //     log(`this._inbattle is now: ${this._inbatttle}`)
+    //     log(`this.battle is now: ${this.battle}`)
+    // }
+
     showhpbar() {
         this.hpBar.set(1);
     }
@@ -374,6 +404,33 @@ export class Player {
             }
         });
     }
+
+    // restoreHealthOutOfCombat() {
+    //     // Check if the player is out of combat
+    //     if (!this._inbatttle) {
+    //         // Define a function to gradually restore health
+    //         const restoreHealthGradually = () => {
+    //             if (!this._inbatttle && this._hp < this._maxhp) {
+    //                 // Calculate 5% of max health
+    //                 let healthToRestore = this._maxhp * 0.05;
+
+    //                 // Add the 5% health or the remaining health to reach max health
+    //                 this._hp = Math.min(this._hp + healthToRestore, this._maxhp);
+
+    //                 // Update UI elements
+    //                 let percentage = ((this._hp / this._maxhp) * 100).toFixed(0);
+    //                 this.initialhp(Number(percentage) / 100);
+    //                 this.healthValue.set(this._hp);
+
+    //                 // Set a timeout to call this function again after 1 second
+    //                 setTimeout(restoreHealthGradually, 1000);
+    //             }
+    //         };
+
+    //         // Start the gradual health restoration
+    //         restoreHealthGradually();
+    //     }
+    // }
 
     updateaggro(action: string, mobid: string) {
         log(`updateing player aggro list ${action} ${mobid}`)

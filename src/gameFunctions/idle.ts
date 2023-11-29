@@ -12,12 +12,12 @@ export function idle(s: any, dt: number) {
     let transform = mob.getComponent(Transform);
 
     mobstate.battle = false;
+    s.player.disengageFromBattle(mob.id)
     mobstate.dead = false;
     mobstate.clicked = false;
     mobstate.playerdead = false;
     mobstate.timeout = false;
 
-    //log(`idle.ts:182 - Calling mobwalk`)
     mob.mobidle()
 
     const lookAtTarget = new Vector3(
@@ -31,5 +31,5 @@ export function idle(s: any, dt: number) {
         Quaternion.LookRotation(direction),
         dt * ROT_SPEED
     )
-    
+
 }

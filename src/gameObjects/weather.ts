@@ -96,12 +96,12 @@ function getWeather(weather: CurrentWeather) {
         newWeather = mapWeather(obj.currentweather)
         log('calling setWeather')
         setWeather(weather, newWeather)
-    } 
+    }
 }
 
 // map verbose API responses to distinct possible values
 function mapWeather(weather: string) {
-    log(weather)
+    log('mapWeather: ', weather)
     let simpleWeather: Weather
     if (weather.match(/(thunder)/gi)) {
         simpleWeather = Weather.storm
@@ -142,7 +142,7 @@ function setWeather(current: CurrentWeather, newWeather: Weather) {
             current.spawnInterval = rainSpeed / current.dropsToAdd
             break
         case Weather.rain:
-            current.dropsToAdd = 10
+            current.dropsToAdd = 1500
             current.flakesToAdd = 0
             current.spawnInterval = rainSpeed / current.dropsToAdd //(10/(0.033*rainSpeed)*30 ) /weather.dropsToAdd
             break

@@ -52,23 +52,15 @@ export class NpcFSM extends Entity {
         //log(`npcFSM.ts: In the npcFSM constructor`)
 
         var obj = Singleton.getInstance();
-        //log(`npcFSM.ts: In the npcFSM constructor - line 55`)
         this.addComponent(new BattleId(npc.id));
-        //log(`npcFSM.ts: In the npcFSM constructor - line 57`)
         this.getComponent(BattleId).id = npc.id;
-        //log(`npcFSM.ts: In the npcFSM constructor - line 59`)
         this._player = obj.player
-        //log(`npcFSM.ts: In the npcFSM constructor - line 61`)
         this._npc = npc;
-        //log(`npcFSM.ts: In the npcFSM constructor line 63`)
         let mobfaction = this._npc.faction
-        //log(`npcFSM.ts: In the npcFSM constructor line 65 ${mobfaction}`)
         let playerfaction = this._player.factions
 
         if (playerfaction) {
-            //log(`npcFSM.ts: In the npcFSM constructor line 67 ${JSON.stringify(playerfaction)}`)
             let matchingFaction = playerfaction.find((faction: { name: string; }) => faction.name === mobfaction);
-            //log(`npcFSM.ts: In the npcFSM constructor line 69 ${JSON.stringify(matchingFaction)}`)
 
             if (matchingFaction) {
                 this.factionvalue = matchingFaction.value
@@ -80,20 +72,14 @@ export class NpcFSM extends Entity {
         }
 
 
-        //log(`npcFSM.ts: In the npcFSM constructor line 77`)
-
         let mobstate = this._npc.getComponent(MobState)
         let hoverText
-
-        //log(`npcFSM.ts: In the npcFSM constructor line 79`)
 
         if (this.factionvalue > 0) {
             hoverText = "Talk"
         } else {
             hoverText = "Attack"
         }
-
-        //log(`npcFSM.ts: In the npcFSM constructor line 91`)
 
         this._startPos = startPos;
         this._startRot = startRot;

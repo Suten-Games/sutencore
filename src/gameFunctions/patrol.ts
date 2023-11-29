@@ -2,7 +2,7 @@ import { TimeOut } from "src/components/timeOutComponent";
 import { MobState } from "../components/mobStateComponent";
 //import { TimeOut } from "../components/timeOutComponent";
 
-export function patrol(s:any,dt:number) {
+export function patrol(s: any, dt: number) {
     //log(`${s.npc.id} patrolling`)
     const mob = s.npc
     const TURN_TIME = 0.5;
@@ -66,12 +66,8 @@ export function patrol(s:any,dt:number) {
 
                 mobstate.fraction = 0;
                 transform.lookAt(mobstate.array[mobstate.target]);
-                //walk.pause();
                 mob.mobwalkpause()
-                //walk_.pause();
                 mob.mobturn()
-                //turn.play();
-                //turn_.play();
                 mob.addComponent(new TimeOut(TURN_TIME));
             }
         } else {
@@ -82,7 +78,4 @@ export function patrol(s:any,dt:number) {
     }
 
     //mob.mobwalk()
-    
-
-    
 }

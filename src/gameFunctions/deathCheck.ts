@@ -11,7 +11,6 @@ export function deathCheck(ui: UI, json: PlayerState, player: Player) {
     // log(`debug: 9 Inside deathCheck`)
     if (json.hp == 0) {
         writeToCl(`Welcome back to SutenQuest ${json.name}!`, `You remain dead.`, `Make your way to the Duat.`, `Find and speak with Anpu.`)
-        // writeToCl(`${json.name} is a level ${json.level} ${json.characterclass}`, `You remain dead.`, `Make your way to the Duat.`, `Find and speak with Anpu.`)
         killPlayer(json, player, ui)
     } else {
         writeToCl(`Welcome back!`, `You are a level ${json.level} ${json.characterclass}`)

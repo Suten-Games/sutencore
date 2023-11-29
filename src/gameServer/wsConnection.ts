@@ -55,8 +55,21 @@ export async function joinSocketsServer(
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
-            // log("in wsConnection - msg: ", msg);
-           
+            log("in wsConnection - msg: ", msg);
+
+            const newMobIds: any = {};
+            msg.forEach((element: any) => {
+                newMobIds[element.id] = true;
+            });
+
+            // Iterate over existing mobs and remove those not in the new data
+            mobs.entities.forEach((mob) => {
+                const mobId = mob.getComponent(NpcId).id;
+                if (!newMobIds[mobId]) {
+                    engine.removeEntity(mob);
+                }
+            });
+
 
             if (mobs.entities.length == 0) {
                 //log(`Calling handleGame Message, length is 0`)
@@ -281,8 +294,6 @@ export function createNpc(element: any, path: any) {
     );
 }
 
-
-
 export function createNpcFSM(npc: any, element: any) {
     return new NpcFSM(
         npc,
@@ -293,12 +304,12 @@ export function createNpcFSM(npc: any, element: any) {
     );
 }
 
-
 export function processGameoverMessage(item: Item) {
     //log('I won')
     victory.play();
 }
 
+let currentNpcs: { [id: string]: Npc } = {};
 export function processNonGameoverMessage(msg: any, mobs: any) {
     //log(`NPC: In processNonGameoverMessage mobs`)
     //log('NPC: msg: ', msg)
@@ -347,10 +358,10 @@ export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
         }
     }
 
-    if(msgItem.mobdead == false && mobstate.mobdead == true) {
+    if (msgItem.mobdead == false && mobstate.mobdead == true) {
         //log(`SHOULD RESPAWN: wsConnection.ts:329 - Setting respawned to true on mobstate`) 
         //log(`ID CHECK ID: msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
-        if(msgItem.id !== mobstate.id) {
+        if (msgItem.id !== mobstate.id) {
             //log(`The IDs do not match, so sending ${JSON.stringify(msgItem)} to handleGameMessage(msgItem) to make a new mob`)
             handleGameMessage(msgItem)
         }
@@ -409,7 +420,7 @@ export function handleGameMessage(msg: any) {
             processGameoverMessage(element);
         } else {
             let mob;
-            if(!element.mobdead) {
+            if (!element.mobdead) {
                 //log(`RESPAWN: The element being passed to createNPC ${JSON.stringify(element)}`)
                 if (element.path.length == 3) {
                     mob = createNpc(element, [

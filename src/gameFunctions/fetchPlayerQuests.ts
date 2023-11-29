@@ -5,13 +5,13 @@ const apiUrl = local
     ? "http://localhost:8080/playerquest/"
     : "https://sutenquestapi.azurewebsites.net/playerquest/";
 
-export async function fetchPlayerQuests(player:Player) {
+export async function fetchPlayerQuests(player: Player) {
     log(`in fetchPlayerQuests`)
 
     try {
         let response = await fetch(apiUrl + player.address);
         let json = await response.json();
-        log(`in fetchPlayerQuests, the json is ${JSON.stringify(json)}`)
+        //log(`in fetchPlayerQuests, the json is ${JSON.stringify(json)}`)
         let questIds = json.map((quest: PlayerQuest) => quest.questId._id);
         questIds.forEach((id: string) => {
             player.quest = id;

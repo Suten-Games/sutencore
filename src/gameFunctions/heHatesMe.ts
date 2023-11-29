@@ -83,6 +83,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             //This is a setting that should be tweaked depending on player class and level
 
             mobstate.battle = true;
+            s.player.engageInBattle(mob.id)
             //mobstate.mobdead = false;
             mobstate.clicked = false;
             mobstate.playerdead = false;
@@ -158,6 +159,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 }
 
                 mobstate.battle = false;
+                s.player.disengageFromBattle(mob.id)
                 log(`RESPAWN: Setting mobstate.mobdead to TRUE`)
                 mobstate.mobdead = true;
                 mobstate.clicked = false;
@@ -217,6 +219,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 s.npc.hidehpbar();
             } else {
                 mobstate.battle = true;
+                s.player.engageInBattle(mob.id)
                 mobstate.clicked = false;
                 mobstate.playerdead = false;
                 mobstate.timeout = true;

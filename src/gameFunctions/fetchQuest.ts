@@ -12,7 +12,7 @@ export async function fetchQuest(npc: Npc, player: Player) {
     try {
         let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
-        log(`passing json ${JSON.stringify(json)} to the npcFSM`)
+        //log(`passing json ${JSON.stringify(json)} to the npcFSM`)
         return json
 
     } catch (error) {
@@ -25,16 +25,16 @@ export async function acceptQuest(quest: any, player: Player) {
     let playerQuestUrl = apiUrl + "/playerquest";
 
     const status = {
-        "playerId":player.address,
-        "questId":quest,
-        "status":"NOT_STARTED"
+        "playerId": player.address,
+        "questId": quest,
+        "status": "NOT_STARTED"
     }
 
     const options = {
         method: "POST",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type": "application/json"
         }
     }
 
