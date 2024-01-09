@@ -12,13 +12,14 @@ import { SpellBook } from "src/gameUI/spellBook";
 import { CombatLog } from "src/gameUI/combatLog";
 import { LootWindow } from "src/gameUI/lootWindow";
 import { UIBar } from "src/gameUI/uiBar";
-//import { closeSocket } from "../gameFunctions/wsConnection";
+import { CornerLabel } from "src/gameUI/cornerLabel";
 
+//import { closeSocket } from "../gameFunctions/wsConnection";
 
 export class Singleton {
     private static instance: Singleton;
-    //     //Assign "new Singleton()" here to avoid lazy initialisation
     private _playerhp: number = 0;
+    private _playermaxhp: number = 0;
     private _playerclass: string = "Adventurer";
     private _playeraddress: string = "123123";
     private _playername: string = "Adventurer";
@@ -40,7 +41,8 @@ export class Singleton {
     private _localmobstate: Array<MobState> = [];
     private _lootwindows: Array<LootWindow> = [];
     private _healthbars: Array<UIBar> = [];
-    // private _healthlabels: Array<CornerLabel> = [];
+    private _healthlabels: Array<CornerLabel> = [];
+    private _levellabels: Array<CornerLabel> = [];
     private _balance: number = 0;
     private _manal1: number = 0
     private _battlehymns: Array<SoundBox> = []
@@ -56,7 +58,12 @@ export class Singleton {
     private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
-    private _actionbarslots: (string | null)[] = new Array(9).map(() => null);
+    //private _actionbarslots: (string | null)[] = new Array(9).map(() => null);
+    //private _backpackslots: (string | null)[] = new Array(16).map(() => null);
+    private _actionbarslots: (string | null)[] = this.initializeArrayWithNulls(9);
+    private _backpackslots: (string | null)[] = this.initializeArrayWithNulls(16);
+
+
     private _backPack: BackPack;
     private _spellScroll: SpellScroll;
     private _spellBook: SpellBook;
@@ -66,6 +73,8 @@ export class Singleton {
     private _socketclass: any;
     private _inDuat: boolean = false;
     private _currentWeather: string = "sun";
+    member: number;
+    balance!: number;
     // private _scribedspells: Map<string, Ispell>;
 
     constructor(balance = 0) {
@@ -95,7 +104,14 @@ export class Singleton {
         this._battlehymns.push(this.soundbox8)
         this._battlehymns.push(this.soundbox9)
         this._battlehymns.push(this.soundbox10)
+    }
 
+    private initializeArrayWithNulls(size: number): (string | null)[] {
+        let array = [];
+        for (let i = 0; i < size; i++) {
+            array.push(null);
+        }
+        return array;
     }
 
     set canvas(val) {
@@ -130,6 +146,14 @@ export class Singleton {
         return this._actionbarslots;
     }
 
+    set backpackslots(val) {
+        this._backpackslots = val;
+    }
+
+    get backpackslots() {
+        return this._backpackslots;
+    }
+
     set gameover(val) {
         this._gameover = val;
     }
@@ -145,7 +169,6 @@ export class Singleton {
     get currentweather() {
         return this._currentWeather;
     }
-
 
     set winner(val) {
         this._winner = val;
@@ -219,11 +242,6 @@ export class Singleton {
         return this._weapon;
     }
 
-    // set closesock(sockclose: closeSocket) {
-    //     //log('Setting sockclose in obj')
-    //     this._socketclass = sockclose
-    // }
-
     set localmobstate(val) {
         this._localmobstate = val
     }
@@ -296,6 +314,14 @@ export class Singleton {
         return this._balance;
     }
 
+    set maxhp(val) {
+        this._playermaxhp = val;
+    }
+
+    get maxhp() {
+        return this._playermaxhp;
+    }
+
     set playerhp(val: number) {
         this._playerhp = val
     }
@@ -324,25 +350,33 @@ export class Singleton {
         return this._healthbars
     }
 
-    // set hpbars(val) {
-    //     this._healthbars.push(val)
-    // }
+    set hpbars(val:any) {
+        this._healthbars.push(val)
+    }
 
-    // get healthlabels() {
-    //     return this._healthlabels
-    // }
+    get healthlabels() {
+        return this._healthlabels
+    }
 
-    // set healthlabels(val) {
-    //     this._healthlabels.push(val)
-    // }
+    set healthlabels(val:any) {
+        this._healthlabels.push(val)
+    }
+
+    get levellabels() {
+        return this._levellabels
+    }
+
+    set levellabels(val: any) {
+        this._levellabels.push(val)
+    }
 
     get lootwindows() {
         return this._lootwindows
     }
 
-    // set lootwindows(val) {
-    //     this._lootwindows.push(val);
-    // }
+    set lootwindows(val:any) {
+        this._lootwindows.push(val);
+    }
 
     playerbackpack(val: any) {
         this._playerbackpack.push(val)
@@ -370,6 +404,10 @@ export class Singleton {
 
     fetchactionbar() {
         return this._playeractionbar
+    }
+
+    fetchbackpack() {
+        return this._playerbackpack
     }
 
     fetchspellbook() {
@@ -418,6 +456,5 @@ export class Singleton {
         return this._battlehymns[Math.floor(Math.random() * this._battlehymns.length)];
     }
 
-    member: number;
-    balance!: number;
+    static lastHpBarPosition: number = 350;
 }

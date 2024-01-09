@@ -4,6 +4,7 @@ export function slotPicker(slot: number) {
     let isMerchant: boolean = false;
     let isPurchase: boolean = false;
     let isLootWindow: boolean = false;
+    let isQuestWindow: boolean = false;
     let isActiveSpell: boolean = false;
     let isSpellBook: boolean = false;
     let hAlign: string = "";
@@ -280,8 +281,12 @@ export function slotPicker(slot: number) {
         case 60:
             position = "as";
             positionX = "-2%";
+            break;
             //log('slotPicker.ts:226 - inside case 60');
-        default:
+        case 70:
+            position = "qw";
+            positionX = "-28.2%";
+            positionY = "-16.5%";
             break;
     }
 
@@ -316,6 +321,13 @@ export function slotPicker(slot: number) {
             fontHAlign = "left";
             fontVAlign = "center";
             break
+        case "qw":
+            isQuestWindow = true;
+            hAlign = "right";
+            vAlign = "center";
+            width = "2.4%";
+            height = "5%";
+            break
         case "as":
             //log('slotPicker.ts:248 - inside as block');
             isActiveSpell = true;
@@ -341,8 +353,8 @@ export function slotPicker(slot: number) {
             isLootWindow = true;
             hAlign = "left";
             vAlign = "center";
-            width = "4.3%";
-            height = "7.3%";
+            width = "4.4%";
+            height = "7.4%";
             fontSize = 12;
             fontWidth = 120;
             fontHeight = 30;
@@ -355,7 +367,7 @@ export function slotPicker(slot: number) {
     }
 
     return {
-        "ab": isActionBar, "bp": isBackpack, "mc": isMerchant, "pc": isPurchase, "lw": isLootWindow,
+        "ab": isActionBar, "bp": isBackpack, "mc": isMerchant, "pc": isPurchase, "lw": isLootWindow, "qw": isQuestWindow,
         "sb": isSpellBook, "as": isActiveSpell, "ha": hAlign, "h": height, "x": positionX, "y": positionY,
         "va": vAlign, "w": width, "fs": fontSize, "fw": fontWidth, "fh": fontHeight, "fha": fontHAlign,
         "fva": fontVAlign, "fy": fontPositionY, "fx": fontPositionX

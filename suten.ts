@@ -1,4 +1,4 @@
-export var sutenBase = '1000,1000'; // Used to determine what to spawn here
+export var sutenBase = '100,100'; // Used to determine what to spawn here
 export var duatX = 1;
 export var duatZ = 1;
 

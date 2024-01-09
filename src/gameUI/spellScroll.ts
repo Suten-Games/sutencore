@@ -4,6 +4,7 @@ import { getspell } from "src/gameObjects/spells";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { SpellBook } from "./spellBook";
 import { Item } from "src/gameObjects/item";
+import { writeToCl } from "src/gameFunctions/writeToCL";
 
 export class SpellScroll {
     private _canvas;
@@ -11,6 +12,7 @@ export class SpellScroll {
     private _bp;
     private _closebutton;
     private _scribebutton;
+    private _discardbutton;
     private _buytext;
     private _lootbig:UIImage;
     private _desc1;
@@ -106,6 +108,22 @@ export class SpellScroll {
             }
         )
 
+        this._discardbutton = new UIImage(this._canvas, resources.interface.discardButton);
+        this._discardbutton.hAlign = "left";
+        this._discardbutton.vAlign = "center";
+        this._discardbutton.width = "5%";
+        this._discardbutton.height = "5.3%";
+        this._discardbutton.positionY = "30%";
+        this._discardbutton.positionX = "65%";
+        this._discardbutton.sourceWidth = 1314;
+        this._discardbutton.sourceHeight = 545;
+        this._discardbutton.visible = false;
+        this._discardbutton.onClick = new OnPointerDown(
+            (e) => {
+                this.discard()
+            }
+        )
+
         this._buytext = new UIText(this._canvas);
         this._buytext.fontSize = 14;
         this._buytext.width = 120;
@@ -123,24 +141,35 @@ export class SpellScroll {
     }
 
     public setSpell(spellname:string, scroll:Item) {
-        log('spellScroll - Inside setSpell')
+        //log('debug spellScroll.ts - Inside setSpell')
         this.currentScroll = scroll
 
-        let spell = getspell(spellname)
-        this._spell = spell
+        //log('debug spellname: ', spellname)
 
-        this._lootbig = new UIImage(this._canvas, spell.image)
-        this._lootbig.hAlign = "center";
-        this._lootbig.vAlign = "bottom";
-        this._lootbig.width = "5%";
-        this._lootbig.height = "8%";
-        this._lootbig.positionY = "95%";
-        this._lootbig.positionX = "8%";
-        this._lootbig.sourceWidth = 122;
-        this._lootbig.sourceHeight = 120;
-        this._desc1.value = this._spell.desc;
-        //this._lootbig.visible = false;
-        this.show()
+        let spell = getspell(spellname)
+        if(spell) {
+            this._spell = spell
+            this._lootbig = new UIImage(this._canvas, spell.image)
+            this._lootbig.hAlign = "center";
+            this._lootbig.vAlign = "bottom";
+            this._lootbig.width = "5%";
+            this._lootbig.height = "8%";
+            this._lootbig.positionY = "95%";
+            this._lootbig.positionX = "8%";
+            this._lootbig.sourceWidth = 122;
+            this._lootbig.sourceHeight = 120;
+            this._desc1.value = this._spell.desc;
+            //this._lootbig.visible = false;
+            this.show()
+        } else {
+            log('unable to find spell: ', spellname)
+        }
+    }
+
+    private discard() {
+        //log(`Discarding the scroll`)
+        this.hide()
+        this.currentScroll.removeItem()
     }
 
     private scribe() {
@@ -148,12 +177,22 @@ export class SpellScroll {
         let spells = obj.sbook
 
         const isSpellAlreadyScribed = spells.some((spell) => {
-            log('spells ', spell.lootdesc())
+            //log('spells ', spell.lootdesc())
             return this._spell.name === spell.lootdesc();
         });
 
+        if (obj.playerclass !== "Magician") {
+            writeToCl(`You must be a spellcaster to scribe spells.`)
+            this.hide()
+            return;
+        }
+
         if (isSpellAlreadyScribed) {
-            log('Spell is already scribed, exiting')
+            //log('Spell is already scribed, exiting')
+            //log(`player class: ${obj.playerclass}`)
+            
+            writeToCl(`This spell is already in your spellbook.`)
+            this.hide()
             return;
         }
 
@@ -168,8 +207,9 @@ export class SpellScroll {
         this._desc1.visible = true;
         this._title.visible = true;
         this._scribebutton.visible = true;
+        this._discardbutton.visible = true;
         this._closebutton.visible = true;
-        this._buytext.visible = true;
+        this._buytext.visible = true    ;
     }
 
     public hide() {
@@ -178,6 +218,7 @@ export class SpellScroll {
         this._desc1.visible = false;
         this._title.visible = false;
         this._scribebutton.visible = false;
+        this._discardbutton.visible = false;
         this._closebutton.visible = false;
         this._buytext.visible = false;
     }

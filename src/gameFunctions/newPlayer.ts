@@ -14,23 +14,22 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
     
     var obj = Singleton.getInstance();
 
-    writeToCl(`Welcome to SutenQuest!`)
-    writeToCl(`You are a level 1 Adventurer`, `Right click to unlock your mouse.`)
+    writeToCl(`Welcome to SutenQuest!`, `You have entered the Ruins of Saqarra.`)
+    writeToCl(`Fight mobs or complete quests for experience and loot.`, `You are a level 1 Adventurer`)
+    writeToCl(`Press 'E' to attack, Press 'F' to loot.`, `Dbl click to delete items.`)
+    //writeToCl(`Good luck ${player.name}, may you prosper and become strong.`,`Perhaps when your days are done, you will become Maa Kheru enter the Field of Reeds`)
 
-    obj.playerhp = 43;
-    obj.playerclass = "Adventurer";
-    ui.bp.playerclass = "Adventurer"
-
-    //reloadGame(gameCanvas, actionBar, backPack, player, combatLog, tradeWindow);
+    
 
     const newplayer = {
         address: lowerCaseAddress,
-        hp: 44,
-        maxhp: 44,
+        maxhp: 40,
+        hp: 40,
         percentage: 100,
         name: obj.player.name,
         level: 1,
         currentxp: 0,
+        levelmax: 40,
         basedamage: 1,
         strength: 5,
         agility: 5,
@@ -49,7 +48,7 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
                 "value": -1
             },
             {
-                "name": "Elvish Empire",
+                "name": "Human Amalgam",
                 "value": -1
             }
         ]
@@ -63,12 +62,18 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
         },
     };
 
+    log(`CREATING A NEW PLAYER`)
+
     fetch(apiUrl, options)
         .then((res) => res.json())
         .then(() => {
             player.level = 1;
             player.basedamage = 1;
-            player.hp = 45;
-            player.maxhp = 45;
+            player.hp = 40;
+            player.maxhp = 40;
         });
+
+    obj.playerhp = 40;
+    obj.playerclass = "Adventurer";
+    ui.bp.playerclass = "Adventurer"
 }

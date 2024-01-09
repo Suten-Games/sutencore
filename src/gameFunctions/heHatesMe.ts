@@ -7,7 +7,7 @@ import { SecondaryTimeOut } from "src/components/secondaryTimeOutComponent";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { createSoundBox } from "./createSoundBox";
 import resources from "src/resources";
-//import { SpawnTimeOut } from "src/components/spawnTimerComponent";
+import { SpawnTimeOut } from "src/components/spawnTimerComponent";
 import { Player } from "src/gameObjects/player";
 import { local } from "suten";
 
@@ -25,10 +25,11 @@ const obj = Singleton.getInstance();
 
 
 export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneState) {
+    //log('he HATES me still')
     const mobvisible = s.npc.getComponent(GLTFShape).visible;
     const camera = Camera.instance;
     let transform = mob.getComponent(Transform);
-
+    
     //He hates me so we battlin'
     if (mobstate.mobdead || mobstate.playerdead || mobvisible == false) {
         return;
@@ -55,7 +56,10 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
         }
 
 
-        mob.showhpbar();
+        if(!mob.battle) {
+            mob.showhpbar();
+        }
+        
         mobstate.position = s.transform.position;
         mobstate.rotation = s.transform.rotation;
 
@@ -84,7 +88,6 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
             mobstate.battle = true;
             s.player.engageInBattle(mob.id)
-            //mobstate.mobdead = false;
             mobstate.clicked = false;
             mobstate.playerdead = false;
             mobstate.timeout = true;
@@ -148,7 +151,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             mobstate.clicked = false;
 
             if (mobhp <= 0) {
-                //log(`attack.ts:196 - Calling mob.mobdead()`)
+                //log(`attack.ts:196 - Calling mob.mobdead() animation`)
                 mob.mobdead()
 
                 if (mobstate.mobname == 'Orc Chief') {
@@ -160,7 +163,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
                 mobstate.battle = false;
                 s.player.disengageFromBattle(mob.id)
-                log(`RESPAWN: Setting mobstate.mobdead to TRUE`)
+                //log(`heHateMe.ts: Setting mobstate.mobdead to TRUE`)
                 mobstate.mobdead = true;
                 mobstate.clicked = false;
                 mobstate.playerdead = false;
@@ -179,9 +182,9 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 }
 
                 //log(`in attack mob ${s.npc.id} hp is 0, setting SpawnTimeout to 90`)
-
-                // log(`RESPAWN: adding SpawnTimeout of 9000 to the mob`)
-                // mob.addComponentOrReplace(new SpawnTimeOut(9000));
+                //log(`RESPAWN: adding SpawnTimeout of 60 to the mob`)
+                mob.addComponentOrReplace(new SpawnTimeOut(60));
+                //log(`Validating mobstate.mobdead should still be true ${mobstate.mobdead}`)
 
                 let aggarray = [];
                 aggarray = s.player.aggro;
@@ -204,16 +207,17 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 //log(`calling achievement check with 20 and ${s.player.level}`)
                 //This is a setting that shouuld change from NPC to NPC. The XP Gained from a kill.
                 if (mob.xp) {
+                    //log(`heHateMe.ts: passing mob xp${mob.xp} and my currentlevel ${s.player.level} to achievementcheck`)
                     //s.player.achievementcheck(s.npc.xp, s.player.level);
                     s.player.achievementcheck(mob.xp, s.player.level)
-                    writeToCl(`You have gained ${s.npc.xp} experience!`)
+                    writeToCl(`You have gained ${mob.xp} experience!`)
                 } else {
                     s.player.achievementcheck(20, s.player.level);
-                    writeToCl(`You have gained 20 experience!`)
+                    writeToCl(`You have gained experience!`)
                 }
 
                 updateFaction(mob.faction, s.player, -1)
-                writeToCl(`Your standing with ${mob.faction} has gotten worse`)
+                //writeToCl(`Your standing with ${mob.faction} has gotten worse`)
 
                 //log('orc.ts:267 attack.ts - hidehpbar')
                 s.npc.hidehpbar();
@@ -229,14 +233,19 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
     }
 }
 
-export function updateFaction(factionName: string, player: Player, change: number) {
 
+export function updateFaction(factionName: string, player: Player, change: number) {
     let factionUrl = apiUrl + player.address + '/factions'
 
     const factions = {
-        factionName1: factionName,
-        factionValue1: change
+        factionName: factionName,
+        factionValue: change
     };
+
+    let originalFactions: { [key: string]: number } = {};
+    player.factions.forEach((faction: { name: string | number; value: number; }) => {
+        originalFactions[faction.name] = faction.value;
+    });
 
     const options = {
         method: "PATCH",
@@ -248,8 +257,24 @@ export function updateFaction(factionName: string, player: Player, change: numbe
 
     fetch(factionUrl, options)
         .then((res) => res.json())
-        .then(() => {
-            log(`Faction updated`)
-        });
+        .then((updatedFactions) => {
+            if (updatedFactions && updatedFactions.factions) {
+                updatedFactions.factions.forEach((updatedFaction: { name: string; value: number }) => {
+                    const originalValue = originalFactions[updatedFaction.name];
+                    if (updatedFaction.value !== originalValue) {
+                        let factionChangeMsg = `Your standing with ${updatedFaction.name} has `;
+                        factionChangeMsg += updatedFaction.value > originalValue ? `improved` : `gotten worse`;
+                        writeToCl(factionChangeMsg);
+                    }
+                });
 
+                // Update the player's factions property
+                player.factions = updatedFactions.factions;
+            } else {
+                writeToCl(`Faction update failed or no changes were made`);
+            }
+        })
+        .catch(error => {
+            log(`Error updating faction: ${error}`);
+        });
 }

@@ -24,6 +24,7 @@ export function chase(s: any, dt: number, dist: number) {
         mobstate.trackplayer = false;
         mobstate.battle = false;
         s.player.disengageFromBattle(mob.id);
+        mob.hidehpbar()
     } else {
         mobstate.trackplayer = true;
         s.player.engageInBattle(mob.id)

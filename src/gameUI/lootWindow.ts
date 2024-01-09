@@ -106,6 +106,8 @@ export class LootWindow extends Entity {
         if (json.statusCode !== 500) {
             let lootimg
 
+            log(`FETCHED LOOT: ${JSON.stringify(json)}`)
+
             if (json.shape.includes("images")) {
                 lootimg = json.shape
             } else {
@@ -115,7 +117,7 @@ export class LootWindow extends Entity {
             //log(`lootWindow.ts:134 - Calling new Item(${lootimg})`)
             this._lootitem = new Item(
                 new Texture(lootimg), //image
-                40,                   //slog
+                40,                   //slot
                 json.width,           //srcw
                 json.height,          //srch
                 json.name,            //name
@@ -128,7 +130,8 @@ export class LootWindow extends Entity {
                 json.sound,           //sound
                 null,                //tradewindow
                 this,                 //lootwindow
-                this._npc
+                this._npc,
+                null                  //questwindow
             )
         } else if (!lootfetched) {
             //log('lootWindow.ts:154 - Failed to fetch loot. Creating an Empty Vial')
@@ -147,7 +150,8 @@ export class LootWindow extends Entity {
                 null,   //sound
                 null,    //tradewindow
                 this,    //lootwindow),
-                this._npc
+                this._npc,
+                null    //questwindow
             )
         } else {
             this._lootitem = new Item(
@@ -165,7 +169,8 @@ export class LootWindow extends Entity {
                 null,   //sound
                 null,    //tradewindow
                 this,    //lootwindow),
-                this._npc
+                this._npc,
+                null    //questwindow
             )
 
         }
@@ -223,7 +228,7 @@ export class LootWindow extends Entity {
             //log('lootWindow:243 - in lootWindow, we have an item, creating a new lootItem')
             //log(`lootWindow:244 - the item ${item}`)
             this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 40, 122, 120, "Mana Vial", "consumable", 50, "consumable",
-                null, null, null, null, null, this)
+                null, null, null, null, null, this, null, null)
             this._lootitem.show()
         } else {
             //log('lootWindow:249 in lootWindow we do not have an item so calling getLoot')

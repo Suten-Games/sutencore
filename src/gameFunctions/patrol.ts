@@ -2,7 +2,7 @@ import { TimeOut } from "src/components/timeOutComponent";
 import { MobState } from "../components/mobStateComponent";
 //import { TimeOut } from "../components/timeOutComponent";
 
-export function patrol(s: any, dt: number) {
+export function patrol(s:any,dt:number) {
     //log(`${s.npc.id} patrolling`)
     const mob = s.npc
     const TURN_TIME = 0.5;

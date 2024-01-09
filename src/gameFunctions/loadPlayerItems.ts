@@ -222,7 +222,7 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     ]
 
     let actions = [
-        { image: "images/spells/protect-red-3.png", slot: 1, srcw: 122, srch: 120, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        //{ image: "images/spells/protect-red-3.png", slot: 1, srcw: 122, srch: 120, desc: "Minor Shielding", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
        
         // {
         //     "image": "images/looticons/sandbeetle.png",
@@ -311,7 +311,7 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
         
 
     // ui.bp.bootLoadBackPack(bp)
-    // ui.ab.bootLoadActionBar(actions)
+    //ui.ab.bootLoadActionBar(actions)
     // ui.sb.bootLoadSpellBook(sb)
 
     ui.bp.bootLoadBackPack(json.backpack);

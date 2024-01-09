@@ -8,7 +8,7 @@ export async function createDefaultPlayer(ui:UI ) {
 
     let player = new Player(
         lowerCaseAddress,
-        0,
+        40,
         ui.gc,
         ui.cl,
         ui.ab,

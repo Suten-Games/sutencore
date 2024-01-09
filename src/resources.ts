@@ -59,8 +59,8 @@ export default {
         orcgrunt: new GLTFShape("models/orc-grunt.glb"),
         orcpeon: new GLTFShape("models/orc-peon.glb"),
         orcwarrior: new GLTFShape("models/orc-warrior-sword.glb"),
-        oldanpu: new GLTFShape("models/death/anpu.glb"),
-        anpu: new GLTFShape("models/death/anpu.glb"),
+        oldanpu: new GLTFShape("models/anpu.glb"),
+        anpu: new GLTFShape("models/anpu.glb"),
         peasant: new GLTFShape("models/peasant1.glb"),
         medjaywarrior: new GLTFShape("models/remetch-warrior10.glb"),
         remetchmage: new GLTFShape("models/remetchmagician1.glb"),
@@ -158,6 +158,7 @@ export default {
         deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png"),
         scrollUpBtn: new Texture("images/vali/cltop.png"),
         scrollDownBtn: new Texture("images/vali/clbottom.png"),
-        questBook: new Texture("images/vali/cover.jpg")
+        questBook: new Texture("images/vali/questlog.png")
+        //questBook: new Texture("images/vali/cover.jpg")
     }
 }

@@ -11,6 +11,8 @@ import { Singleton } from "src/gameObjects/playerDetail";
 import { Npc } from "src/gameObjects/npc";
 import { NpcFSM } from "src/gameFunctions/npcFSM";
 import { NpcId } from "src/components/npcIdComponent";
+import { SpawnTimeOut } from "src/components/spawnTimerComponent";
+import { StartupTimeOut } from "src/components/startupTimer";
 
 
 const updateInterval = 5; //10
@@ -55,9 +57,9 @@ export async function joinSocketsServer(
         try {
             const msg = JSON.parse(event.data);
             const mobs = engine.getComponentGroup(MobState);
-            log("in wsConnection - msg: ", msg);
+            //log("in wsConnection - msg: ", msg);
 
-            const newMobIds: any = {};
+            const newMobIds:any = {};
             msg.forEach((element: any) => {
                 newMobIds[element.id] = true;
             });
@@ -69,7 +71,7 @@ export async function joinSocketsServer(
                     engine.removeEntity(mob);
                 }
             });
-
+           
 
             if (mobs.entities.length == 0) {
                 //log(`Calling handleGame Message, length is 0`)
@@ -148,7 +150,7 @@ class pingSystem implements ISystem {
             this.timer = 0;
 
             if (obj.bpack.length == 0 && obj.abar.length == 0 && obj.sbook.length == 0) {
-                //log(`Syncing HP Only`)
+                //log(`wsConnection: Syncing HP Only`)
                 this.socket.send(
                     JSON.stringify({
                         event: "events",
@@ -160,7 +162,7 @@ class pingSystem implements ISystem {
                     })
                 );
             } else {
-                //log(`Syncing ALL`)
+                //log(`wsConnection: Syncing ALL`)
                 let backpack = obj.bpack.map((lootitem: Item) => {
                     return {
                         image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
@@ -189,6 +191,7 @@ class pingSystem implements ISystem {
                 });
 
                 //log(`wsConnection type: ${sutenBase}`)
+                //log(`PLAYER: ${JSON.stringify(obj.player)}`)
 
                 this.socket.send(
                     JSON.stringify({
@@ -226,6 +229,7 @@ class updateSystem implements ISystem {
             let obj = Singleton.getInstance();
             if (obj.localmobstate && obj.localmobstate.length > 0) {
                 //Only send a sync if there is something in localmobstate to send
+                log(`localmobstate: ${JSON.stringify(obj.localmobstate)}`)
                 this.interval = updateInterval;
                 this.socket.send(
                     JSON.stringify({
@@ -330,19 +334,25 @@ export function processNonGameoverMessage(msg: any, mobs: any) {
             let mobstate = mob.getComponent(MobState);
             let obj = Singleton.getInstance();
 
-            if (msg[item].id === mob.getComponent(NpcId).id) {
-                //log(`NPC: IDs Match`)
-                const isMostHatedPlayer = msg[item].mosthated == null || msg[item].mosthated === obj.playeraddress;
-                mobstate.anotherplayer = !isMostHatedPlayer;
+            if(mob.hasComponent(SpawnTimeOut)) {
+                //log(`Don't process anything, mob has a SpawnTimeOut set`)
+            } else {
+                if (msg[item].id === mob.getComponent(NpcId).id) {
+                    //log(`NPC: IDs Match`)
+                    const isMostHatedPlayer = msg[item].mosthated == null || msg[item].mosthated === obj.playeraddress;
+                    mobstate.anotherplayer = !isMostHatedPlayer;
 
-                if (isMostHatedPlayer) {
-                    //log(`NPC: calling handleLocalMobUpdates`)
-                    handleLocalMobUpdates(msg[item], mobstate, obj);
-                } else {
-                    //log(`NPC: Calling handleOtherPlayerEngaged`)
-                    handleOtherPlayerEngaged(msg[item], mobstate, obj);
+                    if (isMostHatedPlayer) {
+                        //log(`NPC: calling handleLocalMobUpdates`)
+                        handleLocalMobUpdates(msg[item], mobstate, obj);
+                    } else {
+                        //log(`NPC: Calling handleOtherPlayerEngaged`)
+                        handleOtherPlayerEngaged(msg[item], mobstate, obj);
+                    }
                 }
             }
+
+            
         }
     }
 }
@@ -358,22 +368,25 @@ export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
         }
     }
 
-    if (msgItem.mobdead == false && mobstate.mobdead == true) {
-        //log(`SHOULD RESPAWN: wsConnection.ts:329 - Setting respawned to true on mobstate`) 
-        //log(`ID CHECK ID: msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
-        if (msgItem.id !== mobstate.id) {
+    if(msgItem.mobdead == false && mobstate.mobdead == true) {
+        
+        if(msgItem.id !== mobstate.id) {
             //log(`The IDs do not match, so sending ${JSON.stringify(msgItem)} to handleGameMessage(msgItem) to make a new mob`)
             handleGameMessage(msgItem)
+        } else {
+            //log(`handleLocalMobUpdates: SHOULD RESPAWN: wsConnection.ts:329 - Setting respawned to true on mobstate`)
+            //log(`ID CHECK ID: msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
+            mobstate.mobdead = false;
+            mobstate.respawned = true;
         }
-        mobstate.mobdead = false;
-        mobstate.respawned = true;
+        
     }
 }
 
 
 
 export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) {
-    //log(`In handlOtherPlayerEngaged`)
+    log(`CHECK:::::   In handlOtherPlayerEngaged`)
     let mobid = msgItem.id;
     let obj = Singleton.getInstance()
 
@@ -387,6 +400,7 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
         mob.getComponent(MobState).trackplayer = msgItem.trackplayer;
         mob.getComponent(MobState).playerpos = msgItem.playerpos;
         if (msgItem.currentloc === 3) {
+            log(`CHECK 1:::::  Setting position to: ${msgItem.currentloc} `)
             mobstate.position = msgItem.currentloc;
             mobstate.rotation = msgItem.currentrot;
         }
@@ -402,6 +416,7 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
     } else {
         mobstate.battle = msgItem.battle;
         if (msgItem.currentloc.length === 3) {
+            log(`CHECK 2:::::  Setting position to: ${msgItem.currentloc} `)
             mobstate.position = msgItem.currentloc;
             mobstate.rotation = msgItem.currentrot;
         } else {
@@ -420,7 +435,7 @@ export function handleGameMessage(msg: any) {
             processGameoverMessage(element);
         } else {
             let mob;
-            if (!element.mobdead) {
+            if(!element.mobdead) {
                 //log(`RESPAWN: The element being passed to createNPC ${JSON.stringify(element)}`)
                 if (element.path.length == 3) {
                     mob = createNpc(element, [
@@ -428,6 +443,7 @@ export function handleGameMessage(msg: any) {
                         new Vector3(element.path[1][0], element.path[1][1], element.path[1][2]),
                         new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
                     ]);
+                    mob.addComponentOrReplace(new StartupTimeOut(4))
                 } else if (element.path.length == 4) {
                     mob = createNpc(element, [
                         new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
@@ -435,6 +451,7 @@ export function handleGameMessage(msg: any) {
                         new Vector3(element.path[2][0], element.path[2][1], element.path[2][2]),
                         new Vector3(element.path[3][0], element.path[3][1], element.path[3][2]),
                     ]);
+                    mob.addComponentOrReplace(new StartupTimeOut(5))
                 } else {
                     mob = createNpc(element, [])
                 }

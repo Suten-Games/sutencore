@@ -14,12 +14,12 @@ export class QuestBook {
         this._bp = new UIImage(this._canvas, this._image);
         this._bp.hAlign = "right"
         this._bp.vAlign = "bottom";
-        this._bp.width = "3%";
-        this._bp.height = "10%";
-        this._bp.positionY = "1%";
+        this._bp.width = "4%";
+        this._bp.height = "11%";
+        this._bp.positionY = "0%";
         this._bp.positionX = "-29%";
-        this._bp.sourceWidth = 1140;
-        this._bp.sourceHeight = 1327;
+        this._bp.sourceWidth = 1024;
+        this._bp.sourceHeight = 1024;
         this._bp.visible = true;
         this._bp.onClick = new OnPointerDown(() => {
             if (questwindow.visible) {

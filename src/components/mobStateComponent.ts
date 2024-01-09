@@ -3,7 +3,8 @@ export class MobState {
     id: string;
     damage: number = 2;
     faction: number = -100;
-    battle: boolean = false
+    battle: boolean = false;
+    dead: boolean = false; //NEW
     mobname: string;
     mobdead: boolean = false
     orcdead: boolean = false

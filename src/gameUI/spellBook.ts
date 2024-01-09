@@ -151,7 +151,7 @@ export class SpellBook {
                 //let slot = this.selectSlot()
                 //log('creating new item for spellbook')
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null, null, null
                 )
                 //log('new spellbook item is creating, setting slot')
                 this.setSlot(element.slot)
@@ -166,7 +166,7 @@ export class SpellBook {
                 let slot = this.selectSlot()
                 //log('creating new item for spellbook')
                 let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null, null, null
                 )
                 //log('new spellbook item is creating, setting slot')
                 this.setSlot(slot)
@@ -186,7 +186,7 @@ export class SpellBook {
         let slot = this.selectSlot()
 
         let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype, 
-        5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound,null,null)
+        5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound,null,null, null, null)
 
         this.setSlot(slot)
 

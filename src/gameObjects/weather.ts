@@ -96,12 +96,12 @@ function getWeather(weather: CurrentWeather) {
         newWeather = mapWeather(obj.currentweather)
         log('calling setWeather')
         setWeather(weather, newWeather)
-    }
+    } 
 }
 
 // map verbose API responses to distinct possible values
 function mapWeather(weather: string) {
-    log('mapWeather: ', weather)
+    log('mapWeather: ',weather)
     let simpleWeather: Weather
     if (weather.match(/(thunder)/gi)) {
         simpleWeather = Weather.storm

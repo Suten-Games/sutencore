@@ -17,7 +17,8 @@ export async function fetchPlayer(lowerCaseAddress: string, ui: UI, player: Play
         playerSearch(json, ui, lowerCaseAddress, player)
 
     } catch (error) {
-        writeToCl(`Player search by ether address failed ${JSON.stringify(error)}`)
+        writeToCl(`Issue connecting to SutenQuest.`,`Please reload the browser window`)
+        //writeToCl(`Player search by ether address failed ${JSON.stringify(error)}`)
         log(`game.ts:21: Player search by ether address failed ${error} `);
     }
 

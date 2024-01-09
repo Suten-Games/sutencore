@@ -6,7 +6,7 @@ import { ActionBar } from "src/gameUI/actionBar";
 import { BackPack } from "src/gameUI/backPack";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { Singleton } from "./playerDetail";
-import { Item } from "./item"
+import { Item } from "./item";
 import { UIBar } from "src/gameUI/uiBar";
 import { BarStyles } from "src/gameUtils/types";
 import { writeToCl } from "src/gameFunctions/writeToCL";
@@ -40,7 +40,7 @@ export class Player {
     private _shieldhp: number;
     private _factions: any
     private _activequests: string[];
-    
+
     private hpBar = new UIBar(
         1,
         -30,
@@ -75,8 +75,7 @@ export class Player {
         true
     );
     private playerName: UIText;
-    //private playerLevel: UIText;
-    public playerLevel: CornerLabel = new CornerLabel('1', -20, 630, Color4.Yellow(), 18, false);
+    private playerLevel: UIText;
     private _aggroList: [];
     private apiUrl = sPlayer
     private aggUrl = sAggro
@@ -85,7 +84,7 @@ export class Player {
     private actionbar;
     private backpack;
     private tradewindow: any;
-    
+
     private deathsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.playerdeath,
@@ -167,8 +166,6 @@ export class Player {
         if (val > 0) {
             this._level = val;
         }
-        this.playerLevel.set(this._level.toString());
-        //this.xpcheck()
     }
 
     get levelup() {
@@ -196,6 +193,7 @@ export class Player {
     set hp(val: number) {
         if (val > -1) {
             this._hp = val;
+
             this.healthValue.set(val);
         }
     }
@@ -283,16 +281,11 @@ export class Player {
     }
 
     disengageFromBattle(npcId: string) {
-        let obj = Singleton.getInstance()
         delete this._engagedNPCs[npcId];
         if (Object.keys(this._engagedNPCs).length === 0) {
             this._inbatttle = false;
-            obj.hpbars.forEach((x: any) => {
-                x.hide()
-            })
         }
     }
-
 
     showhpbar() {
         this.hpBar.set(1);
@@ -326,10 +319,8 @@ export class Player {
         }
     }
 
-    public xpcheck() {
-        //log(`!!!!!!!!XPCHECK!!!!!!!!`)
+    xpcheck() {
         let val = this.currentxp / this.levelmax;
-        //log(`setting levelBar to ${val}`)
         this.levelBar.set(val);
     }
 
@@ -345,11 +336,8 @@ export class Player {
 
     achievementcheck(xp: number, currentlevel: number) {
         let url = this.levelUrl + "/" + this.address;
-        var obj = Singleton.getInstance();
         let leveledup = false;
 
-        //log(`in achievementcheck with xp of ${xp} and current level of ${currentlevel}`)
-        
         executeTask(async () => {
             const hpo = {
                 xp: xp,
@@ -367,23 +355,17 @@ export class Player {
                 await fetch(url, options)
                     .then((res) => res.json())
                     .then((res) => {
-                        // log(`Back from adding the kill experience`)
-                        // log(`The API level response is now: ${res.level}, comparing against currentlevel: ${currentlevel}`)
                         if (res.level > currentlevel) {
-                            //og(`Should be leveling up now`)
                             var obj = Singleton.getInstance();
                             this.level = res.level;
                             this.levelup = true;
-                            this.playerLevel.set(res.level.toString());
+                            this.playerLevel.value = res.level
                             this.hp = res.hp;
-                            this.maxhp = res.hp
-                            this.currentxp = 0;
+                            this.currentxp = res.currentxp;
                             this.levelmax = res.levelmax;
                             this.basedamage = res.basedamage;
                             this.initialhp(1)
                             obj.playerhp = res.hp;
-                            // obj.level = this.level
-                            // obj.maxhp = res.hp
                             this.xpcheck();
                             this.healthcheck(100 / 100);
                             this.levelupnotice()
@@ -397,12 +379,6 @@ export class Player {
                 log("player.ts: failed to update player achievement  ", error);
             }
         });
-    }
-
-    public notdeadyet(percentage:string) {
-        if (Number(percentage) > 50) {
-            this.abouttodie.stop();
-        }
     }
 
     updateaggro(action: string, mobid: string) {
@@ -610,14 +586,6 @@ export class Player {
 
             obj.hpbars.forEach((x:any) => {
                 x.hide()
-            })
-
-            obj.healthlabels.forEach((x:any) => {
-                x.set(' ');
-            })
-
-            obj.levellabels.forEach((x: any) => {
-                x.set(' ');
             })
 
             obj.localmobstate.forEach((x) => {

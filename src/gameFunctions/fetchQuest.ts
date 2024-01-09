@@ -12,39 +12,107 @@ export async function fetchQuest(npc: Npc, player: Player) {
     try {
         let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
-        //log(`passing json ${JSON.stringify(json)} to the npcFSM`)
-        return json
+        log(`called ${apiUrl}/npc/${npc.id}/quests/${player.address}`)
+        if (Array.isArray(json) && json.length > 0) {
+            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            return json[0];
+        } else { // Check if it's an object
+            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            return json;
+        }
 
     } catch (error) {
         log(`fetchQuests.ts:22: Fetch Quests by npc and player failed ${error} `);
     }
 }
 
-export async function acceptQuest(quest: any, player: Player) {
+export async function checkQuestCompletion(questId:string, playerAddress:string) {
+    let playerQuestCompleteUrl = apiUrl + "/playerquest/" + questId + '/complete'
+    const status = {
+        "playerAddress":playerAddress
+    }
+    const options = {
+        method: "PATCH",
+        body: JSON.stringify(status),
+        headers: {
+            "Content-Type":"application/json"
+        }
+    }
+
+    try {
+        let response = await fetch(playerQuestCompleteUrl, options);
+        let json = await response.json();
+        log(`called ${playerQuestCompleteUrl}`)
+        if (Array.isArray(json) && json.length > 0) {
+            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            return json[0];
+        } else { // Check if it's an object
+            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            return json;
+        }
+    } catch (error) {
+        log(`acceptQuest.ts:22: Check Quest Completion failed ${JSON.stringify(error)} `);
+    }
+}
+
+export async function getQuestReward(questId: string, playerAddress: string) {
+    let playerQuestRewardUrl = apiUrl + "/playerquest/" + questId + '/reward'
+    const status = {
+        "playerAddress": playerAddress
+    }
+    const options = {
+        method: "PATCH",
+        body: JSON.stringify(status),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }
+    try {
+        let response = await fetch(playerQuestRewardUrl, options);
+        let json = await response.json();
+        log(`called ${playerQuestRewardUrl}`)
+        if (Array.isArray(json) && json.length > 0) {
+            log(`passing json ${JSON.stringify(json[0])} to the questWindow`);
+            return json[0];
+        } else { // Check if it's an object
+            log(`passing json ${JSON.stringify(json)} to the questWindow`);
+            return json;
+        }
+    } catch (error) {
+        log(`acceptQuest.ts:22: Get Quest Reward failed ${JSON.stringify(error)} `);
+    }
+
+}
+
+export async function acceptQuest(quest: any, player: Player, npc:string) {
 
     let playerQuestUrl = apiUrl + "/playerquest";
 
     const status = {
-        "playerId": player.address,
-        "questId": quest,
-        "status": "NOT_STARTED"
+        "playerId":player.address,
+        "questId":quest,
+        "questGiver": npc
     }
 
     const options = {
         method: "POST",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type":"application/json"
         }
     }
 
     try {
-        fetch(playerQuestUrl, options)
-            .then((res) => res.json())
-            .then((data) => {
-                log(`Player Quest Added`)
-                player.quest = data.questId
-            })
+        let response = await fetch(playerQuestUrl, options);
+        let json = await response.json();
+        log(`called ${playerQuestUrl}`)
+        if (Array.isArray(json) && json.length > 0) {
+            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            return json[0];
+        } else { // Check if it's an object
+            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            return json;
+        }
     } catch (error) {
         log(`acceptQuest.ts:22: Accept Quest failed ${JSON.stringify(error)} `);
     }

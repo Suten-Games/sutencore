@@ -339,7 +339,9 @@ export class CharWindow {
                         log('discard button has been clicked')
                         this.equipsound.play()
                         //obj.player.changeClass(charclass, weaponstring)
+                        log(`calling the actionbar resetSlot method with slot ${slot}`)
                         actionbar.resetSlot(slot)
+                        log(`calling the backpack resetSlot method with slot ${slot}`)
                         backpack.resetSlot(slot)
                         lootimage.hide()
                         this._base.visible = false;

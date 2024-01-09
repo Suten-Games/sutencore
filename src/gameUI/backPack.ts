@@ -13,22 +13,7 @@ export class BackPack {
     private _charbutton;
     private _spellbutton;
     private _isOpen: boolean;
-    private _slot10: any;
-    private _slot11: any;
-    private _slot12: any;
-    private _slot13: any;
-    private _slot14: any;
-    private _slot15: any;
-    private _slot16: any;
-    private _slot17: any;
-    private _slot18: any;
-    private _slot19: any;
-    private _slot20: any;
-    private _slot21: any;
-    private _slot22: any;
-    private _slot23: any;
-    private _slot24: any;
-    private _slot25: any;
+    //private _slots: (string | null)[] = new Array(16).map(() => null);
     private _mybackpackcontents: any;
     private _playerclass: any;
     private _charwindow: any;
@@ -53,7 +38,6 @@ export class BackPack {
         this._bp.sourceHeight = 951;
         this._bp.visible = false;
         this._mybackpackcontents = obj.showbackpack()
-        //   this._isOpen = false;
         this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
         this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
         this._charbutton.hAlign = "right"
@@ -84,8 +68,7 @@ export class BackPack {
         this._spellbutton.visible = false;
         this._spellbutton.onClick = new OnPointerDown(
             (e) => {
-                //this._charwindow.flip()
-                log('backPack.ts:88 - open spellbook')
+                //log('backPack.ts:88 - open spellbook')
                 this._spellbookwindow.show()
             },
             {
@@ -115,89 +98,33 @@ export class BackPack {
     }
 
     public selectSlot(item: Item): number {
-        if (!this._slot10) {
-            this._slot10 = 'filled'
-            item.updateLoc(10)
-            this._mybackpackcontents.push(item)
-            return 10
-        } else if (!this._slot11) {
-            this._slot11 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(11)
-            return 11
-        } else if (!this._slot12) {
-            this._slot12 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(12)
-            return 12
-        } else if (!this._slot13) {
-            this._slot13 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(13)
-            return 13
-        } else if (!this._slot14) {
-            this._slot14 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(14)
-            return 14
-        } else if (!this._slot15) {
-            this._slot15 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(15)
-            return 15
-        } else if (!this._slot16) {
-            this._slot16 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(16)
-            return 16
-        } else if (!this._slot17) {
-            this._slot17 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(17)
-            return 17
-        } else if (!this._slot18) {
-            this._slot18 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(18)
-            return 18
-        } else if (!this._slot19) {
-            this._slot19 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(19)
-            return 19
-        } else if (!this._slot20) {
-            this._slot20 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(20)
-            return 20
-        } else if (!this._slot21) {
-            this._slot21 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(21)
-            return 21
-        } else if (!this._slot22) {
-            this._slot22 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(22)
-            return 22
-        } else if (!this._slot23) {
-            this._slot23 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(23)
-            return 23
-        } else if (!this._slot24) {
-            this._slot24 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(24)
-            return 24
-        } else if (!this._slot25) {
-            this._slot25 = 'filled'
-            this._mybackpackcontents.push(item)
-            item.updateLoc(25)
-            return 25
-        } else {
-            return 50
+        let obj = Singleton.getInstance()
+        const index = obj.backpackslots.indexOf(null);
+        if (index !== -1) {
+            const slot = index + 10;
+            obj.backpackslots[index] = 'filled';
+            item.updateLoc(slot);
+            this._mybackpackcontents.push(item);
+            //log(`actionBar.ts:selectSlot(): all of the backpack slots: ${obj.backpackslots}`)
+            return slot;
+        } 
+        //log(`actionBar.ts:selectSlot(): all of the backpack slots: ${obj.backpackslots}`)
+        return 50;
+    }
+
+    public checkSlot(): number {
+        //log('backPack.ts: in the checkSlot method');
+        //const obj = Singleton.getInstance();
+        let obj = Singleton.getInstance();
+        //let found = 0
+        for (let i = 10; i < 26; i++) {
+            if (obj.backpackslots[i] !== 'filled') {
+                //log(`actionBar.ts: checkSlot() all of the backpack slots: ${obj.backpackslots}`)
+                return i;
+            }
         }
+        //log(`in the checkSlot method returning found: ${found}`)
+        return 50
     }
 
     private getcontents() {
@@ -234,13 +161,15 @@ export class BackPack {
     }
 
     public bootLoadBackPack(data: any[]) {
-        //log(`debug: 12 Inside bootLoadBackPack`)
+        //log(`debug: 237 Inside bootLoadBackPack`)
+        //log(`bootLoadBackPack data: ${JSON.stringify(data)}`)
 
         data.forEach(element => {
+            //log(`debug: 240 In bootloadforeach - element: ${element}`)
             if (element.slot) {
-                //log('actionBar:90 element ', JSON.stringify(element))
+                //log('debug: actionBar:242 element ', JSON.stringify(element))
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null
+                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound,null,null, null, null
                 )
 
                 this.setSlot(element.slot)
@@ -248,91 +177,48 @@ export class BackPack {
                 item.updateLoc(element.slot)
                 this._mybackpackcontents.push(item)
                 item.hide()
+            } else {
+                log(`debug:253 - In Else`)
             }
         });
+
+        //log(`debug: 255 - After the data.forEach()`)
     }
 
-    private setSlot(slot: number) {
-        if (slot == 10) {
-            this._slot10 = 'filled';
-        } else if (slot == 11) {
-            this._slot11 = 'filled';
-        } else if (slot == 12) {
-            this._slot12 = 'filled';
-        } else if (slot == 13) {
-            this._slot13 = 'filled'
-        } else if (slot == 14) {
-            this._slot14 = 'filled'
-        } else if (slot == 15) {
-            this._slot15 = 'filled'
-        } else if (slot == 16) {
-            this._slot16 = 'filled'
-        } else if (slot == 17) {
-            this._slot17 = 'filled'
-        } else if (slot == 18) {
-            this._slot18 = 'filled'
-        } else if (slot == 19) {
-            this._slot19 = 'filled'
-        } else if (slot == 20) {
-            this._slot20 = 'filled'
-        } else if (slot == 21) {
-            this._slot21 = 'filled'
-        } else if (slot == 22) {
-            this._slot22 = 'filled'
-        } else if (slot == 23) {
-            this._slot23 = 'filled'
-        } else if (slot == 24) {
-            this._slot24 = 'filled'
-        } else if (slot == 25) {
-            this._slot25 = 'filled'
-        }
+    public setSlot(slot: number) {
+        //log(`STEP 5 - Setting the Backpack slot`)
+        //log(`now in backPack.ts - setSlot() setting ${slot} to filled`)
+        //log(`in setSlot, slot is: ${slot} will subtract 1 for some reason and make that filled`)
+        const obj = Singleton.getInstance();
+        //this._slots[slot] = 'filled';
+        obj.backpackslots[slot] = 'filled';
+
+        //log(`backPack.ts: setSlot() - this slot ${slot} is now: ${obj.backpackslots[slot]}`)
+        //log(`backPack.ts: setSlot() - all of the backpack slots (this._slot): ${obj.backpackslots}`)
     }
 
     public resetSlot(slot: number) {
-        if (slot == 10) {
-            this._slot10 = null;
-        } else if (slot == 11) {
-            this._slot11 = null;
-        } else if (slot == 12) {
-            this._slot12 = null;
-        } else if (slot == 13) {
-            this._slot13 = null
-        } else if (slot == 14) {
-            this._slot14 = null
-        } else if (slot == 15) {
-            this._slot15 = null
-        } else if (slot == 16) {
-            this._slot16 = null
-        } else if (slot == 17) {
-            this._slot17 = null
-        } else if (slot == 18) {
-            this._slot18 = null
-        } else if (slot == 19) {
-            this._slot19 = null
-        } else if (slot == 20) {
-            this._slot20 = null
-        } else if (slot == 21) {
-            this._slot21 = null
-        } else if (slot == 22) {
-            this._slot22 = null
-        } else if (slot == 23) {
-            this._slot23 = null
-        } else if (slot == 24) {
-            this._slot24 = null
-        } else if (slot == 25) {
-            this._slot25 = null
-        }
+        if(slot < 10) { return }
+        //log(`in the backPack.ts resetSlot method with slot ${slot}`)
+        const obj = Singleton.getInstance();
+        obj.backpackslots[slot] = null;
         let i = this._mybackpackcontents.map((x: { slot: () => any; }) => x.slot()).indexOf(slot)
-        this._mybackpackcontents.splice(i, 1)
+        if (i !== -1) {
+            this._mybackpackcontents.splice(i, 1)
+        }
+        //log(`this slot ${slot} is now: ${obj.backpackslots[slot]}`)
+        //log(`all of the backpack slots: ${obj.backpackslots}`)
+        //let i = this._mybackpackcontents.map((x: { slot: () => any; }) => x.slot()).indexOf(slot)
+        //this._mybackpackcontents.splice(i, 1)
     }
 
     public show() {
         let obj = Singleton.getInstance()
         this._bp.visible = true;
         this._charbutton.visible = true;
-        if (obj.playerclass == "Magician") {
-            this._spellbutton.visible = true;
-        }
+        //if (obj.playerclass == "Magician") {
+        this._spellbutton.visible = true;
+        //}
         this.getcontents()
         this.backpacksound.play()
         this.bpopen = true

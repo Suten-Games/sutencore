@@ -7,7 +7,7 @@ import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
 import { Player } from "./player";
 import { setTimeout } from "src/gameUtils/timeOut";
-import { setSpell } from "src/gameFunctions/setSpell";
+import { setSpell } from "src/gameFunctions/setSpell"; 
 import { SpellScroll } from "src/gameUI/spellScroll";
 import { spellAction } from "src/gameFunctions/spellAction";
 import { getspell } from "./spells";
@@ -15,6 +15,7 @@ import { Ispell } from "src/components/spellComponent";
 import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
+import { QuestWindow } from "src/gameUI/questWindow";
 
 
 export class Item {
@@ -30,6 +31,7 @@ export class Item {
     private isSpellBook: boolean;
     private isActionBar: boolean;
     private isLootWindow: boolean;
+    private isQuestWindow: boolean;
     private isBackpack: boolean;
     private isPurchase: boolean;
     private isActiveSpell: boolean;
@@ -46,6 +48,7 @@ export class Item {
     private _npc: { hideOrc: () => void; } | null;
     private _tradewindow;
     private _lootwindow:LootWindow;
+    private _questwindow:QuestWindow;
     private _itemtype;
 
     private _isquestloot;
@@ -84,10 +87,12 @@ export class Item {
         sound: AudioClip | null = null,
         tradewindow: TradeWindow | null = null,
         lootwindow: LootWindow | null,
-        npc: Npc | null = null
+        npc: Npc | null = null,
+        questwindow: QuestWindow | null
     ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
+        log(`Setting this._image to ${JSON.stringify(image)}`)
         this._image = image;
         this._slot = slot;
         this._type = type;
@@ -111,12 +116,17 @@ export class Item {
             this._tradewindow = tradewindow
         }
 
+        if (questwindow) {
+            this._questwindow = questwindow
+        }
+
         if(lootwindow) {
             this._lootwindow = lootwindow
         }
 
         this._desc = new UIText(this._canvas);
         if (desc) {
+            log(`Setting desc.value to ${desc}`)
             this._desc.value = desc
             this._potiontype = desc
         } else {
@@ -185,7 +195,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
-        //log('item.ts calling slotPicker with slot: ', slot)
+        log('item.ts still in constructor, calling slotPicker with slot: ', slot)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -194,6 +204,8 @@ export class Item {
         this.isLootWindow = slotposition.lw
         this.isActiveSpell = slotposition.as
         this.isSpellBook = slotposition.sb
+        this.isQuestWindow = slotposition.qw
+        
         this._lootimage.hAlign = slotposition.ha
         this._lootimage.vAlign = slotposition.va
         this._lootimage.width = slotposition.w
@@ -227,6 +239,11 @@ export class Item {
             })
         } else if (this.isSpellBook) {
             let stuff = "stuff"
+        } else if (this.isQuestWindow) {
+            log(`item.ts - Created the loot item. Attaching the click handler to the loot`)
+            this._lootimage.onClick = new OnPointerDown(() => {
+                this.sendToBackpack()
+            })
         }
     }
 
@@ -239,12 +256,22 @@ export class Item {
     }
 
     public show() {
-        //log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
+        log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
         
         if (this.isLootWindow) {
-            //log('in item show, its a lootwindow')
+            log('in item show, its a lootwindow')
             this._lootimage.visible = true;
             this._desc.visible = true;
+            log(`the loot image: ${JSON.stringify(this._lootimage)}`)
+            log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
+            log(`the loot image positionX: ${this._lootimage.positionX}`)
+        } else if (this.isQuestWindow) {
+            log('in item show, its a questwindow, loot should be visible now')
+            this._lootimage.visible = true;
+            this._desc.visible = true;
+            log(`the loot image: ${JSON.stringify(this._lootimage)}`)
+            log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
+            log(`the loot image positionX: ${this._lootimage.positionX}`)
         } else if (this.isMerchant) {
             //log('in item merchant show')
             this._lootimage.visible = true;
@@ -353,14 +380,18 @@ export class Item {
     }
 
     public removeItem() {
-        log('inside removeItem')
-        log('slot ', this.slot())
+        //log('inside removeItem')
+        //log('slot ', this.slot())
         this._lootimage.visible = false;
-        this._actionBar.resetSlot(this._slot);
+        if(this.slot() < 10 ) {
+            this._actionBar.resetSlot(this._slot);
+        } else {
+            this._backPack.resetSlot(this._slot);
+        }
     }
 
     public addSpellClick() {
-        log('inside addSpellClick')
+        //log('inside addSpellClick')
         this._lootimage.onClick = new OnPointerDown(
             (e) => {
                 log('Clicked in addSpellClick')
@@ -373,6 +404,7 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
+        //log(`in item updateLoc method`)
         this._lootimage.visible = true;
 
         if (this._isspell) {
@@ -383,11 +415,12 @@ export class Item {
             return
         }
         this._lootimage.onClick = new OnPointerDown(() => {
+
             if (this._player == undefined || !this._player.alive) {
                 //log('item.ts:354 - you cant heal if you are dead')
                 return
             }
-            //log('in item.ts:435')
+            //log('in item.ts:392')
 
             if (this._isscroll) {
                 //log('item.ts:360 - Clicked on the scroll')
@@ -395,7 +428,7 @@ export class Item {
 
                 return
             }
-            //log('in item.ts:445')
+            //log('in item.ts:398')
 
             if (this._isweapon) {
                 if (this._image.src.split('/')[2] == 'rustysword.png') {
@@ -405,6 +438,7 @@ export class Item {
                 } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
                     this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
                 } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
+                    //log(`cracked staff`)
                     this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
                 }
                 return
@@ -465,46 +499,70 @@ export class Item {
     }
 
     public sendToBackpack() {
+        //log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
         let obj = Singleton.getInstance()
         let myactionbarcontents = obj.fetchactionbar()
+        let mybackpackcontents = obj.fetchbackpack()
         //let slot = this._actionBar.selectSlot(this);
         let slot = this._actionBar.checkSlot()
 
-        //log(`item.ts:455 - slot ${slot}`)
+        //log(`item.ts:476 - The actionBar checkSlot method thinks I should use: slot ${slot}`)
 
         if (slot === 0) {
-            slot = this._backPack.selectSlot(this);
+            //log(`Because its 0, Calling selectSlot on the backpack`)
+            //slot = this._backPack.selectSlot(this);
+            slot = this._backPack.checkSlot()
+            //log(`item.ts:476 - The backpack checkSlot method thinks I should use: slot ${slot}`)
         }
 
+        //log(`STEP 3 - Processing the slot update`)
         if (slot === 50) {
+            //log(`STEP 4 - NO SPACE ANYWHERE`)
             this._player.bagsfull();
             this._desc.visible = false;
             this._lootimage.visible = false;
         } else {
             this._slot = slot;
             const slotPosition = slotPicker(slot);
+            if(slotPosition.bp) {
+                this.isBackpack = true
+            }
             this.setSlotProperties(slotPosition);
-            this._actionBar.setSlot(slot)
-            this.updateLoc(slot)
-            //this.setslot = slot
-            myactionbarcontents.push(this)
-
-            if (slot === 0) {
-                if (!this._backPack.bpopen) {
-                    this._desc.visible = false;
+            //log(`slotPosition backpack: ${slotPosition.bp}`)
+            if(this.isBackpack) {
+                //log(`STEP 4 - BACKPACK`)
+                //log(`item.ts: ts a backback`)
+                this._backPack.setSlot(slot)
+                this.updateLoc(slot)
+                this.backpacksound.play();
+                mybackpackcontents.push(this)
+                this._desc.visible = false;
+                if(this._backPack.bpopen) {
+                    this._lootimage.visible = true; 
+                } else {
                     this._lootimage.visible = false;
                 }
             } else {
+                //log(`STEP 4 - ACTIONBAR`)
+                this._actionBar.setSlot(slot)
+                this.updateLoc(slot)
+                myactionbarcontents.push(this)
                 this.isActionBar = true;
                 this._lootimage.visible = true;
                 this._desc.visible = false;
             }
+
             if (this._lootwindow) {
                 this._lootwindow.hidelootwindow();
                 this._lootwindow.looted = true;
                 this._npc?.hideOrc()
             }
-            this.backpacksound.play();
+
+            if (this._questwindow) {
+                //this._questwindow.hide()
+                this._questwindow.hidequestwindow()
+            }
+            
         }
     }
 

@@ -1,4 +1,7 @@
+import { getQuestReward } from "src/gameFunctions/fetchQuest";
+import { Item } from "src/gameObjects/item";
 import resources from "src/resources";
+import { local } from "suten";
 
 export class QuestWindow {
     private _canvas: any;
@@ -6,6 +9,7 @@ export class QuestWindow {
     private _bp;
     private _questText: UIText;
     private _closebutton;
+    private _lootitem: any;
 
     constructor(canvas: any, image: Texture) {
         this._canvas = canvas;
@@ -46,11 +50,48 @@ export class QuestWindow {
                 this.hide()
             }
         )
+
+        // this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 70, 122, 120, "Mana Vial", "consumable", 50, "consumable",
+        //     null, null, null, null, null, null)
     }
 
-    public openQuestWindow(questText: string) {
-        this._bp.visible = true;
+    public openQuestWindow(questText: string, questID:string|null = null, playerAddress:string|null = null) {
+        //this._bp.visible = true;
 
+        if (questID && playerAddress) {
+            getQuestReward(questID, playerAddress).then(res => {
+                log(`questWindow.ts: in the getQuestReward section of openQuestWindow: ${JSON.stringify(res)}`)
+                let lootimg
+                if(res.shape.includes("images")) {
+                    lootimg = res.shape
+                } else {
+                    lootimg = "images/looticons/" + res.shape
+                }
+
+                this._lootitem = new Item(
+                    new Texture(lootimg),
+                    70,
+                    res.portraitwidth,
+                    res.portraitheight,
+                    res.name,
+                    res.itemtype,
+                    res.price,
+                    res.itemtype,
+                    res.spellshape,
+                    res.spellstart,
+                    res.spellend,
+                    res.sound,
+                    null,
+                    null,
+                    null,
+                    this
+                )
+                
+            })
+
+            this.hide()
+        }
+        
         const charsPerLine = 42;
         let lines = [];
         let start = 0;
@@ -79,8 +120,10 @@ export class QuestWindow {
         // Display text
         this._questText.value = displayText;
         this._questText.color = Color4.Black();
-        this._questText.visible = true;
-        this._closebutton.visible = true;
+
+
+        log('Calling questWindow.show()')
+        this.show()
     }
 
     get visible() {
@@ -91,9 +134,17 @@ export class QuestWindow {
         this._bp.visible = true;
         this._questText.visible = true;
         this._closebutton.visible = true;
+        this._lootitem.show()
     }
 
     public hide() {
+        this._bp.visible = false;
+        this._questText.visible = false;
+        this._closebutton.visible = false;
+        this._lootitem.hide()
+    }
+
+    public hidequestwindow() {
         this._bp.visible = false;
         this._questText.visible = false;
         this._closebutton.visible = false;

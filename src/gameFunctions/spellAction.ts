@@ -1,10 +1,10 @@
+
+import { ObjectTimeOut } from "src/components/TempObjectTimeOut";
 import { Item } from "src/gameObjects/item";
 import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 import { openHeavens } from "src/gameSystems/precipitation";
 import { setTimeout } from "src/gameUtils/timeOut";
 import resources from "src/resources";
-//import { writeToCl } from "./writeToCL";
-//import { CombatLog } from "src/gameUI/combatLog";
 
 export function spellAction(spell:Item, completespell:any) {
     let ps: ParticleSystem
@@ -87,31 +87,39 @@ export function spellAction(spell:Item, completespell:any) {
                             ps.turnOn(shape, completespell.spellstart, completespell.spellend)
                             spell.activateSpell(completespell) 
                         } else if (completespell.spelltype === "Defense") {
-                            //log('Create a Blue Barricade')
-                            //const origin = Camera.instance.feetPosition
-                            let origin = Camera.instance.feetPosition.clone()
-                            //newTarget.y = newTarget.y - 1.75;
-                            origin.x = origin.x + 2;
-                            //origin.y = origin.y + 2;
-                            //let dividerShape = resources.models.barricade;
-                            const myEntity = new Entity()
-                            myEntity.addComponent(new BoxShape())
+                            let origin = Camera.instance.feetPosition.clone();
+                            let rotation = Camera.instance.rotation;
 
-                            //Create material and configure its fields
-                            const myMaterial = new Material()
-                            myMaterial.albedoColor = Color3.Blue()
-                            myMaterial.metallic = 0.9
-                            myMaterial.roughness = 0.1
+                            // Calculate the forward direction from the rotation
+                            let forward = Vector3.Forward().rotate(rotation);
 
-                            //myEntity.addComponent(new Transform())
-                            //myEntity.getComponent(Transform).position.set(5, 1, 5)
-                            //myEntity.getComponent(Transform).position.set(origin)
-                            myEntity.addComponent(new Transform({ position: origin }))
-                           
+                            // Move the origin 2 units in the direction the camera is facing
+                            let newPosition = origin.add(forward.scale(2));
 
-                            //Assign the material to the entity
-                            myEntity.addComponent(myMaterial)
-                            engine.addEntity(myEntity)
+                            const myEntity = new Entity();
+                            myEntity.addComponent(new BoxShape());
+
+                            // Create material and configure its fields
+                            const myMaterial = new Material();
+                            if (completespell.blockable) {
+                                myMaterial.albedoColor = Color3.Blue();
+                                myMaterial.metallic = 0.2;
+                                myMaterial.roughness = 0.5;
+                            } else {
+                                //myMaterial.albedoColor = Color3.Magenta();
+                                myMaterial.albedoColor = Color3.FromHexString("#FFD700");
+                                myMaterial.metallic = 1;
+                                myMaterial.roughness = 0.1;
+                            }
+
+                            // Set the position of the entity
+                            myEntity.addComponent(new Transform({ position: newPosition }));
+                            myEntity.addComponentOrReplace(new ObjectTimeOut(20));
+
+                            // Assign the material to the entity
+                            myEntity.addComponent(myMaterial);
+                            engine.addEntity(myEntity);
+
                         } else if (completespell.spelltype === "Weather") {
                             //writeToCl(completespell.oncastmsg[0].line1,'')
                             openHeavens(completespell, completespell.sound)   
@@ -127,9 +135,6 @@ export function spellAction(spell:Item, completespell:any) {
                 hoverText: "Add to ActionBar",
             }
         );
-    
-
-
 }
 
 function calculateXOffset(spell: { slot: () => number }): string {

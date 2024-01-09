@@ -2,6 +2,7 @@ import { Item } from "src/gameObjects/item";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { getspell } from "src/gameObjects/spells";
 import { spellAction } from "./spellAction";
+import { writeToCl } from "./writeToCL";
 
 export function addSpellClick(image:UIImage, name:string) {
     log('inside addSpellClick function')
@@ -13,6 +14,7 @@ export function addSpellClick(image:UIImage, name:string) {
             log('Clicked in addSpellClick function')
             //log('First Check if the first slot in the AB is a spell or not')
             let slot = querySlot()
+            if(slot == 50) { return }
             setSlot(slot)
             //log(`looks like slot: ${slot} is open for a new spell`)
             //log('Now I need to create a new object, a spell object in the ActionBar slot selected')
@@ -24,7 +26,7 @@ export function addSpellClick(image:UIImage, name:string) {
             let newspell = new Item(
                 completespell.image, slot, completespell.srcw, completespell.srch, completespell.desc,
                 completespell.spelltype, completespell.price, completespell.itemtype, completespell.spellshape, completespell.spellstart,
-                completespell.spellend, completespell.sound,null,null
+                completespell.spellend, completespell.sound,null,null, null, null
             );
             
             myactionbarcontents.push(newspell)
@@ -42,22 +44,23 @@ function querySlot(): number {
     log('in the querySlot method');
     const obj = Singleton.getInstance();
     let myactionbarcontents = obj.fetchactionbar()
-    let found = 0
+    //let found = 0
     for (let i = 1; i < 10; i++) {
-        log(` On loop: ${i} - Checking ${obj.actionbarslots[i]} against ${myactionbarcontents[i].itemtype}`)
+        //log(` On loop: ${i} - Checking ${obj.actionbarslots[i]} against ${myactionbarcontents[i].itemtype}`)
         if (obj.actionbarslots[i] !== 'filled') { 
             log(`in the querySlot method returning: ${i}`)
             return i;
-        } else if (obj.actionbarslots[i] === 'filled' && myactionbarcontents[i].itemtype !== 'spell') {
-            const poppeditem = myactionbarcontents.shift();
-            obj.actionbarslots[i] = null;
-            //this._myactionbarcontents.push(poppeditem);
-            log(`filled but not by a spell so returning i + 1: ${i + 1}`)
-            return i + 1;
-        } 
+        } else {
+            log(`Slot ${i} was filled, checking ${i + 1}`)
+        }
     }
-    log(`in the querySlot method returning: ${found}`)
-    return found
+    
+    writeToCl(`The actionbar is full.`, `Remove items to scribe spells.`)
+    writeToCl(`Discard, or Dbl Click to reveal trash icon.`)
+    return 50
+    
+    //log(`in the querySlot method returning: ${found}`)
+    //return found
 
 }
 

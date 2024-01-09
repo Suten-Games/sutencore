@@ -1,13 +1,16 @@
 import { PlayerState } from "src/components/playerStateComponent";
 import { Player } from "src/gameObjects/player";
 import { UI } from "src/gameUI/ui";
-import { writeToCl } from "../gameFunctions/writeToCL";
-import { joinSocketsServer } from "./wsConnection";
+import { writeToCl } from "./writeToCL";
+import { joinSocketsServer } from "src/gameServer/wsConnection";
+//import { joinSocketsServer } from "./wsConnection";
+
 
 export async function connectToServer(ui: UI,json: PlayerState, player: Player) {
-    //log(`debug: 8 Inside connectToServer`)
+    log(`debug: 8 Inside connectToServer`)
 
     try {
+        //log('joining socket server')
         let socket = await joinSocketsServer(
             ui.gc,
             ui.ab,
@@ -17,6 +20,8 @@ export async function connectToServer(ui: UI,json: PlayerState, player: Player) 
         );
     } catch (error) {
         writeToCl(`:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
+        //writeToCl(ui, `:(  Game socket failed to load  :(`, `Please refresh/reload the scene`)
+        //failedstart = true;
 
         return;
     }

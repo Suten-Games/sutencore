@@ -31,5 +31,5 @@ export function idle(s: any, dt: number) {
         Quaternion.LookRotation(direction),
         dt * ROT_SPEED
     )
-
+    
 }

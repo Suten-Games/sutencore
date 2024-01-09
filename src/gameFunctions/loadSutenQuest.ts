@@ -15,7 +15,6 @@ export function loadSutenQuest(ui: UI) {
         await registerPlayer(ui, player, tradeWindow)
         ws = new WaitSystem()
         engine.addSystem(ws);
-
     });
 }
 
