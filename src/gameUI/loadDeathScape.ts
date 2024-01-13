@@ -1,6 +1,6 @@
 import resources from "../resources";
 import { DeathItem } from "../components/deathItemComponent";
-import { duatX, duatZ } from "suten";
+import { duatX, duatZ, sutenBase } from "suten";
 
 
 export class DeathScene extends Entity {
@@ -56,21 +56,40 @@ export class DeathScene extends Entity {
                 scale: new Vector3(1, 1, 1)
             })
         )
-        anpuartifact.addComponentOrReplace(
-            new OnPointerDown(
-                (e) => {
-                    log('Finding Anpu ')
-                    const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
-                    openExternalURL(dclWorldUrl);
-                },
-                {
-                    button: ActionButton.PRIMARY,
-                    showFeedback: true,
-                    hoverText: 'Locate Anpu',
-                    distance: 30
-                }
+        if (sutenBase === '30,30') {
+            anpuartifact.addComponentOrReplace(
+                new OnPointerDown(
+                    (e) => {
+                        log('Teleport to Saqqara')
+                        const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=saqqara.dcl.eth';
+                        openExternalURL(dclWorldUrl);
+                    },
+                    {
+                        button: ActionButton.PRIMARY,
+                        showFeedback: true,
+                        hoverText: 'Teleport to Saqqara',
+                        distance: 30
+                    }
+                )
             )
-        )
+        } else {
+            anpuartifact.addComponentOrReplace(
+                new OnPointerDown(
+                    (e) => {
+                        log('Finding Anpu ')
+                        const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
+                        openExternalURL(dclWorldUrl);
+                    },
+                    {
+                        button: ActionButton.PRIMARY,
+                        showFeedback: true,
+                        hoverText: 'Locate Anpu',
+                        distance: 30
+                    }
+                )
+            )
+        }
+
 
     }
 

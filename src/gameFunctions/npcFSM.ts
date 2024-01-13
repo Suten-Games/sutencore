@@ -15,12 +15,15 @@ import { idle } from "./idle";
 import { acceptQuest, checkQuestCompletion, chunkSentence, fetchQuest, writeChunks } from "./fetchQuest";
 import { UI } from "src/gameUI/ui";
 import { StartupTimeOut } from "src/components/startupTimer";
+import { createSoundBox } from "./createSoundBox";
 
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.orclaugh,
     false
 );
+
+const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false);
 
 const levelupbox = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -105,12 +108,14 @@ export class NpcFSM extends Entity {
                     log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${factionvalue}`)
 
                     if (factionvalue >= 0) {
+                        //this._npc.showhpbar();
                         writeToCl(`You hail an ${this._npc.name}`)
                         fetchQuest(this._npc, this._player).then(res => {
-                            log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
+                            //log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
                             let chunks
                             chunks = chunkSentence(res.dialogue, 7)
-                            if(res.status === 'NOT_STARTED') {
+                            if (res.status === 'NOT_STARTED') {
+                                this.openQuestWindow(res.dialogue)
                                 writeChunks(chunks).then(() => {
                                     writeToCl(
                                         "I accept!",
@@ -119,9 +124,8 @@ export class NpcFSM extends Entity {
                                         "",
                                         () => {
                                             log(`I accept clicked`)
-                                            //this.acceptQuest(res)
                                             acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
-                                                log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
+                                                //log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
                                                 chunks = chunkSentence(acceptres.dialogue, 7)
                                                 writeChunks(chunks)
                                                 this.openQuestWindow(acceptres.dialogue)  // replace with actual function and arguments
@@ -129,22 +133,79 @@ export class NpcFSM extends Entity {
                                         }
                                     );
                                 })
-                            } else if(res.status === 'IN_PROGRESS') {
+                            } else if (res.status === 'IN_PROGRESS') {
+                                log(`in the IN_PROGRESS STATUS`)
                                 checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
-                                    chunks = chunkSentence(checkcompletionres.dialogue, 7)
-                                    writeChunks(chunks)
-                                    if(checkcompletionres.status === 'COMPLETED') {
-                                        // Play a quest completion sound. 
-                                        // Grant some experience to the player
-                                        // Need to delete the loot used for the quest. Probably best to send the loot
-                                        // Open the Loot Window and Fetch the Loot
+                                    // chunks = chunkSentence(checkcompletionres.dialogue, 7)
+                                    // writeChunks(chunks)
+                                    if (checkcompletionres.status === 'COMPLETED') {
+                                        let foundone = false
+                                        this._player.achievementcheck(checkcompletionres.xp, this._player.level)
+                                        let desc = checkcompletionres.objectives[0].description
+                                        const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
+                                        writeToCl(firstSentence)
+                                        killbox.play();
+                                        writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
+
+                                        for (let item of obj.fetchactionbar()) {
+                                            if (desc === item.lootdesc()) {
+                                                foundone = true
+                                                obj.actionbar.resetSlot(item.slot())
+                                                item.hide()
+                                            }
+                                        }
+
+                                        if (foundone == false) {
+                                            for (let item of obj.fetchbackpack()) {
+                                                if (desc === item.lootdesc()) {
+                                                    obj.backpack.resetSlot(item.slot())
+                                                    item.hide()
+                                                }
+                                            }
+                                        }
+                                        //log(`calling this.openQuestWindow 1`)
                                         this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
+                                    }
+                                })
+                            } else if (res.status === 'PENDING') {
+                                log(`in the PENDING STATUS`)
+                                checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
+                                    if (checkcompletionres.status === 'COMPLETED') {
+                                        let foundone = false
+                                        this._player.achievementcheck(checkcompletionres.xp, this._player.level)
+                                        let desc = checkcompletionres.objectives[0].description
+                                        const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
+                                        writeToCl(firstSentence)
+                                        killbox.play();
+                                        writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
+
+                                        for (let item of obj.fetchactionbar()) {
+                                            if (desc === item.lootdesc()) {
+                                                foundone = true
+                                                obj.actionbar.resetSlot(item.slot())
+                                                item.hide()
+                                            }
+                                        }
+
+                                        if (foundone == false) {
+                                            for (let item of obj.fetchbackpack()) {
+                                                if (desc === item.lootdesc()) {
+                                                    obj.backpack.resetSlot(item.slot())
+                                                    item.hide()
+                                                }
+                                            }
+                                        }
+                                        this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
+                                    } else {
+                                        //writeChunks(chunks)
+                                        log(`calling this.openQuestWindow 3`)
+                                        this.openQuestWindow(res.dialogue, res.id, this._player.address)
                                     }
                                 })
                             } else {
                                 writeChunks(chunks)
                             }
-                            
+
                         })
 
                     } else {
@@ -165,8 +226,8 @@ export class NpcFSM extends Entity {
         //log(`npcFSM:ts - npcFSM is now added`)
     }
 
-    openQuestWindow(val: string, questId: string|null = null, playerAddress:string|null = null) {
-        log(`passing ${val} to the questLog`)
+    openQuestWindow(val: string, questId: string | null = null, playerAddress: string | null = null) {
+        //log(`passing ${val} to the questLog`)
         //log(`the full res ${res} is here and not being sent to the questlog`)
         //fetch the reward from res.rewards[0]
         //log(`fetch the reward using ${res.rewards[0]}`)
@@ -204,7 +265,7 @@ export class NpcFSM extends Entity {
             this.transform = this._npc.getComponent(Transform);
             //let dist = ydistance(thiso.transform.position, camera.position, this._npc);
 
-            log(`CAMERA: ${camera.position}`)
+            //log(`CAMERA: ${camera.position}`)
 
             const dist = Vector3.DistanceSquared(
                 this.transform.position,

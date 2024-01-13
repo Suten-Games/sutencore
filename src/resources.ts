@@ -132,7 +132,6 @@ export default {
         crackedstaff: new Texture("images/looticons/crackedstaff.png")
     },
     interface: {
-        questLog: new Texture("images/vali/QuestLogScreen.png"),
         mageScreen: new Texture("images/vali/MageCharacterScreen.png"),
         warriorScreen: new Texture("images/vali/WarriorCharacterScreen.png"),
         berzerkerScreen: new Texture("images/vali/BerzerkerCharacterScreen.png"),
@@ -158,7 +157,7 @@ export default {
         deleteSpellBG: new Texture("images/vali/DeleteSpellBG.png"),
         scrollUpBtn: new Texture("images/vali/cltop.png"),
         scrollDownBtn: new Texture("images/vali/clbottom.png"),
-        questBook: new Texture("images/vali/questlog.png")
-        //questBook: new Texture("images/vali/cover.jpg")
+        questLog: new Texture("images/vali/QuestLogScreen.png"),
+        questBook: new Texture("images/vali/questbook.png")
     }
 }

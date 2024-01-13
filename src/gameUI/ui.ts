@@ -19,9 +19,9 @@ export class UI {
     private spellBook: SpellBook
     private spellScroll: SpellScroll
     private charWindowHandler: CharWindowHandler
-    private quest: QuestWindow;
+    private questwindow: QuestWindow;
     private questBook: QuestBook;
-        
+
 
     constructor() {
         if (UI.instance) {
@@ -33,10 +33,10 @@ export class UI {
         this.actionBar = new ActionBar(this.gameCanvas, resources.interface.blueActionBar);
         this.backPack = new BackPack(this.gameCanvas, resources.interface.blueBackpack);
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
-        this.quest = new QuestWindow(this.gameCanvas, resources.interface.questLog);
+        this.questwindow = new QuestWindow(this.gameCanvas, resources.interface.questLog);
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.spellScroll = new SpellScroll(this.gameCanvas, resources.interface.spellScroll);
-        this.questBook = new QuestBook(this.gameCanvas, resources.interface.questBook, this.quest)
+        //this.questBook = new QuestBook(this.gameCanvas, resources.interface.questBook, this.quest)
 
         //this.charWindowHandler = new CharWindowHandler(this.gameCanvas, resources.interface.characterButton)
 
@@ -52,7 +52,7 @@ export class UI {
     }
 
     get cl() {
-        return this.combatLog; 
+        return this.combatLog;
     }
 
     get sb() {
@@ -62,7 +62,7 @@ export class UI {
     get ss() {
         return this.spellScroll;
     }
- 
+
     get ab() {
         return this.actionBar;
     }
@@ -76,7 +76,7 @@ export class UI {
     }
 
     get ql() {
-        return this.quest;
+        return this.questwindow;
     }
 
     get qb() {

@@ -427,7 +427,6 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
 }
 
 
-
 export function handleGameMessage(msg: any) {
     //log(`In Handle Game Message`)
     msg.forEach((element: any) => {

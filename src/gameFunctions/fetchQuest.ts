@@ -12,12 +12,12 @@ export async function fetchQuest(npc: Npc, player: Player) {
     try {
         let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
-        log(`called ${apiUrl}/npc/${npc.id}/quests/${player.address}`)
+        //log(`called ${apiUrl}/npc/${npc.id}/quests/${player.address}`)
         if (Array.isArray(json) && json.length > 0) {
-            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
 
@@ -26,28 +26,29 @@ export async function fetchQuest(npc: Npc, player: Player) {
     }
 }
 
-export async function checkQuestCompletion(questId:string, playerAddress:string) {
+export async function checkQuestCompletion(questId: string, playerAddress: string) {
     let playerQuestCompleteUrl = apiUrl + "/playerquest/" + questId + '/complete'
     const status = {
-        "playerAddress":playerAddress
+        "playerAddress": playerAddress
     }
     const options = {
         method: "PATCH",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type": "application/json"
         }
     }
 
     try {
         let response = await fetch(playerQuestCompleteUrl, options);
         let json = await response.json();
-        log(`called ${playerQuestCompleteUrl}`)
+        log('quest complete api response: ', json)
+        //log(`called ${playerQuestCompleteUrl}`)
         if (Array.isArray(json) && json.length > 0) {
-            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
     } catch (error) {
@@ -70,12 +71,12 @@ export async function getQuestReward(questId: string, playerAddress: string) {
     try {
         let response = await fetch(playerQuestRewardUrl, options);
         let json = await response.json();
-        log(`called ${playerQuestRewardUrl}`)
+        //log(`called ${playerQuestRewardUrl}`)
         if (Array.isArray(json) && json.length > 0) {
-            log(`passing json ${JSON.stringify(json[0])} to the questWindow`);
+            //log(`passing json ${JSON.stringify(json[0])} to the questWindow`);
             return json[0];
         } else { // Check if it's an object
-            log(`passing json ${JSON.stringify(json)} to the questWindow`);
+            //log(`passing json ${JSON.stringify(json)} to the questWindow`);
             return json;
         }
     } catch (error) {
@@ -84,13 +85,13 @@ export async function getQuestReward(questId: string, playerAddress: string) {
 
 }
 
-export async function acceptQuest(quest: any, player: Player, npc:string) {
+export async function acceptQuest(quest: any, player: Player, npc: string) {
 
     let playerQuestUrl = apiUrl + "/playerquest";
 
     const status = {
-        "playerId":player.address,
-        "questId":quest,
+        "playerId": player.address,
+        "questId": quest,
         "questGiver": npc
     }
 
@@ -98,19 +99,19 @@ export async function acceptQuest(quest: any, player: Player, npc:string) {
         method: "POST",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type": "application/json"
         }
     }
 
     try {
         let response = await fetch(playerQuestUrl, options);
         let json = await response.json();
-        log(`called ${playerQuestUrl}`)
+        //log(`called ${playerQuestUrl}`)
         if (Array.isArray(json) && json.length > 0) {
-            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
     } catch (error) {
