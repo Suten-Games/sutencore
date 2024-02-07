@@ -6,6 +6,7 @@ export class MobState {
     battle: boolean = false;
     dead: boolean = false; //NEW
     mobname: string;
+    mobclass: string;
     mobdead: boolean = false
     orcdead: boolean = false
     playerdead: boolean = false

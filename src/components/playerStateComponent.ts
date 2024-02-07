@@ -7,6 +7,8 @@ export class PlayerState {
     actionbar: any;
     questlog: any;
     spellbook: any;
+    warriorstome: any;
+    roguestoolbelt: any;
     address: string;
     name: string;
     maxhp: number;

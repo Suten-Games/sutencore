@@ -9,6 +9,23 @@ if [ ! -d $INIT_CWD/src ]; then
   mkdir $INIT_CWD/src
 fi
 
+# Check if suten.ts exists
+SUTEN_TS="$INIT_CWD/suten.ts"
+if [ -f "$SUTEN_TS" ]; then
+  # Extract existing values
+  sutenBase=$(grep 'sutenBase' $SUTEN_TS | cut -d'=' -f2 | tr -d " ';")
+  duatX=$(grep 'duatX' $SUTEN_TS | cut -d'=' -f2 | tr -d " ';")
+  duatZ=$(grep 'duatZ' $SUTEN_TS | cut -d'=' -f2 | tr -d " ';")
+  
+  # Prepare the new suten.ts with the preserved values
+  sed -i.bak "s/^export var sutenBase = .*$/export var sutenBase = '$sutenBase';/" suten.ts
+  sed -i.bak "s/^export var duatX = .*$/export var duatX = $duatX;/" suten.ts
+  sed -i.bak "s/^export var duatZ = .*$/export var duatZ = $duatZ;/" suten.ts
+
+  # Cleanup backup files created by sed
+  rm -f suten.ts.bak
+fi
+
 cp suten.ts $INIT_CWD
 cp tsconfig.json $INIT_CWD
 
