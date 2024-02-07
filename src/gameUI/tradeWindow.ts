@@ -5,12 +5,22 @@ import resources from "../resources";
 import { ActionBar } from "./actionBar";
 import { BackPack } from "./backPack";
 import { CombatLog } from "./combatLog";
+import { Item } from "src/gameObjects/item";
+import { fetchInventory } from "src/gameFunctions/fetchInventory";
+import { Npc } from "src/gameObjects/npc";
+import { PromptStyles } from "src/gameUtils/types";
+import { writeToCl } from "src/gameFunctions/writeToCL";
+import { OkPrompt } from "./okPrompt";
+import { purchasedItem } from "src/gameFunctions/purchasedItem";
+//import { matic } from '@dcl/l2-scene-utils'
 
 export class TradeWindow {
     private _canvas;
     private _image;
     private _cl;
     private _bp;
+    private _npc: Npc;
+    private _potions: Item[] = [];
     private _closebutton;
     private _buybutton;
     private _buytext;
@@ -82,28 +92,54 @@ export class TradeWindow {
         return this._bp.visible;
     }
 
-    public show() {
+    public async loadItems(npc: Npc) {
+        const inventory = await fetchInventory(npc);
+        this.clearItems();
+
+        inventory.forEach((itemData: any, index: number) => {
+            if (index < 10) {
+                const lootimage = "images/looticons/" + itemData.portrait;
+                const newItem = new Item(
+                    new Texture(lootimage),
+                    index + 26,
+                    itemData.width,
+                    itemData.height,
+                    itemData.name,
+                    null, // Other parameters as needed
+                    itemData.price, // Assuming price is part of itemData
+                    itemData.itemtype,
+                    null,
+                    null,
+                    null,
+                    itemData.sound,
+                    this,
+                    null,
+                    null,
+                    null
+                );
+
+                newItem.show();
+                this._potions.push(newItem); // Add the new item to the array
+            }
+        });
+    }
+
+    private clearItems() {
+        this._potions.forEach(potion => potion.hide());
+        this._potions = []; // Reset the array
+    }
+
+    public show(npc: Npc) {
         this._bp.visible = true;
         this._closebutton.visible = true;
-    }
+        //this._buybutton.visible = true;
+        
+        this._npc = npc
 
-    private afterConfirm(potion: any) {
-        potion.sendItemDown();
-        this._buybutton.visible = false;
-    }
+        this.loadItems(npc); // Load items asynchronously
 
-    public purchase(potion: any) {
-        this._buybutton.visible = true;
-        this._buytext.value = `${potion.potionprice} Mana`
-        this._buytext.visible = true;
-
-        // Skip Matic
-        this._buybutton.onClick = new OnPointerDown(() => {
-            log('clicked the buy button')
-            potion.sendItemDown()
-            this._buybutton.visible = false;
-            this._buytext.visible = false;
-        });
+        // Show potions if they exist in the array
+        this._potions.forEach(potion => potion.show());
     }
 
     public hide() {
@@ -111,5 +147,174 @@ export class TradeWindow {
         this._buybutton.visible = false;
         this._closebutton.visible = false;
         this._buytext.visible = false;
+
+        this.clearItems(); // Clear items when hiding
     }
+
+    private afterConfirm(potion: any) {
+        potion.sendItemDown();
+        this._buybutton.visible = false;
+    }
+
+    public purchase(item: any) {
+        log(`in tradeWindow purchase`)
+        this._buybutton.visible = true;
+        this._buytext.value = `${item.potionprice} Mana`
+        this._buytext.visible = true;
+
+        // Skip Matic
+        this._buybutton.onClick = new OnPointerDown(() => {
+            log('clicked the buy button')
+            purchasedItem(this._npc, item)
+            //potion.sendItemDown()
+            item.sendToBackpack()
+            this._buybutton.visible = false;
+            this._buytext.visible = false;
+        });
+
+        //Matic Purchasing
+        // this._buybutton.onClick = new OnPointerDown(async () => {
+        //   var obj = Singleton.getInstance();
+
+        //   log(`obj.manal1 ${obj.manal1} ${typeof(obj.manal1)}`)
+
+        //   if (obj.manal1 < 100 && obj.maticbalance <= item.potionprice) {
+        //     this.hide();
+        //     writeToCl(`You don't have enough Mana for this item.`)
+        //     new OkPrompt(
+        //         "You don't have enough Mana to buy this item.",
+        //         () => {
+        //             writeToCl(`Please acquire some mana and come back to the shop!`)
+        //         },
+        //         'Ok',
+        //         true
+        //     )
+        //   } else if (obj.maticbalance >= item.potionprice) {
+        //     //const loading = new ui.LoadingIcon(15);
+        //     writeToCl(`You are purchasing a ${item.potiontype} potion`)
+        //     writeToCl(`Click 'Sign' in the Metamask popup.`)
+        //     writeToCl(`Hang tight, only takes a moment.`)
+        //     await matic.sendMana(this.sutenaddress, item.potionprice, true);
+        //     obj.maticbalance = obj.maticbalance - item.potionprice;
+        //     item.sendItemDown();
+        //     this._cl.text = `You have purchased a ${item.potiontype} potion`;
+        //     this._cl.text = `Your Matic Mana Balance is now ${obj.maticbalance}`;
+        //     this._buybutton.visible = false;
+        //     this._buytext.visible = false;
+        //     this.backpacksound.play();
+        //   }
+        // }
+        //   } else {
+        //     this.hide();
+        //     this._cl.text = `You don't have enough Mana for this item.`;
+        //     let customprompt = new ui.CustomPrompt(PromptStyles.LIGHT);
+        //     customprompt.addText("Out of Matic Mana!", 0, 130, Color4.Red(), 30);
+        //     customprompt.addText(
+        //       "You don't have enough Matic Mana to buy this item.",
+        //       0,
+        //       100
+        //     );
+        //     customprompt.addText("I can transfer Mana to Matic for you.", 0, 80);
+        //     customprompt.addText(
+        //       "How much Mana would you like to transfer?",
+        //       0,
+        //       60
+        //     );
+        //     let button1 = customprompt.addButton(
+        //       "50 Mana",
+        //       -100,
+        //       -30,
+        //       () => {
+        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
+        //         this._cl.text = `There is an associated Ethereum Miner Fee. `
+        //         this._cl.text = `The fee depends on Ethereum network traffic. `
+        //         this._cl.text = `If the fee is too high, try again later.`
+        //         async function firedeposit(cl) {
+        //           this._cl.text = `Please be patient, might take a few minutes to mine.`
+        //           await matic.depositMana(50);
+        //           log("Mana deposited");
+        //           obj.maticbalance = obj.maticbalance + 50;
+        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
+        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
+        //           log("new balance: ", obj.maticbalance);
+        //           cl.text = `You have added 50 Mana to your Matic Wallet`;
+        //           cl.text = `Your balance is now ${obj.maticbalance}`;
+        //         }
+        //         firedeposit(this._cl);
+        //       }, ButtonStyles.ROUNDGOLD
+        //     );
+
+        //     let button2 = customprompt.addButton(
+        //       "100 Mana",
+        //       -100,
+        //       -90,
+        //       () => {
+        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
+        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
+        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
+        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
+        //         async function firedeposit(cl) {
+        //           await matic.depositMana(100);
+        //           log("Mana deposited");
+        //           obj.maticbalance = obj.maticbalance + 100;
+        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
+        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
+        //           log("new balance: ", obj.maticbalance);
+        //           cl.text = `You have added 100 Mana to your Matic Wallet`;
+        //           cl.text = `Your balance is now ${obj.maticbalance}`;
+        //         }
+        //         firedeposit(this._cl);
+        //       }, ButtonStyles.ROUNDGOLD
+        //     );
+        //     let button3 = customprompt.addButton(
+        //       "500 Mana",
+        //       100,
+        //       -30,
+        //       () => {
+        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
+        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
+        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
+        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
+        //         async function firedeposit(cl) {
+        //           await matic.depositMana(500);
+        //           log("Mana deposited");
+        //           obj.maticbalance = obj.maticbalance + 500;
+        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
+        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
+        //           log("new balance: ", obj.maticbalance);
+        //           cl.text = `You have transfered 500 Mana to your Matic Wallet!`;
+        //           cl.text = `Your Matic Mana balance is now ${obj.maticbalance}`;
+        //           customprompt.hide()
+        //           this.show()
+        //         }
+        //         firedeposit(this._cl);
+        //       }, ButtonStyles.ROUNDGOLD
+        //     );
+
+        //     let button4 = customprompt.addButton(
+        //       "1000 Mana",
+        //       100,
+        //       -90,
+        //       () => {
+        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
+        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
+        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
+        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
+        //         async function firedeposit(cl) {
+        //           await matic.depositMana(1000);
+        //           log("Mana deposited");
+        //           obj.maticbalance = obj.maticbalance + 1000;
+        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
+        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
+        //           log("new balance: ", obj.maticbalance);
+        //           cl.text = `You have added 1000 Mana to your Matic Wallet`;
+        //           cl.text = `Your balance is now ${obj.maticbalance}`;
+        //         }
+        //         firedeposit(this._cl);
+        //       }, ButtonStyles.ROUNDGOLD
+        //     );
+        //   }
+        // });
+    }
+
 }

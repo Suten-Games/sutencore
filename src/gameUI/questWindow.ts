@@ -52,7 +52,7 @@ export class QuestWindow extends Entity {
         )
     }
 
-    async getLoot(questID: string, playerAddress: string) {
+    async getLoot(questID: string,playerAddress: string){
         getQuestReward(questID, playerAddress).then(res => {
             log(`questWindow.ts: in the getQuestReward section of openQuestWindow: ${JSON.stringify(res)}`)
             let lootimg
@@ -86,13 +86,13 @@ export class QuestWindow extends Entity {
 
     }
 
-    public openQuestWindow(questText: string, questID: string | null = null, playerAddress: string | null = null) {
+    public openQuestWindow(questText: string, questID:string|null = null, playerAddress:string|null = null) {
         //this._questwindow.visible = true;
 
         if (questID && playerAddress) {
             this.getLoot(questID, playerAddress)
         }
-
+        
         const charsPerLine = 42;
         let lines = [];
         let start = 0;
@@ -145,8 +145,8 @@ export class QuestWindow extends Entity {
         this._questwindow.visible = false;
         this._questText.visible = false;
         this._closebutton.visible = false;
-        if (this._lootitem) {
-            this._lootitem.hide()
+        if(this._lootitem) {
+           this._lootitem.hide()
         }
     }
 

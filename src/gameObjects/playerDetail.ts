@@ -13,6 +13,8 @@ import { CombatLog } from "src/gameUI/combatLog";
 import { LootWindow } from "src/gameUI/lootWindow";
 import { UIBar } from "src/gameUI/uiBar";
 import { CornerLabel } from "src/gameUI/cornerLabel";
+import { WarriorsTome } from "src/gameUI/warriorsTome";
+import { RoguesToolbelt } from "src/gameUI/roguestoolbelt";
 
 //import { closeSocket } from "../gameFunctions/wsConnection";
 
@@ -32,6 +34,8 @@ export class Singleton {
     private _playerarmor: number = 0;
     private _weapon: string = "";
     private _playerspellbook: Array<Item> = [];
+    private _playerswarriorstome: Array<Item> = [];
+    private _playersroguestoolbelt: Array<Item> = [];
     private _playerbackpack: Array<Item> = [];
     private _playeractionbar: Array<Item> = [];
     private _playeractivespells: Array<object> = [];
@@ -67,6 +71,8 @@ export class Singleton {
     private _backPack: BackPack;
     private _spellScroll: SpellScroll;
     private _spellBook: SpellBook;
+    private _warriorsTome: WarriorsTome;
+    private _roguesToolbelt: RoguesToolbelt;
     private _combatLog: CombatLog
     private _player: Player;
     private _tradewindow: TradeWindow;
@@ -282,6 +288,22 @@ export class Singleton {
         return this._spellBook
     }
 
+    set warriorstome(val:WarriorsTome) {
+        this._warriorsTome = val
+    }
+
+    get warriorstome() {
+        return this._warriorsTome;
+    }
+
+    set roguestoolbelt(val: RoguesToolbelt) {
+        this._roguesToolbelt = val
+    }
+
+    get roguestoolbelt() {
+        return this._roguesToolbelt;
+    }
+
     set player(val) {
         this._player = val
     }
@@ -390,6 +412,14 @@ export class Singleton {
         this._playerspellbook.push(val)
     }
 
+    playerswarriorstome(val: any) {
+        this._playerswarriorstome.push(val)
+    }
+
+    playersroguestoolbelt(val: any){
+        this._playersroguestoolbelt.push(val)
+    }
+
     get bpack() {
         return this._playerbackpack 
     }
@@ -402,6 +432,14 @@ export class Singleton {
         return this._playerspellbook
     }
 
+    get wtome() {
+        return this._playerswarriorstome
+    }
+
+    get rtoolbelt() {
+        return this._playersroguestoolbelt
+    }
+
     fetchactionbar() {
         return this._playeractionbar
     }
@@ -412,6 +450,14 @@ export class Singleton {
 
     fetchspellbook() {
         return this._playerspellbook
+    }
+
+    fetchwarriorstome() {
+        return this._playerswarriorstome
+    }
+
+    fetchroguestoolbelt() {
+        return this._playersroguestoolbelt
     }
 
     set playeractivespells(val) {

@@ -2,8 +2,8 @@ import { MobState } from "../components/mobStateComponent";
 import resources from "../resources";
 import { sutenBase, local } from "../../suten"
 import { Player } from "../gameObjects/player";
-import { ActionBar } from "../gameUI/actionBar";
-import { BackPack } from "../gameUI/backPack";
+// import { ActionBar } from "../gameUI/actionBar";
+// import { BackPack } from "../gameUI/backPack";
 import { CombatLog } from "../gameUI/combatLog";
 import { Item } from "../gameObjects/item";
 import { SoundBox } from "src/gameObjects/soundBox";
@@ -38,9 +38,9 @@ const server = local
     : "wss://sutenquestapi.azurewebsites.net/";
 
 export async function joinSocketsServer(
-    gameCanvas: UICanvas,
-    actionBar: ActionBar,
-    backPack: BackPack,
+    // gameCanvas: UICanvas,
+    // actionBar: ActionBar,
+    // backPack: BackPack,
     player: Player,
     combatLog: CombatLog
 ) {
@@ -55,7 +55,13 @@ export async function joinSocketsServer(
 
     socket.onmessage = async function (event) {
         try {
-            const msg = JSON.parse(event.data);
+            let msg
+            if(!player.alive) {
+                msg = []
+            } else {
+                msg = JSON.parse(event.data);
+            }
+            
             const mobs = engine.getComponentGroup(MobState);
             //log("in wsConnection - msg: ", msg);
 
@@ -190,6 +196,24 @@ class pingSystem implements ISystem {
                     }
                 });
 
+                let warriorstome = obj.wtome.map((lootitem) => {
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    } 
+                })
+
+                let roguestoolbelt = obj.rtoolbelt.map((lootitem) => {
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    }
+                })
+
                 //log(`wsConnection type: ${sutenBase}`)
                 //log(`PLAYER: ${JSON.stringify(obj.player)}`)
 
@@ -202,7 +226,9 @@ class pingSystem implements ISystem {
                             address: obj.playeraddress,
                             backpack: backpack,
                             actionbar: actionbar,
-                            spellbook: spellbook
+                            spellbook: spellbook,
+                            warriorstome: warriorstome,
+                            roguestoolbelt: roguestoolbelt
                         },
                     })
                 );
@@ -264,6 +290,7 @@ export function createNpc(element: any, path: any) {
     return new Npc(
         element.id,
         element.name,
+        element.class,
         element.xp,
         element.damage,
         element.maxhp,
@@ -425,6 +452,7 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
 
     }
 }
+
 
 
 export function handleGameMessage(msg: any) {

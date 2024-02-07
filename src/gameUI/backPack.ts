@@ -4,6 +4,8 @@ import { SoundBox } from "src/gameObjects/soundBox";
 import resources from "../resources";
 import { CharWindow } from "./charWindow";
 import { SpellBook } from "./spellBook";
+import { WarriorsTome } from "./warriorsTome";
+import { RoguesToolbelt } from "./roguestoolbelt";
 
 
 export class BackPack {
@@ -18,6 +20,8 @@ export class BackPack {
     private _playerclass: any;
     private _charwindow: any;
     private _spellbookwindow: any;
+    private _warriorstomewindow: any;
+    private _roguestoolbelt: any;
 
     private backpacksound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
@@ -39,6 +43,8 @@ export class BackPack {
         this._bp.visible = false;
         this._mybackpackcontents = obj.showbackpack()
         this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
+        this._warriorstomewindow = new WarriorsTome(this._canvas, resources.interface.spellBook)
+        this._roguestoolbelt = new RoguesToolbelt(this._canvas, resources.interface.spellBook)
         this._charbutton = new UIImage(this._canvas, resources.interface.characterButton)
         this._charbutton.hAlign = "right"
         this._charbutton.vAlign = "center";
@@ -68,8 +74,18 @@ export class BackPack {
         this._spellbutton.visible = false;
         this._spellbutton.onClick = new OnPointerDown(
             (e) => {
-                //log('backPack.ts:88 - open spellbook')
-                this._spellbookwindow.show()
+                let obj = Singleton.getInstance()
+                //log(`playerclass is currently: ${obj.playerclass}`)
+                //Adventurer
+                if (obj.playerclass == "Magician") {
+                    this._spellbookwindow.show()
+                } else if (obj.playerclass == "Warrior") {
+                    this._warriorstomewindow.show()
+                } else if (obj.playerclass == "Rogue") {
+                    this._roguestoolbelt.show()
+                } else {
+                    this._spellbookwindow.show() 
+                }
             },
             {
                 button: ActionButton.PRIMARY,
@@ -154,9 +170,9 @@ export class BackPack {
     }
 
     public showCharWindow(weapon: any, weapontext: any, combatlog: any, actionbar: any, backpack: any, lootimage: any, slot: any) {
-        //log('calling charwindow.setcharloot from the backback showcharwindow function')
-        this._charwindow.setCharLoot(weapon, weapontext, combatlog, actionbar, backpack, lootimage, slot)
-        //log('calling charwindow.flip from the backpack showcharwindow function')
+        log('calling charwindow.setcharloot from the backback showcharwindow function')
+        this._charwindow.setCharLoot(weapon, weapontext, actionbar, backpack, lootimage, slot)
+        log('calling charwindow.flip from the backpack showcharwindow function')
         this._charwindow.flip()
     }
 

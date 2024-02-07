@@ -6,7 +6,7 @@ const apiUrl = local
     : "https://sutenquestapi.azurewebsites.net/playerquest/";
 
 export async function fetchPlayerQuests(player:Player) {
-    //log(`in fetchPlayerQuests`)
+    log(`debug: 13 Inside fetchPlayerQuests`)
 
     try {
         let response = await fetch(apiUrl + player.address);

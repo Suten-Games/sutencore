@@ -12,9 +12,9 @@ export async function connectToServer(ui: UI,json: PlayerState, player: Player) 
     try {
         //log('joining socket server')
         let socket = await joinSocketsServer(
-            ui.gc,
-            ui.ab,
-            ui.bp,
+            // ui.gc,
+            // ui.ab,
+            // ui.bp,
             player,
             ui.cl
         );

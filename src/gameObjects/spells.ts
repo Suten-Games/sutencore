@@ -40,6 +40,44 @@ const amunsShielding:Ispell = {
 
 }
 
+const shieldbash: Ispell = {
+    "mana": 12,
+    "casttime": 3,
+    "fizzleadj": 2,
+    "fizzletime": 1,
+    "location": "self",
+    "blockable": false,
+    "dispellable": false,
+    "name": "Shield Bash",
+    "spelltype": "Shield",
+    "skill": "Abjuration",
+    "recasttime": 3,
+    "range": 3,
+    "size": 3,
+    "class": "Mage",
+    "level": 1,
+    "timeofdate": "any",
+    "deletable": false,
+    "focusable": false,
+    "interruptable": false,
+    "targettype": "self",
+    "desc": "Shield Bash",
+    "levelmsg": [{ "line1": "msg 2" }],
+    "oncastmsg": [{ "line1": "You swing your shield" }],
+    "ondropmsg": [{ "line1": "Your shielding fades away" }],
+    "duration": 40000,
+    "image": new Texture("images/spells/explosion-magenta-1.png"),
+    "itemtype": "spell",
+    "spellshape": "BoxShape",
+    "spellstart": 5,
+    "spellend": 10,
+    "sound": resources.sounds.wardspell,
+    "srcw": 122,
+    "srch": 120,
+    "price": 6
+
+}
+
 const minorShielding: Ispell = {
     "mana": 12,
     "casttime": 3,
@@ -275,6 +313,7 @@ allspells["Blizzard"] = blizzard
 allspells["Sprinkle"] = sprinkle
 allspells["Sprinkle Scroll"] = sprinkle
 allspells["Gilded Blocks"] = gildedblocks
+allspells["Shield Bash"] = shieldbash
 
 export function getspells() {
     return allspells

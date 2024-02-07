@@ -7,11 +7,12 @@ import { WaitSystem } from "src/gameSystems/waitSystem";
 let ws: WaitSystem
 
 export function loadSutenQuest(ui: UI) {
-    //log(`debug: 1 Inside startGame`)
+    log(`debug: 1 Inside startGame`)
     
     executeTask(async () => {
         let player = await createDefaultPlayer(ui)
         let tradeWindow = await setupTrade(ui, player)
+        //tradeWindow.show()
         await registerPlayer(ui, player, tradeWindow)
         ws = new WaitSystem()
         engine.addSystem(ws);

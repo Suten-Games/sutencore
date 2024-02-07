@@ -16,6 +16,8 @@ import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
 import { QuestWindow } from "src/gameUI/questWindow";
+import { writeToCl } from "src/gameFunctions/writeToCL";
+import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
 
 
 export class Item {
@@ -58,6 +60,7 @@ export class Item {
     private _isspell;
     private _isability;
     private _isscroll;
+    private _isclothing;
     private _scribedspell;
 
     private potionsound = new SoundBox(
@@ -187,6 +190,11 @@ export class Item {
 
             case "scribedscroll":
                 this._scribedspell = true;
+                break;
+            
+            case "clothing":
+                this._isclothing = true;
+                break;
 
             default:
                 break;
@@ -231,7 +239,8 @@ export class Item {
             log('--')
         } else if (this.isPurchase) {
             this._lootimage.onClick = new OnClick(() => {
-                this.sendItemDown();
+                //this.sendItemDown();
+                this.sendToBackpack()
             });
         } else if (this.isLootWindow) {
             this._lootimage.onClick = new OnClick(() => {
@@ -404,7 +413,7 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
-        //log(`in item updateLoc method`)
+        log(`in item updateLoc method`)
         this._lootimage.visible = true;
 
         if (this._isspell) {
@@ -415,6 +424,7 @@ export class Item {
             return
         }
         this._lootimage.onClick = new OnPointerDown(() => {
+            log(`in the lootimage onClick function`)
 
             if (this._player == undefined || !this._player.alive) {
                 //log('item.ts:354 - you cant heal if you are dead')
@@ -428,9 +438,19 @@ export class Item {
 
                 return
             }
-            //log('in item.ts:398')
+
+            if (this._isclothing) {
+                trinketAction(this)
+                const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
+                Dbl click, then click on the trash icon to delete it from inventory.`
+                const chunks = chunkSentence(statement, 7)
+                writeChunks(chunks)
+                //writeToCl()
+                return
+            }
 
             if (this._isweapon) {
+                //trinketAction(this) //Adds a new click handler that prevents the weapon dialog for spawning
                 if (this._image.src.split('/')[2] == 'rustysword.png') {
                     this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
                 } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
@@ -440,7 +460,8 @@ export class Item {
                 } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
                     //log(`cracked staff`)
                     this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
-                }
+                } 
+                
                 return
             }
 
@@ -499,7 +520,7 @@ export class Item {
     }
 
     public sendToBackpack() {
-        //log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
+        log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
         let obj = Singleton.getInstance()
         let myactionbarcontents = obj.fetchactionbar()
         let mybackpackcontents = obj.fetchbackpack()
@@ -586,6 +607,7 @@ export class Item {
         this._desc.positionY = slotPosition.fy;
         this._desc.positionX = slotPosition.fx;
         this._desc.visible = false;
+        if(this.isPurchase) { this._desc.visible = true}
     }
 
     setActiveSpellImageProperties(slotPosition:any) {
@@ -597,32 +619,36 @@ export class Item {
         this._activespellimage.positionX = slotPosition.x;
     }
 
-    public sendItemDown() {
-        this._actionBar.exist();
-        let slot = this._actionBar.selectSlot(this);
-        this._slot = slot;
-        let slotPosition = slotPicker(slot);
-        this.setSlotProperties(slotPosition);
+    // public sendItemDown() {
+    //     this._actionBar.exist();
+    //     let slot = this._actionBar.selectSlot(this);
+    //     this._slot = slot;
+    //     let slotPosition = slotPicker(slot);
+    //     this.setSlotProperties(slotPosition);
 
-        if (slot === 0) {
-            slot = this._backPack.selectSlot(this);
-            this._slot = slot;
-            slotPosition = slotPicker(slot);
-            this.setSlotProperties(slotPosition);
+    //     if (slot === 0) {
+    //         slot = this._backPack.selectSlot(this);
+    //         this._slot = slot;
+    //         slotPosition = slotPicker(slot);
+    //         this.setSlotProperties(slotPosition);
 
-            if (!this._backPack.bpopen) {
-                this._desc.visible = false;
-                this._lootimage.visible = false;
-            }
-            this.isBackpack = true;
-        }
-    }
+    //         if (!this._backPack.bpopen) {
+    //             this._desc.visible = false;
+    //             this._lootimage.visible = false;
+    //         }
+    //         this.isBackpack = true;
+    //     }
+    // }
 
     private setItemForSale() {
+        log(`In Set Item for Sale, `)
+        this._tradewindow?.purchase(this)
+
         const slotPosition = slotPicker(36);
         this.setSlotProperties(slotPosition);
-        this._lootimage.onClick = new OnPointerDown(() => {
-            this.sendItemDown();
-        });
+        // this._lootimage.onClick = new OnPointerDown(() => {
+        //     //this.sendItemDown();
+        //     this.sendToBackpack()
+        // });
     }
 }

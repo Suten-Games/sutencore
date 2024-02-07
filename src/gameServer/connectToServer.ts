@@ -5,13 +5,13 @@ import { writeToCl } from "../gameFunctions/writeToCL";
 import { joinSocketsServer } from "./wsConnection";
 
 export async function connectToServer(ui: UI,json: PlayerState, player: Player) {
-    //log(`debug: 8 Inside connectToServer`)
+    log(`debug: 8 Inside connectToServer`)
 
     try {
         let socket = await joinSocketsServer(
-            ui.gc,
-            ui.ab,
-            ui.bp,
+            // ui.gc,
+            // ui.ab,
+            // ui.bp,
             player,
             ui.cl
         );

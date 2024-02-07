@@ -1,39 +1,35 @@
 import { TimeOut } from "src/components/timeOutComponent";
 import { MobState } from "../components/mobStateComponent";
-//import { TimeOut } from "../components/timeOutComponent";
 
-export function patrol(s:any,dt:number) {
-    //log(`${s.npc.id} patrolling`)
-    const mob = s.npc
+export function working(s: any, dt: number) {
+    const mob = s.npc;
     const TURN_TIME = 0.5;
-    //const PAUSE = 2.2;
+    // Adjusting PAUSE to be more frequent and potentially longer
+    const PAUSE_MIN = 60; // Minimum idle time in seconds
+    const PAUSE_MAX = 300; // Maximum idle time in seconds
     const mobstate = mob.getComponent(MobState);
     let transform = mob.getComponent(Transform);
 
-    if(mob.battle) {
-        mob.hidehpbar()
+    if (mob.battle) {
+        mob.hidehpbar();
         mobstate.battle = false;
     }
-    
 
     // If mob is in 'idle' state, decrease the timeout
     if (mobstate.idle) {
         mobstate.idletimeout -= dt;
-        // If timeout has reached 0, resume patrolling and stop idling
         if (mobstate.idletimeout <= 0) {
             mobstate.idle = false;
-            mobstate.idletimeout = 0;
+            mobstate.idletimeout = PAUSE_MIN + Math.random() * (PAUSE_MAX - PAUSE_MIN); // Randomly decide next idle duration
         } else {
-            mob.mobidle();  // Run idle behavior
-            return;  // Skip the rest of the patrol function
+            mob.mobidle(); // Run idle behavior
+            return; // Skip the rest of the working function
         }
     }
 
     if (!mobstate.idle) {
         if (mobstate.array && mobstate.array.length > 0) {
-            //log(`calling mob.mobwalk in the patrol.ts`)
             mob.mobwalk();
-            // The rest of the patrolling code...
             if (mobstate.fraction < 1) {
                 mobstate.fraction += dt / 12;
                 transform.position = Vector3.Lerp(
@@ -42,12 +38,9 @@ export function patrol(s:any,dt:number) {
                     mobstate.fraction
                 );
             } else {
-                // When reaching a waypoint, randomly decide whether to go idle
-                if (Math.random() < 0.2) {  // 20% chance to go idle
-                    mobstate.idle = true;
-                    mobstate.idletimeout = Math.random() * 2 * 60;  // Random timeout up to 2 minutes
-                    return;
-                }
+                // At each waypoint, go idle
+                mobstate.idle = true;
+                mobstate.idletimeout = PAUSE_MIN + Math.random() * (PAUSE_MAX - PAUSE_MIN); // Idle for a set time between PAUSE_MIN and PAUSE_MAX
 
                 if (mobstate.target > mobstate.origin) {
                     mobstate.origin = mobstate.target;
@@ -72,16 +65,13 @@ export function patrol(s:any,dt:number) {
 
                 mobstate.fraction = 0;
                 transform.lookAt(mobstate.array[mobstate.target]);
-                mob.mobwalkpause()
-                mob.mobturn()
+                mob.mobwalkpause();
+                mob.mobturn();
                 mob.addComponent(new TimeOut(TURN_TIME));
             }
         } else {
-            // If mobstate.array is not set or blank, make the NPC stand idle
             mobstate.idle = true;
-            mobstate.idletimeout = Math.random() * 2 * 60;  // Random timeout up to 2 minutes
+            mobstate.idletimeout = PAUSE_MIN + Math.random() * (PAUSE_MAX - PAUSE_MIN);
         }
     }
-
-    //mob.mobwalk()
 }

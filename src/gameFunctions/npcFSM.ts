@@ -16,6 +16,9 @@ import { acceptQuest, checkQuestCompletion, chunkSentence, fetchQuest, writeChun
 import { UI } from "src/gameUI/ui";
 import { StartupTimeOut } from "src/components/startupTimer";
 import { createSoundBox } from "./createSoundBox";
+//import { setupTrade } from "./setupTrade";
+import { TradeWindow } from "src/gameUI/tradeWindow";
+import { working } from "./working";
 
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -36,22 +39,22 @@ export class NpcFSM extends Entity {
     private _player: Player;
     private _npc: Npc;
     private _combatLog: CombatLog;
-    private _canvas: UICanvas;
+    //private _canvas: UICanvas;
     private showHealthBar = false;
     public endFight: () => void;
     private transform: Transform;
     private _startPos;
     private _startRot;
-    private _patrol = true;
+    //private _patrol = true;
     public factionvalue: number;
-    private _playerfaction: any;
+    //private _playerfaction: any;
 
     constructor(
         npc: Npc,
         startPos: number[],
         startRot: number[],
         clicked: boolean,
-        battlepause: number,
+        battlepause: number
     ) {
         super();
         //log(`npcFSM.ts: In the npcFSM constructor`)
@@ -62,6 +65,16 @@ export class NpcFSM extends Entity {
         this._player = obj.player
         this._npc = npc;
         let mobfaction = this._npc.faction
+        const ui = UI.getInstance();
+
+        const tradeWindow = new TradeWindow(
+            ui.gc,
+            resources.interface.blueMerchantInterface,
+            ui.ab,
+            ui.bp,
+            this._player,
+            ui.cl
+        );
 
 
         let playerfaction = this._player.factions
@@ -79,11 +92,13 @@ export class NpcFSM extends Entity {
         }
 
 
-        let mobstate = this._npc.getComponent(MobState)
+        //let mobstate = this._npc.getComponent(MobState)
         let hoverText
 
         if (this.factionvalue >= 0) {
-            hoverText = "Hail"
+            hoverText = "Hail" 
+        } else if (this.factionvalue >= 200) {
+            hoverText = "Trade"
         } else {
             hoverText = "Attack"
         }
@@ -99,115 +114,121 @@ export class NpcFSM extends Entity {
                     this._npc.getComponent(OnPointerDown).showFeedback = true;
                     let mobstate = this._npc.getComponent(MobState)
 
+                    log(`Checking faction with ${this._npc.name}`)
                     let factionvalue = this.checkFaction()
-                    if (factionvalue >= 0) {
+                    log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${factionvalue}`)
+
+                    if (factionvalue > 0) {
                         hoverText = "Hail"
                     } else {
                         hoverText = "Attack"
                     }
-                    log(`name: ${this._npc.name} faction: ${this._npc.faction} factionvalue: ${factionvalue}`)
 
                     if (factionvalue >= 0) {
                         //this._npc.showhpbar();
                         writeToCl(`You hail an ${this._npc.name}`)
-                        fetchQuest(this._npc, this._player).then(res => {
-                            //log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
-                            let chunks
-                            chunks = chunkSentence(res.dialogue, 7)
-                            if (res.status === 'NOT_STARTED') {
-                                this.openQuestWindow(res.dialogue)
-                                writeChunks(chunks).then(() => {
-                                    writeToCl(
-                                        "I accept!",
-                                        "",
-                                        "",
-                                        "",
-                                        () => {
-                                            log(`I accept clicked`)
-                                            acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
-                                                //log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
-                                                chunks = chunkSentence(acceptres.dialogue, 7)
-                                                writeChunks(chunks)
-                                                this.openQuestWindow(acceptres.dialogue)  // replace with actual function and arguments
-                                            })
-                                        }
-                                    );
-                                })
-                            } else if (res.status === 'IN_PROGRESS') {
-                                log(`in the IN_PROGRESS STATUS`)
-                                checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
-                                    // chunks = chunkSentence(checkcompletionres.dialogue, 7)
-                                    // writeChunks(chunks)
-                                    if (checkcompletionres.status === 'COMPLETED') {
-                                        let foundone = false
-                                        this._player.achievementcheck(checkcompletionres.xp, this._player.level)
-                                        let desc = checkcompletionres.objectives[0].description
-                                        const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
-                                        writeToCl(firstSentence)
-                                        killbox.play();
-                                        writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
-
-                                        for (let item of obj.fetchactionbar()) {
-                                            if (desc === item.lootdesc()) {
-                                                foundone = true
-                                                obj.actionbar.resetSlot(item.slot())
-                                                item.hide()
+                        if(this._npc.mobclass == "merchant") {
+                            writeToCl(`${this._npc.mobname} says "Well met! Please browse my wares.`)
+                            tradeWindow.show(this._npc) 
+                        } else {
+                            fetchQuest(this._npc, this._player).then(res => {
+                                //log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
+                                let chunks
+                                chunks = chunkSentence(res.dialogue, 7)
+                                if (res.status === 'NOT_STARTED') {
+                                    this.openQuestWindow(res.dialogue)
+                                    writeChunks(chunks).then(() => {
+                                        writeToCl(
+                                            "I accept!",
+                                            "",
+                                            "",
+                                            "",
+                                            () => {
+                                                log(`I accept clicked`)
+                                                acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
+                                                    //log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
+                                                    chunks = chunkSentence(acceptres.dialogue, 7)
+                                                    writeChunks(chunks)
+                                                    this.openQuestWindow(acceptres.dialogue)  // replace with actual function and arguments
+                                                })
                                             }
-                                        }
+                                        );
+                                    })
+                                } else if (res.status === 'IN_PROGRESS') {
+                                    log(`in the IN_PROGRESS STATUS`)
+                                    checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
+                                        // chunks = chunkSentence(checkcompletionres.dialogue, 7)
+                                        // writeChunks(chunks)
+                                        if (checkcompletionres.status === 'COMPLETED') {
+                                            let foundone = false
+                                            this._player.achievementcheck(checkcompletionres.xp, this._player.level)
+                                            let desc = checkcompletionres.objectives[0].description
+                                            const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
+                                            writeToCl(firstSentence)
+                                            killbox.play();
+                                            writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
 
-                                        if (foundone == false) {
-                                            for (let item of obj.fetchbackpack()) {
+                                            for (let item of obj.fetchactionbar()) {
                                                 if (desc === item.lootdesc()) {
-                                                    obj.backpack.resetSlot(item.slot())
+                                                    foundone = true
+                                                    obj.actionbar.resetSlot(item.slot())
                                                     item.hide()
                                                 }
                                             }
-                                        }
-                                        //log(`calling this.openQuestWindow 1`)
-                                        this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
-                                    }
-                                })
-                            } else if (res.status === 'PENDING') {
-                                log(`in the PENDING STATUS`)
-                                checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
-                                    if (checkcompletionres.status === 'COMPLETED') {
-                                        let foundone = false
-                                        this._player.achievementcheck(checkcompletionres.xp, this._player.level)
-                                        let desc = checkcompletionres.objectives[0].description
-                                        const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
-                                        writeToCl(firstSentence)
-                                        killbox.play();
-                                        writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
 
-                                        for (let item of obj.fetchactionbar()) {
-                                            if (desc === item.lootdesc()) {
-                                                foundone = true
-                                                obj.actionbar.resetSlot(item.slot())
-                                                item.hide()
+                                            if (foundone == false) {
+                                                for (let item of obj.fetchbackpack()) {
+                                                    if (desc === item.lootdesc()) {
+                                                        obj.backpack.resetSlot(item.slot())
+                                                        item.hide()
+                                                    }
+                                                }
                                             }
+                                            //log(`calling this.openQuestWindow 1`)
+                                            this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
                                         }
+                                    })
+                                } else if (res.status === 'PENDING') {
+                                    log(`in the PENDING STATUS`)
+                                    checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
+                                        if (checkcompletionres.status === 'COMPLETED') {
+                                            let foundone = false
+                                            this._player.achievementcheck(checkcompletionres.xp, this._player.level)
+                                            let desc = checkcompletionres.objectives[0].description
+                                            const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
+                                            writeToCl(firstSentence)
+                                            killbox.play();
+                                            writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
 
-                                        if (foundone == false) {
-                                            for (let item of obj.fetchbackpack()) {
+                                            for (let item of obj.fetchactionbar()) {
                                                 if (desc === item.lootdesc()) {
-                                                    obj.backpack.resetSlot(item.slot())
+                                                    foundone = true
+                                                    obj.actionbar.resetSlot(item.slot())
                                                     item.hide()
                                                 }
                                             }
+
+                                            if (foundone == false) {
+                                                for (let item of obj.fetchbackpack()) {
+                                                    if (desc === item.lootdesc()) {
+                                                        obj.backpack.resetSlot(item.slot())
+                                                        item.hide()
+                                                    }
+                                                }
+                                            }
+                                            this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
+                                        } else {
+                                            //writeChunks(chunks)
+                                            log(`calling this.openQuestWindow 3`)
+                                            this.openQuestWindow(res.dialogue, res.id, this._player.address)
                                         }
-                                        this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
-                                    } else {
-                                        //writeChunks(chunks)
-                                        log(`calling this.openQuestWindow 3`)
-                                        this.openQuestWindow(res.dialogue, res.id, this._player.address)
-                                    }
-                                })
-                            } else {
-                                writeChunks(chunks)
-                            }
+                                    })
+                                } else {
+                                    writeChunks(chunks)
+                                }
 
-                        })
-
+                            })
+                        }
                     } else {
                         mobstate.battle = true;
                         mobstate.clicked = true;
@@ -226,11 +247,7 @@ export class NpcFSM extends Entity {
         //log(`npcFSM:ts - npcFSM is now added`)
     }
 
-    openQuestWindow(val: string, questId: string | null = null, playerAddress: string | null = null) {
-        //log(`passing ${val} to the questLog`)
-        //log(`the full res ${res} is here and not being sent to the questlog`)
-        //fetch the reward from res.rewards[0]
-        //log(`fetch the reward using ${res.rewards[0]}`)
+    openQuestWindow(val: string, questId: string|null = null, playerAddress:string|null = null) {
         var ui = UI.getInstance();
         ui.ql.openQuestWindow(val, questId, playerAddress)
 
@@ -307,6 +324,12 @@ export class NpcFSM extends Entity {
 
             if (state.anotherplayer) {
                 otherplayerattack(scene, this._combatLog)
+            } else if (this._npc.mobclass == "merchant") {
+                // if (dist < 4) {
+                //     idle(scene, dt)
+                // } else {
+                working(scene, dt);
+                //}
             } else {
                 if (dist < 8) {
                     if (this.factionvalue < 0) {

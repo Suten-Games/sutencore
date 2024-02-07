@@ -454,6 +454,7 @@ export class Player {
 
 
     weapon(weapon: Texture, weapontext: string, actionbar: any, backpack: any, lootimage: any, slot: number) {
+        log(`in player.weapon with weapontext: ${weapontext}`)
         this.backpack.showCharWindow(weapon, weapontext, this._combatLog, actionbar, backpack, lootimage, slot)
     }
 
@@ -557,15 +558,29 @@ export class Player {
     }
 
     unloadLife() {
-        const mobs = engine.getComponentGroup(MobState);
-        while (mobs.entities.length) {
-            engine.removeEntity(mobs.entities[0]);
-        }
+        log(`in unloadLife of player.ts`)
+        let obj = Singleton.getInstance()
 
+        log(`in player.ts setting localmobstate empty`)
+        obj.localmobstate = []
+
+        log(`in player.ts unloadLife removing mobs`)
+        const mobs = engine.getComponentGroup(MobState);
+        mobs.entities.forEach((mob) => {
+            engine.removeEntity(mob);
+        });
+        // while (mobs.entities.length) {
+        //     engine.removeEntity(mobs.entities[0]);
+        // }
+
+        log(`in player.ts removing all LifeItems`)
         const items = engine.getComponentGroup(LifeItem);
         while (items.entities.length) {
             engine.removeEntity(items.entities[0]);
         }
+        
+        log(`localmobstate is now: ${obj.localmobstate}`)
+
     }
 
     damage(amount: number) {
@@ -635,6 +650,8 @@ export class Player {
 
             this.unloadLife()
             this.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");
+
+            this.hidehpbar()
 
             let deathscene = new DeathScene()
         }

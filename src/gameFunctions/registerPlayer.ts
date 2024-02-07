@@ -7,7 +7,7 @@ import { writeToCl } from "./writeToCL";
 
 
 export async function registerPlayer(ui: UI, player:Player, tradeWindow: TradeWindow) {
-    //log(`debug: 4 Inside registerPlayer`)
+    log(`debug: 4 Inside registerPlayer`)
 
     executeTask(async () => {
         try {

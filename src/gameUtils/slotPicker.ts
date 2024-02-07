@@ -189,6 +189,7 @@ export function slotPicker(slot: number) {
             fontPositionX = "19.5%";
             break;
         case 33:
+            position = "mc";
             positionY = "5.5%";
             positionX = "26.9%";
             fontPositionY = "7%";
@@ -209,7 +210,7 @@ export function slotPicker(slot: number) {
             fontPositionX = "30%";
             break;
         case 36:
-            position = "mc";
+            position = "pc";                //Purchase
             positionY = "-13%";
             positionX = "26.9%";
             fontPositionY = "-12%";
@@ -272,7 +273,7 @@ export function slotPicker(slot: number) {
             fontPositionX = "28.6%";
             break;
         case 58:
-            position = "sb";
+            position = "sb";            //SpellBook
             positionY = "-4.8%";
             positionX = "25.7%";
             fontPositionY = "-2%";
@@ -284,7 +285,7 @@ export function slotPicker(slot: number) {
             break;
             //log('slotPicker.ts:226 - inside case 60');
         case 70:
-            position = "qw";
+            position = "qw";          //QuestWindow
             positionX = "-28.2%";
             positionY = "-16.5%";
             break;
@@ -339,6 +340,18 @@ export function slotPicker(slot: number) {
             break;
         case "mc":
             isMerchant = true;
+            hAlign = "left";
+            vAlign = "center";
+            width = "1.8%";
+            height = "4.8%";
+            fontSize = 12;
+            fontWidth = 120;
+            fontHeight = 30;
+            fontHAlign = "left";
+            fontVAlign = "center";
+            break;
+        case "pc":
+            isPurchase = true;
             hAlign = "left";
             vAlign = "center";
             width = "1.8%";

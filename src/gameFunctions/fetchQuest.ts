@@ -26,16 +26,16 @@ export async function fetchQuest(npc: Npc, player: Player) {
     }
 }
 
-export async function checkQuestCompletion(questId: string, playerAddress: string) {
+export async function checkQuestCompletion(questId:string, playerAddress:string) {
     let playerQuestCompleteUrl = apiUrl + "/playerquest/" + questId + '/complete'
     const status = {
-        "playerAddress": playerAddress
+        "playerAddress":playerAddress
     }
     const options = {
         method: "PATCH",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type":"application/json"
         }
     }
 
@@ -85,13 +85,13 @@ export async function getQuestReward(questId: string, playerAddress: string) {
 
 }
 
-export async function acceptQuest(quest: any, player: Player, npc: string) {
+export async function acceptQuest(quest: any, player: Player, npc:string) {
 
     let playerQuestUrl = apiUrl + "/playerquest";
 
     const status = {
-        "playerId": player.address,
-        "questId": quest,
+        "playerId":player.address,
+        "questId":quest,
         "questGiver": npc
     }
 
@@ -99,7 +99,7 @@ export async function acceptQuest(quest: any, player: Player, npc: string) {
         method: "POST",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type":"application/json"
         }
     }
 

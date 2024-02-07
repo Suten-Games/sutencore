@@ -10,17 +10,20 @@ import { followData } from "../gameSystems/followSystem";
 import { UIBar } from "src/gameUI/uiBar";
 import { BarStyles } from "src/gameUtils/types";
 import { LootWindow } from "src/gameUI/lootWindow";
+import { QuestWindow } from "src/gameUI/questWindow";
 import { CornerLabel } from "src/gameUI/cornerLabel";
-import { setTimeout } from "src/gameUtils/timeOut";
+//import { setTimeout } from "src/gameUtils/timeOut";
 
 export class Npc extends Entity {
     private _id: string;
     private _name: string;
+    private _class: string;
     private _xp: number;
     private _hp: number;
     private _maxhp: number;
     private _percentage: number;
     private _lootWindow: LootWindow;
+    private _questWindow: QuestWindow;
     public walk: AnimationState;
     public turnAround: AnimationState;
     public turnLeft: AnimationState;
@@ -68,6 +71,7 @@ export class Npc extends Entity {
     constructor(
         id: string,
         name: string,
+        classtype: string,
         xp: number,
         damage: number,
         maxhp: number,
@@ -98,7 +102,7 @@ export class Npc extends Entity {
 
         
 
-        this.initializeComponents(id, name, xp, damage, dead, maxhp, hp, percentage, sound, shape, currentloc, currentrot, path, level, boss, portrait, width, height, personality, wallet, deity, goaltree, currentgoal, patron, faction)
+        this.initializeComponents(id, name, classtype, xp, damage, dead, maxhp, hp, percentage, sound, shape, currentloc, currentrot, path, level, boss, portrait, width, height, personality, wallet, deity, goaltree, currentgoal, patron, faction)
         // this.initializeAnimations();
 
         //log('attempting to create a new orc')
@@ -150,6 +154,9 @@ export class Npc extends Entity {
             obj.player,
             this
         );
+
+        this._questWindow = new QuestWindow(
+            obj.canvas, resources.interface.questLog);
 
 
         engine.addEntity(this);
@@ -213,6 +220,10 @@ export class Npc extends Entity {
 
     get mobname() {
         return this._name
+    }
+
+    get mobclass() {
+        return this._class
     }
 
     mobwalk() {
@@ -377,7 +388,7 @@ export class Npc extends Entity {
     }
 
     showhpbar() {
-        //log(`npc.ts:393 - inshowhpbar`);
+        log(`npc.ts:393 - inshowhpbar`);
         let obj = Singleton.getInstance();
         this.healthLabel.set(' ');
         this.levelLabel.set(' ');
@@ -387,6 +398,8 @@ export class Npc extends Entity {
         if (newYPosition < 0) {
             newYPosition = 350; // Reset to default if it goes too low
         }
+
+        //log('percentage ', this.percentage)
 
         this.hpbar = new UIBar(this.percentage / 100, -30, newYPosition, Color4.Red(), BarStyles.ROUNDSILVER, 0.8);
         this.healthLabel = new CornerLabel(this._name, -40, newYPosition + 10, Color4.White(), 12);
@@ -399,6 +412,7 @@ export class Npc extends Entity {
         if (!this.hpbar.hasComponent(LifeItem)) {
             this.hpbar.addComponent(new LifeItem());
         }
+        //log('calling this.hpbar.show()')
         this.hpbar.show();
 
         this.healthLabel.set(this.mobname);
@@ -428,7 +442,7 @@ export class Npc extends Entity {
     }
 
     hidehpbar() {
-        //log('npc.ts:407 - in hidehpbar')
+        log('npc.ts:407 - in hidehpbar')
         let obj = Singleton.getInstance();
         this.hpbar.hide()
         this.healthLabel.set('');
@@ -512,6 +526,7 @@ export class Npc extends Entity {
     private initializeComponents(
         id: string,
         name: string,
+        classtype: string,
         xp: number,
         damage: number,
         dead: boolean,
@@ -571,6 +586,8 @@ export class Npc extends Entity {
         this.getComponent(MobState).damage = damage;
         this._name = name;
         this.getComponent(MobState).mobname = name;
+        this._class = classtype;
+        this.getComponent(MobState).mobclass = classtype;
         this._xp = xp;
         this._hp = hp;
         this._percentage = percentage;

@@ -3,7 +3,7 @@ import { Player } from "src/gameObjects/player";
 import { Singleton } from "src/gameObjects/playerDetail";
 
 export function populateObj(json: ObjState, player: Player) {
-    // log(`debug: 10 Inside populateObj`)
+    log(`debug: 10 Inside populateObj`)
 
     // log(`populateObj:8 - player.name: ${player.name}`)
 

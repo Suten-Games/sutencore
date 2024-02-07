@@ -6,6 +6,8 @@ import { UI } from "src/gameUI/ui";
 import { writeToCl } from "./writeToCL";
 
 export async function getEthData(ui: UI, player:Player) {
+    log(`debug: 5 Inside  getEthData`)
+
     let lowerCaseAddress: string = "";
     let address = await getUserAccount();
     let userdata = await getUserData();
@@ -38,6 +40,7 @@ export async function getEthData(ui: UI, player:Player) {
     obj.backpack = ui.bp;
     obj.spellscroll = ui.ss;
     obj.spellbook = ui.sb;
+    obj.warriorstome = ui.wt;
     obj.combatlog = ui.cl;
 
     return lowerCaseAddress

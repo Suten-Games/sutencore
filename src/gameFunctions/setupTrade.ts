@@ -4,7 +4,7 @@ import { UI } from "src/gameUI/ui";
 import resources from "src/resources";
 
 export async function setupTrade(ui: UI, player: Player) {
-    //log(`debug: 3 Inside setupTrade`)
+    log(`debug: 3 Inside setupTrade`)
 
     const tradeWindow = new TradeWindow(
         ui.gc,

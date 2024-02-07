@@ -1,5 +1,4 @@
 import resources from "../resources";
-import { LifeItem } from "../components/lifeItemComponent";
 import { Item } from "../gameObjects/item";
 import { local } from "suten";
 import { Npc } from "src/gameObjects/npc";
@@ -15,11 +14,11 @@ export class LootWindow extends Entity {
     private _image;
     private _loot;
     private _closebutton;
-    private _actionbar;
-    private _backpack;
+    // private _actionbar;
+    // private _backpack;
     private _player;
     private _lootitem: any;
-    private _activeloot: any;
+    //private _activeloot: any;
     private _looted = false
     private _npc
 
@@ -39,8 +38,8 @@ export class LootWindow extends Entity {
         this._loot.sourceWidth = 1440; //Old Style
         this._loot.sourceHeight = 1440; //Old Style
         this._loot.visible = false;
-        this._actionbar = actionBar;
-        this._backpack = backPack;
+        // this._actionbar = actionBar;
+        // this._backpack = backPack;
         this._player = player;
         this._npc = orc
         //this.addComponent(new LifeItem())
@@ -90,7 +89,8 @@ export class LootWindow extends Entity {
         obj.lootwindows.push(this)
 
         let lootfetched = true;
-        let looturl = server + mobtier + '/' + this._player.address
+        //let looturl = server + mobtier + '/' + this._player.address
+        let looturl = server + 'mob/' + mobtier + '/' + this._player.address + '/' + this._npc.id
 
         //log(`RESPAWN: Calling looturl ${looturl}`)
 
