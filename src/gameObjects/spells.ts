@@ -36,7 +36,8 @@ const amunsShielding:Ispell = {
     "sound":resources.sounds.wardspell,
     "srcw": 122,
     "srch": 120,
-    "price":6
+    "price":6,
+    "buybackprice":2
 
 }
 
@@ -74,7 +75,8 @@ const shieldbash: Ispell = {
     "sound": resources.sounds.wardspell,
     "srcw": 122,
     "srch": 120,
-    "price": 6
+    "price": 6,
+    "buybackprice":2
 
 }
 
@@ -112,8 +114,8 @@ const minorShielding: Ispell = {
     "sound": resources.sounds.wardspell,
     "srcw":122,
     "srch":120,
-    "price":5
-
+    "price":5,
+    "buybackprice": 2
 }
 
 const jadeShielding: Ispell = {
@@ -150,8 +152,8 @@ const jadeShielding: Ispell = {
     "sound": resources.sounds.wardspell,
     "srcw": 122,
     "srch": 120,
-    "price": 5
-
+    "price": 5,
+    "buybackprice": 2
 }
 
 const barricade: Ispell = {
@@ -188,7 +190,8 @@ const barricade: Ispell = {
     "sound": resources.sounds.elementalspell,
     "srcw": 122,
     "srch": 120,
-    "price": 6
+    "price": 6,
+    "buybackprice": 2
 }
 
 const gildedblocks: Ispell = {
@@ -225,7 +228,8 @@ const gildedblocks: Ispell = {
     "sound": resources.sounds.elementalspell,
     "srcw": 122,
     "srch": 120,
-    "price": 6
+    "price": 6,
+    "buybackprice": 2
 }
 
 const blizzard: Ispell = {
@@ -262,7 +266,8 @@ const blizzard: Ispell = {
     "sound": resources.sounds.snowspell,
     "srcw": 122,
     "srch": 120,
-    "price": 60
+    "price": 60,
+    "buybackprice": 2
 }
 
 const sprinkle: Ispell = {
@@ -299,7 +304,8 @@ const sprinkle: Ispell = {
     "sound": resources.sounds.rainspell,
     "srcw": 122,
     "srch": 120,
-    "price": 60
+    "price": 60,
+    "buybackprice": 20,
 }
 
 let allspells: Record<string, Ispell> = {}

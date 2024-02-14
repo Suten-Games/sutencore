@@ -8,28 +8,23 @@ import { newPlayer } from "./newPlayer";
 import { populateObj } from "./populateObj";
 import { loadPlayerFactions } from "./loadPlayerFactions";
 import { fetchPlayerQuests } from "./fetchPlayerQuests";
-import { setupTrade } from "./setupTrade";
 
 export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: string, player: Player) {
-    log(`debug: 7 Inside playerSearch`)
-    //let tradeWindow
+    let playerJson = json;
 
-    if (json.message == "Could not find player by address") {
-        //log(`Could not find player, calling newPlayer`)
-        newPlayer(ui, lowerCaseAddress, player)
-        connectToServer(ui, json, player)
-        //tradeWindow = await setupTrade(ui, player)
+    if (json.message === "Could not find player by address") {
+        playerJson = await newPlayer(ui, lowerCaseAddress, player);
     } else {
-        //log(`playerSearch.ts: 23`)
-        //connectToServer(ui, json, player)
-        let playerdead = deathCheck(ui, json, player)
-        if(!playerdead) {
-            connectToServer(ui, json, player)
-            //tradeWindow = await setupTrade(ui, player)
-            populateObj(json, player)
-            loadPlayerItems(ui, json)
-            loadPlayerFactions(player, json)
-            fetchPlayerQuests(player)
+        const playerIsDead = deathCheck(ui, json, player);
+        if (playerIsDead) {
+            return; // Exit if the player is dead
         }
+
+        loadPlayerItems(ui, json);
+        populateObj(playerJson, player);
+        loadPlayerFactions(player, playerJson);
+        await fetchPlayerQuests(player);
     }
+
+    await connectToServer(ui, player);
 }

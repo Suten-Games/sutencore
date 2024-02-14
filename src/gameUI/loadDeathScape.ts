@@ -11,9 +11,8 @@ export class DeathScene extends Entity {
 
         const parcelsCountX = duatX
         const parcelsCountZ = duatZ
-        //const groundShape = new GLTFShape("models/skullsandbones.glb");
         const groundShape = resources.models.skullsandbones
-        const outerwall = resources.models.duatwall
+        //const outerwall = resources.models.duatwall
 
         for (let i = 0; i < parcelsCountX; i++) {
             for (let j = 0; j < parcelsCountZ; j++) {

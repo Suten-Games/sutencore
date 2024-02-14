@@ -70,6 +70,7 @@ export class QuestWindow extends Entity {
                 res.name,
                 res.itemtype,
                 res.price,
+                res.buybackprice,
                 res.itemtype,
                 res.spellshape,
                 res.spellstart,

@@ -8,32 +8,37 @@ import { CombatLog } from "./combatLog";
 import { Item } from "src/gameObjects/item";
 import { fetchInventory } from "src/gameFunctions/fetchInventory";
 import { Npc } from "src/gameObjects/npc";
-import { PromptStyles } from "src/gameUtils/types";
-import { writeToCl } from "src/gameFunctions/writeToCL";
-import { OkPrompt } from "./okPrompt";
 import { purchasedItem } from "src/gameFunctions/purchasedItem";
-//import { matic } from '@dcl/l2-scene-utils'
+import { UI } from "./ui";
+import { writeToCl } from "src/gameFunctions/writeToCL";
+import { soldItem } from "src/gameFunctions/soldItem";
 
 export class TradeWindow {
     private _canvas;
     private _image;
     private _cl;
     private _bp;
+    //private _sellbackground: UIImage;
     private _npc: Npc;
     private _potions: Item[] = [];
     private _closebutton;
     private _buybutton;
+    private _buypage;
+    private _sellpage;
     private _buytext;
+    private _storetitle;
+    private _forsale: Item;
     public sutenaddress = "0xaC33868Cd9fE28eF755bA568369214dB42Aa9022";
     private obj = Singleton.getInstance();
 
-    private backpacksound = new SoundBox(
+    private coinssound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
-        resources.sounds.backpack,
+        resources.sounds.coins,
         false
     );
 
     constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, player: Player, combatLog: CombatLog) {
+    //constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, player: Player, combatLog: CombatLog, salespage: UIImage) {
         this._canvas = canvas;
         this.obj.canvas = canvas;
         this._image = image;
@@ -48,6 +53,7 @@ export class TradeWindow {
         this._bp.sourceWidth = 877; //Old Style
         this._bp.sourceHeight = 1401; //Old Style
         this._bp.visible = false;
+
 
         this._closebutton = new UIImage(this._canvas, resources.interface.closebutton);
         this._closebutton.hAlign = "left";
@@ -64,6 +70,18 @@ export class TradeWindow {
                 this.hide()
             }
         )
+
+        this._storetitle = new UIText(this._canvas)
+        this._storetitle.value = "General Store"
+        this._storetitle.fontSize = 12;
+        this._storetitle.width = 120;
+        this._storetitle.height = 30;
+        this._storetitle.hAlign = "left";
+        this._storetitle.vAlign = "center";
+        this._storetitle.positionY = "39%";
+        this._storetitle.positionX = "22%";
+        this._storetitle.visible = false;
+
 
         this._buybutton = new UIImage(this._canvas, resources.interface.buybutton);
         this._buybutton.hAlign = "left";
@@ -85,6 +103,37 @@ export class TradeWindow {
         this._buytext.positionY = "-21%";
         this._buytext.positionX = "31%";
         this._buytext.visible = false;
+
+        this._buypage = new UIImage(this._canvas, resources.interface.buybutton);
+        this._buypage.hAlign = "left";
+        this._buypage.vAlign = "center";
+        this._buypage.width = "5%";
+        this._buypage.height = "5.3%";
+        this._buypage.positionY = "-28.9%";
+        this._buypage.positionX = "15.7%";
+        this._buypage.sourceWidth = 390;
+        this._buypage.sourceHeight = 170;
+        this._buypage.visible = false;
+        this._buypage.onClick = new OnPointerDown(() => {
+            log('clicked buypage')
+            this.showbuypage()
+        })
+
+        this._sellpage = new UIImage(this._canvas, resources.interface.buybutton);
+        this._sellpage.hAlign = "left";
+        this._sellpage.vAlign = "center";
+        this._sellpage.width = "5%";
+        this._sellpage.height = "5.3%";
+        this._sellpage.positionY = "-28.9%";
+        this._sellpage.positionX = "20.7%";
+        this._sellpage.sourceWidth = 390;
+        this._sellpage.sourceHeight = 170;
+        this._sellpage.visible = false;
+        this._sellpage.onClick = new OnPointerDown(() => {
+            log('clicked sellpage')
+            this.showsellpage()
+        })
+
         this.obj.tradewindow = this;
     }
 
@@ -107,6 +156,7 @@ export class TradeWindow {
                     itemData.name,
                     null, // Other parameters as needed
                     itemData.price, // Assuming price is part of itemData
+                    itemData.buybackprice,
                     itemData.itemtype,
                     null,
                     null,
@@ -126,13 +176,16 @@ export class TradeWindow {
 
     private clearItems() {
         this._potions.forEach(potion => potion.hide());
-        this._potions = []; // Reset the array
+        //this._potions = []; // Reset the array
     }
 
     public show(npc: Npc) {
         this._bp.visible = true;
         this._closebutton.visible = true;
-        //this._buybutton.visible = true;
+        this._sellpage.visible = true;
+        this._buypage.visible = true;
+        this._storetitle.value = `${npc.name}'s General Store`
+        this._storetitle.visible = true;
         
         this._npc = npc
 
@@ -142,13 +195,53 @@ export class TradeWindow {
         this._potions.forEach(potion => potion.show());
     }
 
+    public showbuypage() {
+        this._bp.visible = true;
+        this._potions.forEach(potion => potion.show());
+    }
+
+    public showsellpage() {
+        this._bp.visible = false;
+
+        var ui = UI.getInstance()
+        ui.turnOnSales()
+
+        this.clearItems(); // Clear items when hiding 
+        this._buybutton.visible = false;
+        this._buytext.visible = false;
+
+        let actionbarcontent = this.obj.fetchactionbar()
+        actionbarcontent.forEach(item => item.setOnClickForSelling(this));
+
+        let backpackcontent = this.obj.fetchbackpack()
+        backpackcontent.forEach(item => item.setOnClickForSelling(this));
+    }
+
     public hide() {
         this._bp.visible = false;
         this._buybutton.visible = false;
         this._closebutton.visible = false;
         this._buytext.visible = false;
+        this._sellpage.visible = false;
+        this._buypage.visible = false;
+        this._storetitle.visible = false;
+
+        var ui = UI.getInstance()
+        ui.turnOffSales()
 
         this.clearItems(); // Clear items when hiding
+
+        let actionbarcontent = this.obj.fetchactionbar()
+        actionbarcontent.forEach(item => item.restoreOriginalOnClick());
+
+        let backpackcontent = this.obj.fetchbackpack()
+        backpackcontent.forEach(item => item.restoreOriginalOnClick());
+
+        if(this._forsale) {
+            this._forsale.sendToBackpack()
+        }
+
+        writeToCl(`${this._npc.name} says, Take care!`)
     }
 
     private afterConfirm(potion: any) {
@@ -156,7 +249,42 @@ export class TradeWindow {
         this._buybutton.visible = false;
     }
 
-    public purchase(item: any) {
+    public sell(item: any) {
+        log(`in tradeWindow sell: ${item.buybackprice}`)
+        this._buybutton.visible = true;
+        this._buytext.value = `${item.buybackprice} Mana`
+        this._buytext.visible = true;
+        this._forsale = item
+
+        this._buybutton.onClick = new OnPointerDown(() => {
+            log('clicked the sell button')
+            writeToCl(`You have sold ${item.lootdesc()} for ${item.buybackprice}`)
+            // Step One, Update the Cash of the player
+            // player.increaseWealth(item.buybackprice)
+
+            // Step Three, Make the coins sound
+            let camera = Camera.instance
+            this.coinssound.getComponent(Transform).position = camera.position
+            this.coinssound.play();
+
+            // Step Five, Merchant thanks the player
+            writeToCl(`${this._npc.name} says, Pleasure doing business with you.`)
+
+            //Step 6 Add item to Merchants Inventory on server
+            soldItem(this._npc, item)
+
+            // Step Seven, Delete the item since its been sold
+            item.hide()
+            item = null;
+
+            // Step Eight, Remove the buy buttons
+            this._buybutton.visible = false;
+            this._buytext.visible = false;
+
+        });
+    }
+
+    public purchase(item: Item) {
         log(`in tradeWindow purchase`)
         this._buybutton.visible = true;
         this._buytext.value = `${item.potionprice} Mana`
@@ -166,155 +294,9 @@ export class TradeWindow {
         this._buybutton.onClick = new OnPointerDown(() => {
             log('clicked the buy button')
             purchasedItem(this._npc, item)
-            //potion.sendItemDown()
             item.sendToBackpack()
             this._buybutton.visible = false;
             this._buytext.visible = false;
         });
-
-        //Matic Purchasing
-        // this._buybutton.onClick = new OnPointerDown(async () => {
-        //   var obj = Singleton.getInstance();
-
-        //   log(`obj.manal1 ${obj.manal1} ${typeof(obj.manal1)}`)
-
-        //   if (obj.manal1 < 100 && obj.maticbalance <= item.potionprice) {
-        //     this.hide();
-        //     writeToCl(`You don't have enough Mana for this item.`)
-        //     new OkPrompt(
-        //         "You don't have enough Mana to buy this item.",
-        //         () => {
-        //             writeToCl(`Please acquire some mana and come back to the shop!`)
-        //         },
-        //         'Ok',
-        //         true
-        //     )
-        //   } else if (obj.maticbalance >= item.potionprice) {
-        //     //const loading = new ui.LoadingIcon(15);
-        //     writeToCl(`You are purchasing a ${item.potiontype} potion`)
-        //     writeToCl(`Click 'Sign' in the Metamask popup.`)
-        //     writeToCl(`Hang tight, only takes a moment.`)
-        //     await matic.sendMana(this.sutenaddress, item.potionprice, true);
-        //     obj.maticbalance = obj.maticbalance - item.potionprice;
-        //     item.sendItemDown();
-        //     this._cl.text = `You have purchased a ${item.potiontype} potion`;
-        //     this._cl.text = `Your Matic Mana Balance is now ${obj.maticbalance}`;
-        //     this._buybutton.visible = false;
-        //     this._buytext.visible = false;
-        //     this.backpacksound.play();
-        //   }
-        // }
-        //   } else {
-        //     this.hide();
-        //     this._cl.text = `You don't have enough Mana for this item.`;
-        //     let customprompt = new ui.CustomPrompt(PromptStyles.LIGHT);
-        //     customprompt.addText("Out of Matic Mana!", 0, 130, Color4.Red(), 30);
-        //     customprompt.addText(
-        //       "You don't have enough Matic Mana to buy this item.",
-        //       0,
-        //       100
-        //     );
-        //     customprompt.addText("I can transfer Mana to Matic for you.", 0, 80);
-        //     customprompt.addText(
-        //       "How much Mana would you like to transfer?",
-        //       0,
-        //       60
-        //     );
-        //     let button1 = customprompt.addButton(
-        //       "50 Mana",
-        //       -100,
-        //       -30,
-        //       () => {
-        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
-        //         this._cl.text = `There is an associated Ethereum Miner Fee. `
-        //         this._cl.text = `The fee depends on Ethereum network traffic. `
-        //         this._cl.text = `If the fee is too high, try again later.`
-        //         async function firedeposit(cl) {
-        //           this._cl.text = `Please be patient, might take a few minutes to mine.`
-        //           await matic.depositMana(50);
-        //           log("Mana deposited");
-        //           obj.maticbalance = obj.maticbalance + 50;
-        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
-        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
-        //           log("new balance: ", obj.maticbalance);
-        //           cl.text = `You have added 50 Mana to your Matic Wallet`;
-        //           cl.text = `Your balance is now ${obj.maticbalance}`;
-        //         }
-        //         firedeposit(this._cl);
-        //       }, ButtonStyles.ROUNDGOLD
-        //     );
-
-        //     let button2 = customprompt.addButton(
-        //       "100 Mana",
-        //       -100,
-        //       -90,
-        //       () => {
-        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
-        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
-        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
-        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
-        //         async function firedeposit(cl) {
-        //           await matic.depositMana(100);
-        //           log("Mana deposited");
-        //           obj.maticbalance = obj.maticbalance + 100;
-        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
-        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
-        //           log("new balance: ", obj.maticbalance);
-        //           cl.text = `You have added 100 Mana to your Matic Wallet`;
-        //           cl.text = `Your balance is now ${obj.maticbalance}`;
-        //         }
-        //         firedeposit(this._cl);
-        //       }, ButtonStyles.ROUNDGOLD
-        //     );
-        //     let button3 = customprompt.addButton(
-        //       "500 Mana",
-        //       100,
-        //       -30,
-        //       () => {
-        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
-        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
-        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
-        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
-        //         async function firedeposit(cl) {
-        //           await matic.depositMana(500);
-        //           log("Mana deposited");
-        //           obj.maticbalance = obj.maticbalance + 500;
-        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
-        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
-        //           log("new balance: ", obj.maticbalance);
-        //           cl.text = `You have transfered 500 Mana to your Matic Wallet!`;
-        //           cl.text = `Your Matic Mana balance is now ${obj.maticbalance}`;
-        //           customprompt.hide()
-        //           this.show()
-        //         }
-        //         firedeposit(this._cl);
-        //       }, ButtonStyles.ROUNDGOLD
-        //     );
-
-        //     let button4 = customprompt.addButton(
-        //       "1000 Mana",
-        //       100,
-        //       -90,
-        //       () => {
-        //         this._cl.text = `The first Metamask Popup is to approve the transfer.`
-        //         this._cl.text = `There is an associated Ethereum Miner Fee for this. `
-        //         this._cl.text = `The fee is higher depending on Ethereum network traffic. `
-        //         this._cl.text = `If the fee is too high, try again at a lower traffic time.`
-        //         async function firedeposit(cl) {
-        //           await matic.depositMana(1000);
-        //           log("Mana deposited");
-        //           obj.maticbalance = obj.maticbalance + 1000;
-        //           this._cl.text = `The second popup is the fee for the Mana transfer.`
-        //           this._cl.text = `Please be patient, might take a couple minutes to mine.`
-        //           log("new balance: ", obj.maticbalance);
-        //           cl.text = `You have added 1000 Mana to your Matic Wallet`;
-        //           cl.text = `Your balance is now ${obj.maticbalance}`;
-        //         }
-        //         firedeposit(this._cl);
-        //       }, ButtonStyles.ROUNDGOLD
-        //     );
-        //   }
-        // });
     }
-
 }

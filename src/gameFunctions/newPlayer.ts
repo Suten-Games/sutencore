@@ -8,18 +8,14 @@ const apiUrl = local
     ? "http://localhost:8080/player"
     : "https://sutenquestapi.azurewebsites.net/player";
 
-export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
+export async function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
     log('could not find player')
-    //log(`debug: 7 Inside  newPlayer`)
     
     var obj = Singleton.getInstance();
 
     writeToCl(`Welcome to SutenQuest!`, `You have entered the Ruins of Saqarra.`)
     writeToCl(`Fight mobs or complete quests for experience and loot.`, `You are a level 1 Adventurer`)
     writeToCl(`Press 'E' to attack, Press 'F' to loot.`, `Dbl click to delete items.`)
-    //writeToCl(`Good luck ${player.name}, may you prosper and become strong.`,`Perhaps when your days are done, you will become Maa Kheru enter the Field of Reeds`)
-
-    
 
     const newplayer = {
         address: lowerCaseAddress,
@@ -64,16 +60,32 @@ export function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
 
     log(`CREATING A NEW PLAYER`)
 
-    fetch(apiUrl, options)
-        .then((res) => res.json())
-        .then(() => {
-            player.level = 1;
-            player.basedamage = 1;
-            player.hp = 40;
-            player.maxhp = 40;
-        });
+    player.level = newplayer.level;
+    player.basedamage = newplayer.basedamage;
+    player.hp = newplayer.hp;
+    player.maxhp = newplayer.maxhp;
+    player.factions = newplayer.factions;
+    obj.playerhp = newplayer.hp;
+    obj.playerclass = newplayer.characterclass;
+    ui.bp.playerclass = newplayer.characterclass
+    obj.strength = newplayer.strength;
+    obj.level = newplayer.level;
+    obj.agility = newplayer.agility;
+    obj.stamina = newplayer.stamina;
+    obj.wisdom = newplayer.wisdom;
+    obj.charisma = newplayer.charisma;
+    obj.armor = newplayer.armor;
+    obj.player = player
 
-    obj.playerhp = 40;
-    obj.playerclass = "Adventurer";
-    ui.bp.playerclass = "Adventurer"
+    try {
+        const response = await fetch(apiUrl, options);
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json(); // Assuming the server responds with JSON
+        return data; // Return the parsed JSON data
+    } catch (error:any) {
+        log(`Error in newPlayer function: ${error.message}`);
+        return null; // Handle errors or invalid responses
+    }
 }

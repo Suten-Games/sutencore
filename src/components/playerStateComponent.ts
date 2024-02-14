@@ -28,4 +28,5 @@ export class PlayerState {
     primaryweapon: string; 
     message:string;
     factions: any;
+    searchingfor: any;
 }

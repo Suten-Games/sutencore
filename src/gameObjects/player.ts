@@ -40,6 +40,8 @@ export class Player {
     private _shieldhp: number;
     private _factions: any
     private _activequests: string[];
+    private _searchingfor: string[];
+    private isAgressive: boolean = false;
     
     private hpBar = new UIBar(
         1,
@@ -135,6 +137,14 @@ export class Player {
         return this._activequests;
     }
 
+    set aggressive(val:boolean){
+        this.isAgressive =  val;
+    }
+
+    get aggressive() {
+        return this.isAgressive;
+    }
+
     get alive() {
         return this._alive;
     }
@@ -145,6 +155,14 @@ export class Player {
 
     get name() {
         return this._name;
+    }
+
+    get searching() {
+        return this._searchingfor;
+    }
+
+    set searching(val) {
+        this._searchingfor = val;
     }
 
     set name(val: string) {
@@ -511,7 +529,6 @@ export class Player {
                     .then((res) => res.json())
                     .then((res) => {
                         this.hp = res.maxhp;
-                        this.maxhp = res.maxhp;
                         obj.playerhp = res.maxhp;
                     });
             } catch (error) {

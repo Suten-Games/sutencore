@@ -2,8 +2,6 @@ import { MobState } from "../components/mobStateComponent";
 import resources from "../resources";
 import { sutenBase, local } from "../../suten"
 import { Player } from "../gameObjects/player";
-// import { ActionBar } from "../gameUI/actionBar";
-// import { BackPack } from "../gameUI/backPack";
 import { CombatLog } from "../gameUI/combatLog";
 import { Item } from "../gameObjects/item";
 import { SoundBox } from "src/gameObjects/soundBox";
@@ -38,14 +36,9 @@ const server = local
     : "wss://sutenquestapi.azurewebsites.net/";
 
 export async function joinSocketsServer(
-    // gameCanvas: UICanvas,
-    // actionBar: ActionBar,
-    // backPack: BackPack,
     player: Player,
     combatLog: CombatLog
 ) {
-
-    //log(`in joinSocketServer`)
 
     const socket = new WebSocket(server)
 
@@ -326,12 +319,11 @@ export function createNpc(element: any, path: any) {
 }
 
 export function createNpcFSM(npc: any, element: any) {
+    log(`wsConnection.ts: 322 -> calling new NpcFSM`)
     return new NpcFSM(
         npc,
         element.spawnloc,
         element.spawnrot,
-        clicked,
-        PUNCH_TIME,
     );
 }
 
@@ -483,6 +475,7 @@ export function handleGameMessage(msg: any) {
                     mob = createNpc(element, [])
                 }
                 if (mob) {
+                    log(`wsConnection.ts: adding createNpcFSM system`)
                     engine.addSystem(createNpcFSM(mob, element));
                     mob.name = element.name;
                 }

@@ -1,5 +1,5 @@
 import { Singleton } from "src/gameObjects/playerDetail";
-import { SceneState } from "./npcFSM";
+import { SceneState } from "./NewnpcFSM";
 import { CombatLog } from "src/gameUI/combatLog";
 import { MobState } from "src/components/mobStateComponent";
 import { heHatedSomebodyButTheyLeft } from "./heHatedSomebody";

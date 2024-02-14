@@ -59,13 +59,6 @@ export class Npc extends Entity {
     private _portrait: string
     private _goaltree: any
     private _inbattle: boolean
-    // //private currentHitAnimation: string = '';
-    // private hitAnimationStartTime: number = 0;
-    // //private currentAttackAnimation: string = '';
-    // private currentAttackAnimation: 'boxing' | 'kicking' | null = null;
-    // private attackAnimationStartTime: number = 0;
-    // private currentHitAnimation: 'hit1' | 'hit2' | null = null;
-    // private canChangeAnimation: boolean = true;
 
 
     constructor(
@@ -100,16 +93,12 @@ export class Npc extends Entity {
 
         this.hpbar.hide()
 
-        
-
         this.initializeComponents(id, name, classtype, xp, damage, dead, maxhp, hp, percentage, sound, shape, currentloc, currentrot, path, level, boss, portrait, width, height, personality, wallet, deity, goaltree, currentgoal, patron, faction)
         // this.initializeAnimations();
 
-        //log('attempting to create a new orc')
         const obj = Singleton.getInstance()
 
         this._level = level;
-
         this._faction = faction;
 
         let npcAnimator = new Animator();
@@ -165,7 +154,6 @@ export class Npc extends Entity {
     public hideOrc() {
         this.getComponent(GLTFShape).visible = false
     }
-
 
     public playAudio() {
         this.getComponent(AudioSource).playOnce();
@@ -275,7 +263,6 @@ export class Npc extends Entity {
             this.hit1.playing = true;
         }
     }
-    
 
     mobidle() {
         //log(`in mobidle method()`)
@@ -286,16 +273,13 @@ export class Npc extends Entity {
     mobdead() {
         this.idle.playing = false;
         this.boxing.playing = false;
-        this.death2.playing = false;
         this.walk.playing = false;
         this.turnLeft.playing = false;
         this.hit1.playing = false;
         this.hit2.playing = false;
-        this.death1.playing = true;
-        this.death1.looping = false;
+        this.death2.playing = true;
+        this.death2.looping = false;
     }
-
-
 
     respawn() {
         log(`trying to respawn ${this.id}`)
@@ -346,7 +330,6 @@ export class Npc extends Entity {
         }
     }
 
-
     healthcheck(val: number) {
         //log('npc.ts:337 - in healthcheck')
         if (val > 0) {
@@ -369,7 +352,6 @@ export class Npc extends Entity {
             )
         );
     }
-
 
     addlootallclick() {
         this.addComponentOrReplace(
@@ -474,7 +456,6 @@ export class Npc extends Entity {
         this.initialhp(Number(percentage) / 100)
     }
 
-
     takedamage(amount: number, loc: any, rot: any) {
         const obj = Singleton.getInstance()
         let mobstate = this.getComponent(MobState)
@@ -505,7 +486,6 @@ export class Npc extends Entity {
         return this.hp
     }
 
-
     remove() {
         let url = this.npcUrl + "/" + this._id;
 
@@ -521,7 +501,6 @@ export class Npc extends Entity {
             }
         });
     }
-
 
     private initializeComponents(
         id: string,

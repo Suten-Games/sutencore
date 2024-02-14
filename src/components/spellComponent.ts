@@ -7,7 +7,7 @@ export interface Ispell {
     desc: string, levelmsg: Array<Imsg>, oncastmsg: Array<Imsg>,
     ondropmsg: Array<Imsg>, duration: number, image: Texture,
     itemtype: string, spellshape: string, spellstart: number, spellend: number, sound: AudioClip,
-    srcw: number, srch:number, price: number
+    srcw: number, srch:number, price: number, buybackprice: number
 }
 
 export interface Imsg {

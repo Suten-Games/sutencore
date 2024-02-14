@@ -7,7 +7,6 @@ import { Singleton } from "./playerDetail";
 import { slotPicker } from "src/gameUtils/slotPicker";
 import { Player } from "./player";
 import { setTimeout } from "src/gameUtils/timeOut";
-import { setSpell } from "src/gameFunctions/setSpell"; 
 import { SpellScroll } from "src/gameUI/spellScroll";
 import { spellAction } from "src/gameFunctions/spellAction";
 import { getspell } from "./spells";
@@ -16,7 +15,6 @@ import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
 import { QuestWindow } from "src/gameUI/questWindow";
-import { writeToCl } from "src/gameFunctions/writeToCL";
 import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
 
 
@@ -41,6 +39,7 @@ export class Item {
     private _player: Player;
     private _potiontype;
     private _potionprice;
+    private _buybackprice;
     private _slot: number;
     private _type: string | null;
     private _spellshape;
@@ -63,6 +62,8 @@ export class Item {
     private _isclothing;
     private _scribedspell;
 
+    private originalOnClick: () => void;
+
     private potionsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.corkpop,
@@ -74,7 +75,7 @@ export class Item {
         resources.sounds.backpack,
         false
     );
-
+    
     constructor(
         image: Texture,
         slot: number,
@@ -83,6 +84,7 @@ export class Item {
         desc: string,
         type: string | null = null,
         price: number | null = null,
+        buybackprice: number | null = null,
         itemtype: string | null = null,
         spellshape: string | null = null,
         spellstart: number | null = null,
@@ -104,6 +106,8 @@ export class Item {
         this._lootimage.visible = false;
         this._activespellimage = new UIImage(this._canvas, this._image);
         this._activespellimage.visible = false;
+
+        this.originalOnClick = () => { };
 
         if (npc) {
             this._npc = npc
@@ -139,6 +143,11 @@ export class Item {
 
         if (price) {
             this._potionprice = price
+        }
+
+        if (buybackprice) {
+            log(`Set buybackprice: ${buybackprice}`)
+            this._buybackprice = buybackprice
         }
 
         this._spellstart = spellstart;
@@ -203,7 +212,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
-        log('item.ts still in constructor, calling slotPicker with slot: ', slot)
+        //log('item.ts still in constructor, calling slotPicker with slot: ', slot)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -232,29 +241,155 @@ export class Item {
 
 
         if (this.isMerchant) {
-            this._lootimage.onClick = new OnClick(() => {
+            this._lootimage.onClick = new OnPointerDown(() => {
                 this.setItemForSale();
             });
         } else if (this.isActionBar) {
             log('--')
         } else if (this.isPurchase) {
-            this._lootimage.onClick = new OnClick(() => {
-                //this.sendItemDown();
+            this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
             });
         } else if (this.isLootWindow) {
-            this._lootimage.onClick = new OnClick(() => {
+            this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
             })
         } else if (this.isSpellBook) {
             let stuff = "stuff"
         } else if (this.isQuestWindow) {
-            log(`item.ts - Created the loot item. Attaching the click handler to the loot`)
+            //log(`item.ts - Created the loot item. Attaching the click handler to the loot`)
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
             })
         }
     }
+
+    private consumeAction = (slot: number) => {
+        if (this._image.src.split("/")[2] == "redHealthPotion.png") {
+            this._isconsumable = true;
+            this._player.heal(20, true);
+        } else if (this._image.src.split("/")[2] == "greenHealthPotion.png") {
+            this._isconsumable = true;
+            this._player.heal(50, true);
+        } else if (this._image.src.split("/")[2] == "blueHealthPotion.png") {
+            this._isconsumable = true;
+            this._player.heal(500, true);
+        }
+
+        let camera = Camera.instance
+        this.potionsound.getComponent(Transform).position = camera.position
+        this.potionsound.play()
+
+        this._lootimage.visible = false;
+        this._actionBar.resetSlot(slot);
+        this._backPack.resetSlot(slot); 
+    }
+
+    private handleQuestLoot = (slot:number) => {
+        trinketAction(this)
+        if (this._image.src.split('/')[2] == 'sandbeetle.png') {
+            this._isquestloot = true;
+            this._player.trinket("It looks like a petrified beetle shell", "Beetle Shell", slot, this)
+        } else if (this._image.src.split('/')[2] == "orctooth.png") {
+            this._isquestloot = true;
+            this._player.trinket("You hit him so hard a tooth fell out! Someone might want this.", "Orc Tooth", slot, this);
+        }
+    }
+    
+    private equipWeaponAction = (slot: number) => {
+        if (this._image.src.split('/')[2] == 'rustysword.png') {
+            this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
+        } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
+            this._player.weapon(resources.loot.rustydagger, "Rusty Dagger", this._actionBar, this._backPack, this, slot)
+        } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
+            this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
+        } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
+            //log(`cracked staff`)
+            this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
+        } 
+    }
+
+    private inspectScroll = () => {
+        this._spellScroll.setSpell(this._desc.value, this)
+    }
+
+    private inspectClothing = () => {
+        trinketAction(this)
+        const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
+        Dbl click, then click on the trash icon to delete it from inventory.`
+        const chunks = chunkSentence(statement, 7)
+        writeChunks(chunks)
+    }
+
+    private castSpell = () => {
+        let completespell = getspell(this._desc.value)
+        spellAction(this, completespell)
+    }
+
+    // Method to change onClick logic, e.g., for selling items
+    public setOnClickForSelling(tradewindow:TradeWindow): void {
+        log(`called setOnClickForSelling `)
+
+        if(tradewindow) {
+            log(`we have a tradewinow`)
+        } else {
+            log(`somehow still no tradewindow`)
+        }
+
+        this._lootimage.onClick = new OnPointerDown(() => {
+            log("Clicked an item in the actionbar. Item is now set for selling.");
+
+            this.saleResetItem()
+
+            const slotPosition1 = slotPicker(36);
+            this.setSlotProperties(slotPosition1);
+
+            if(this._tradewindow) {
+                log("Calling tradewindow.sell")
+                this._tradewindow.sell(this) 
+            } else {
+                log("tradewindow is somehow not set")
+                log("setting it and calling sell")
+                tradewindow.sell(this)
+            }
+        });
+    }
+
+    public setOriginalAction(slot:number) {
+        // Based on the item type, assign the correct action method
+        if (this._isconsumable) {
+            this.setOriginalOnClick(() => this.consumeAction(slot));
+        } else if (this._isweapon) {
+            this.setOriginalOnClick(() => this.equipWeaponAction(slot));
+        } else if (this._isquestloot) {
+            this.setOriginalOnClick(() => this.handleQuestLoot(slot));
+        } else if (this._isscroll)  {
+            this.setOriginalOnClick(() => this.inspectScroll()); 
+        } else if (this._isclothing) {
+            this.setOriginalOnClick(() => this.inspectClothing());
+        } else if (this._isspell) {
+            this.setOriginalOnClick(() => this.castSpell());
+        } else {
+            this._player.unusable()
+        }
+    }
+
+    // Call this method with the original onClick logic
+    public setOriginalOnClick(onClickFunction: () => void): void {
+        this.originalOnClick = onClickFunction;
+        this._lootimage.onClick = new OnPointerDown(() => onClickFunction());
+    }
+
+    // Call this method to switch to a selling action or any other temporary action
+    public setTemporaryOnClick(action: () => void): void {
+        this._lootimage.onClick = new OnPointerDown((e) => action());
+    }
+
+    // Method to restore the original onClick logic
+    public restoreOriginalOnClick(): void {
+        this._lootimage.onClick = new OnPointerDown(() => this.originalOnClick());
+    }
+
 
     public image() {
         return this._image;
@@ -265,22 +400,22 @@ export class Item {
     }
 
     public show() {
-        log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
+        //log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
         
         if (this.isLootWindow) {
-            log('in item show, its a lootwindow')
+            //log('in item show, its a lootwindow')
             this._lootimage.visible = true;
             this._desc.visible = true;
-            log(`the loot image: ${JSON.stringify(this._lootimage)}`)
-            log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
-            log(`the loot image positionX: ${this._lootimage.positionX}`)
+            // log(`the loot image: ${JSON.stringify(this._lootimage)}`)
+            // log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
+            // log(`the loot image positionX: ${this._lootimage.positionX}`)
         } else if (this.isQuestWindow) {
-            log('in item show, its a questwindow, loot should be visible now')
+            //log('in item show, its a questwindow, loot should be visible now')
             this._lootimage.visible = true;
             this._desc.visible = true;
-            log(`the loot image: ${JSON.stringify(this._lootimage)}`)
-            log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
-            log(`the loot image positionX: ${this._lootimage.positionX}`)
+            // log(`the loot image: ${JSON.stringify(this._lootimage)}`)
+            // log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
+            // log(`the loot image positionX: ${this._lootimage.positionX}`)
         } else if (this.isMerchant) {
             //log('in item merchant show')
             this._lootimage.visible = true;
@@ -364,6 +499,14 @@ export class Item {
         return this._potionprice
     }
 
+    get buybackprice() {
+        return this._buybackprice;
+    }
+
+    set buybackprice(val) {
+        this._buybackprice = val;
+    }
+
     get potionprice() {
         return this._potionprice
     }
@@ -386,6 +529,16 @@ export class Item {
 
     get questlootclicked() {
         return this._questlootclicked
+    }
+
+    public saleResetItem() {
+        //Don't want to make the item invisible, just want to reset its old slot
+
+        if (this.slot() < 10) {
+            this._actionBar.resetSlot(this._slot);
+        } else {
+            this._backPack.resetSlot(this._slot);
+        } 
     }
 
     public removeItem() {
@@ -413,93 +566,15 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
-        log(`in item updateLoc method`)
+        //log(`in item updateLoc method`)
         this._lootimage.visible = true;
 
-        if (this._isspell) {
-            let completespell = getspell(this._desc.value)
-            spellAction(this, completespell)
-            //this.activateSpell(completespell)
+        //     if (this._player == undefined || !this._player.alive) {
+        //         //log('item.ts:354 - you cant heal if you are dead')
+        //         return
+        //     }
 
-            return
-        }
-        this._lootimage.onClick = new OnPointerDown(() => {
-            log(`in the lootimage onClick function`)
-
-            if (this._player == undefined || !this._player.alive) {
-                //log('item.ts:354 - you cant heal if you are dead')
-                return
-            }
-            //log('in item.ts:392')
-
-            if (this._isscroll) {
-                //log('item.ts:360 - Clicked on the scroll')
-                this._spellScroll.setSpell(this._desc.value, this)
-
-                return
-            }
-
-            if (this._isclothing) {
-                trinketAction(this)
-                const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
-                Dbl click, then click on the trash icon to delete it from inventory.`
-                const chunks = chunkSentence(statement, 7)
-                writeChunks(chunks)
-                //writeToCl()
-                return
-            }
-
-            if (this._isweapon) {
-                //trinketAction(this) //Adds a new click handler that prevents the weapon dialog for spawning
-                if (this._image.src.split('/')[2] == 'rustysword.png') {
-                    this._player.weapon(resources.loot.rustysword, "Rusty Sword", this._actionBar, this._backPack, this, slot)
-                } else if (this._image.src.split('/')[2] == 'rustydagger.png') {
-                    this._player.weapon(resources.loot.rustydagger, "Rusty Dagger", this._actionBar, this._backPack, this, slot)
-                } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
-                    this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
-                } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
-                    //log(`cracked staff`)
-                    this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
-                } 
-                
-                return
-            }
-
-            if (this._isconsumable) {
-                if (this._image.src.split("/")[2] == "redHealthPotion.png") {
-                    this._isconsumable = true;
-                    this.potionsound.play()
-                    this._player.heal(20, true);
-                } else if (this._image.src.split("/")[2] == "greenHealthPotion.png") {
-                    this._isconsumable = true;
-                    this.potionsound.play()
-                    this._player.heal(50, true);
-                } else if (this._image.src.split("/")[2] == "blueHealthPotion.png") {
-                    this._isconsumable = true;
-                    this.potionsound.play()
-                    this._player.heal(500, true);
-                }
-
-                this._lootimage.visible = false;
-                this._actionBar.resetSlot(slot);
-                this._backPack.resetSlot(slot);
-
-                return
-            }
-
-            if (this._isquestloot) {
-                trinketAction(this)
-                if (this._image.src.split('/')[2] == 'sandbeetle.png') {
-                    this._isquestloot = true;
-                    this._player.trinket("It looks like a petrified beetle shell", "Beetle Shell", slot, this)
-                } else if (this._image.src.split('/')[2] == "orctooth.png") {
-                    this._isquestloot = true;
-                    this._player.trinket("You hit him so hard a tooth fell out! Someone might want this.", "Orc Tooth", slot, this);
-                }
-            } else {
-                this._player.unusable()
-            }
-        });
+        this.setOriginalAction(slot);
     }
 
     public activateSpell(spell: Ispell) {
@@ -520,7 +595,7 @@ export class Item {
     }
 
     public sendToBackpack() {
-        log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
+        //log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
         let obj = Singleton.getInstance()
         let myactionbarcontents = obj.fetchactionbar()
         let mybackpackcontents = obj.fetchbackpack()
@@ -555,6 +630,8 @@ export class Item {
                 //log(`item.ts: ts a backback`)
                 this._backPack.setSlot(slot)
                 this.updateLoc(slot)
+                let camera = Camera.instance
+                this.backpacksound.getComponent(Transform).position = camera.position
                 this.backpacksound.play();
                 mybackpackcontents.push(this)
                 this._desc.visible = false;
@@ -564,7 +641,7 @@ export class Item {
                     this._lootimage.visible = false;
                 }
             } else {
-                //log(`STEP 4 - ACTIONBAR`)
+                log(`STEP 4 - ACTIONBAR`)
                 this._actionBar.setSlot(slot)
                 this.updateLoc(slot)
                 myactionbarcontents.push(this)
@@ -619,36 +696,16 @@ export class Item {
         this._activespellimage.positionX = slotPosition.x;
     }
 
-    // public sendItemDown() {
-    //     this._actionBar.exist();
-    //     let slot = this._actionBar.selectSlot(this);
-    //     this._slot = slot;
-    //     let slotPosition = slotPicker(slot);
-    //     this.setSlotProperties(slotPosition);
+    // private setItemForPurchase() {
 
-    //     if (slot === 0) {
-    //         slot = this._backPack.selectSlot(this);
-    //         this._slot = slot;
-    //         slotPosition = slotPicker(slot);
-    //         this.setSlotProperties(slotPosition);
-
-    //         if (!this._backPack.bpopen) {
-    //             this._desc.visible = false;
-    //             this._lootimage.visible = false;
-    //         }
-    //         this.isBackpack = true;
-    //     }
     // }
 
     private setItemForSale() {
-        log(`In Set Item for Sale, `)
+        log(`item.ts: setItemForSale() - In Set Item for Sale`)
         this._tradewindow?.purchase(this)
 
         const slotPosition = slotPicker(36);
         this.setSlotProperties(slotPosition);
-        // this._lootimage.onClick = new OnPointerDown(() => {
-        //     //this.sendItemDown();
-        //     this.sendToBackpack()
-        // });
+       
     }
 }

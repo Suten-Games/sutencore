@@ -48,7 +48,7 @@ export class ActionBar {
             if (element.slot) {
                 let item = new Item(
                     new Texture(element.image), element.slot, element.srcw, element.srch, element.desc,
-                    element.type, element.price, element.itemtype, element.spellshape, element.spellstart,
+                    element.type, element.price, element.buybackprice, element.itemtype, element.spellshape, element.spellstart,
                     element.spellend, element.sound,null,null, null, null
                 );
 

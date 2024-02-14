@@ -6,15 +6,16 @@ const apiUrl = local
     ? "http://localhost:8080"
     : "https://sutenquestapi.azurewebsites.net";
 
-export async function purchasedItem(npc: Npc, item: Item) {
-    log(`in ${npc.name} purchasedItem: ${item.lootdesc()}`)
+export async function soldItem(npc: Npc, item: Item) {
+    log(`in ${npc.name} soldItem: ${item.lootdesc()}`)
 
     const lootname = {
-        "lootName": item.lootdesc()
+        "lootName": item.lootdesc(),
+        "quantity":1
     }
 
     const options = {
-        method: "PATCH",
+        method: "POST",
         body: JSON.stringify(lootname),
         headers: {
             "Content-Type": "application/json",
@@ -22,11 +23,11 @@ export async function purchasedItem(npc: Npc, item: Item) {
     };
 
     try {
-        let response = await fetch(apiUrl + "/merchant/" + npc.id + "/inventory/removebyname", options);
+        let response = await fetch(apiUrl + "/merchant/" + npc.id + "/inventory/addbyname", options);
         let json = await response.json();
 
         return json;
     } catch (error) {
-        log(`purchasedItem.ts:30: Remove Merchant Inventory by name failed ${error} `);
+        log(`purchasedItem.ts:30: Add Merchant Inventory by name failed ${error} `);
     }
 }

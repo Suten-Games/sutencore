@@ -1,5 +1,5 @@
 import { MobState } from "../components/mobStateComponent";
-import { SceneState } from "./npcFSM";
+import { SceneState } from "./NewnpcFSM";
 import { CombatLog } from "../gameUI/combatLog";
 
 

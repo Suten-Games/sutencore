@@ -86,6 +86,7 @@ export async function getQuestReward(questId: string, playerAddress: string) {
 }
 
 export async function acceptQuest(quest: any, player: Player, npc:string) {
+    log(`in the accept function call`)
 
     let playerQuestUrl = apiUrl + "/playerquest";
 
@@ -106,12 +107,12 @@ export async function acceptQuest(quest: any, player: Player, npc:string) {
     try {
         let response = await fetch(playerQuestUrl, options);
         let json = await response.json();
-        //log(`called ${playerQuestUrl}`)
+        log(`called ${playerQuestUrl}`)
         if (Array.isArray(json) && json.length > 0) {
-            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
+            log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
+            log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
     } catch (error) {

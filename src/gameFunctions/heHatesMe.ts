@@ -1,5 +1,5 @@
 import { MobState } from "src/components/mobStateComponent";
-import { SceneState } from "./npcFSM";
+import { SceneState } from "./NewnpcFSM";
 import { Npc } from "src/gameObjects/npc";
 import { writeToCl } from "./writeToCL";
 import { BossBattle } from "src/components/bossBattleComponent";
@@ -216,10 +216,11 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                     writeToCl(`You have gained experience!`)
                 }
 
+                log(`heHatesMe.ts - Calling updateFaction with ${mob.faction}, ${s.player.name} and -1`)
                 updateFaction(mob.faction, s.player, -1)
                 //writeToCl(`Your standing with ${mob.faction} has gotten worse`)
 
-                //log('orc.ts:267 attack.ts - hidehpbar')
+                log('orc.ts:267 heHatesMe.ts - mob is dead, calling npc.hidehpbar')
                 s.npc.hidehpbar();
             } else {
                 mobstate.battle = true;
@@ -235,12 +236,17 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
 
 export function updateFaction(factionName: string, player: Player, change: number) {
+    log(`heHatesMe.ts`)
     let factionUrl = apiUrl + player.address + '/factions'
+
+    log(`heHatesMe.ts factionUrl: ${factionUrl}`)
 
     const factions = {
         factionName: factionName,
         factionValue: change
     };
+
+    log(`heHatesMe.ts factions: ${factions}`)
 
     let originalFactions: { [key: string]: number } = {};
     player.factions.forEach((faction: { name: string | number; value: number; }) => {

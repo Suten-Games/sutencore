@@ -11,4 +11,4 @@ if (typeof BaseScene == 'function') {
 }
 
 // START GAME
-loadSutenQuest(ui); 
+loadSutenQuest(ui);

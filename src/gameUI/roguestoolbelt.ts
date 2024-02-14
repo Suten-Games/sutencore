@@ -151,7 +151,7 @@ export class RoguesToolbelt {
                 //let slot = this.selectSlot()
                 //log('creating new item for roguestoolbelt')
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
+                    element.price, element.buybackprice, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
                 )
                 //log('new roguestoolbelt item is creating, setting slot')
                 this.setSlot(element.slot)
@@ -166,7 +166,7 @@ export class RoguesToolbelt {
                 let slot = this.selectSlot()
                 //log('creating new item for roguestoolbelt')
                 let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
+                    element.price, element.buybackprice, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
                 )
                 //log('new roguestoolbelt item is creating, setting slot')
                 this.setSlot(slot)
@@ -186,7 +186,7 @@ export class RoguesToolbelt {
         let slot = this.selectSlot()
 
         let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype,
-            5, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound, null, null, null, null)
+            5, 3, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound, null, null, null, null)
 
         this.setSlot(slot)
 

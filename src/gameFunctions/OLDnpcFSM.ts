@@ -19,7 +19,6 @@ import { createSoundBox } from "./createSoundBox";
 //import { setupTrade } from "./setupTrade";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { working } from "./working";
-import { handleNpcInteraction } from "./handleNpcInteraction";
 
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
@@ -60,7 +59,7 @@ export class NpcFSM extends Entity {
         // battlepause: number
     ) {
         super();
-        //log(`npcFSM.ts: In the npcFSM constructor`)
+        log(`npcFSM.ts: In the old npcFSM constructor`)
 
         var obj = Singleton.getInstance();
         this.addComponent(new BattleId(npc.id));
@@ -69,9 +68,6 @@ export class NpcFSM extends Entity {
         this._npc = npc;
         let mobfaction = this._npc.faction
         const ui = UI.getInstance();
-
-        this._player.aggressive = false;
-
 
         const tradeWindow = new TradeWindow(
             ui.gc,
@@ -112,7 +108,7 @@ export class NpcFSM extends Entity {
         this._startPos = startPos;
         this._startRot = startRot;
 
-        log(`npcFSM.ts: ABout to add the pointer clicky for: ${this._npc.id}`)
+        //log(`npcFSM.ts: ABout to add the pointer clicky for: ${this._npc.id}`)
         this._npc.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
@@ -133,31 +129,6 @@ export class NpcFSM extends Entity {
                     if (factionvalue >= 0) {
                         //this._npc.showhpbar();
                         writeToCl(`You hail an ${this._npc.name}`)
-
-                        if(this._player.searching) {
-                            log(`inFlightNPCFSM.ts: Player.searching: ${this._player.searching}`)
-                        } else {
-                            log(`player.searching is empty right now`)
-                        }
-
-                        if (this._player.searching && this._player.searching.indexOf(this._npc.id) !== -1) {
-                            // Remove NPC ID from searchingFor array
-                            this._player.searching = this._player.searching.filter(id => id !== this._npc.id);
-
-                            handleNpcInteraction(this._player, this._npc).then(response => {
-                                if (response.xpGained) {
-                                    log(`xpgained: ${JSON.stringify(response.xpGained)}`);
-                                    writeToCl(`gained ${response.xpGained} xp `);
-                                }
-                            }).catch(error => {
-                                log("Error handling NPC interaction:", error);
-                            });
-
-                            log('Removed the NPC ID from searching and called interaction on the server');
-                            log(`This is the client searching array now: ${this._player.searching}`)
-                        }
-
-
                         if (this._npc.mobclass == "merchant") {
                             writeToCl(`${this._npc.mobname} says "Well met! Please browse my wares.`)
                             tradeWindow.show(this._npc)
@@ -177,9 +148,7 @@ export class NpcFSM extends Entity {
                                             () => {
                                                 log(`I accept clicked`)
                                                 acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
-                                                    log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
-                                                    log(`Setting the searchingfor results to: ${acceptres.searchingfor}`)
-                                                    this._player.searching = acceptres.searchingfor
+                                                    //log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
                                                     chunks = chunkSentence(acceptres.dialogue, 7)
                                                     writeChunks(chunks)
                                                     this.openQuestWindow(acceptres.dialogue)  // replace with actual function and arguments
@@ -197,9 +166,7 @@ export class NpcFSM extends Entity {
                                             this._player.achievementcheck(checkcompletionres.xp, this._player.level)
                                             let desc = checkcompletionres.objectives[0].description
                                             const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
-                                            chunks = chunkSentence(firstSentence, 7)
-                                            writeChunks(chunks)
-                                            //writeToCl(firstSentence)
+                                            writeToCl(firstSentence)
                                             killbox.play();
                                             writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
 
@@ -289,7 +256,6 @@ export class NpcFSM extends Entity {
     }
 
     performFactionCheckAndUpdateHoverText() {
-        log(`in performFactionCheckAndUpdateHoverText`)
         let factionValue = this.checkFaction();
         let hoverText = "Attack"; // Default
 

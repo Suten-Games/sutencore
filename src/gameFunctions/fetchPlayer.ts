@@ -9,17 +9,12 @@ const apiUrl = local
     : "https://sutenquestapi.azurewebsites.net/player";
 
 export async function fetchPlayer(lowerCaseAddress: string, ui: UI, player: Player) {
-    log(`debug: 6 Inside fetchPlayer`)
-    
     try {
         let response = await fetch(apiUrl + "/" + lowerCaseAddress);
         let json = await response.json();
-        playerSearch(json, ui, lowerCaseAddress, player)
-
+        void playerSearch(json, ui, lowerCaseAddress, player)
     } catch (error) {
-        writeToCl(`Issue connecting to SutenQuest.`,`Please reload the browser window`)
-        //writeToCl(`Player search by ether address failed ${JSON.stringify(error)}`)
+        void writeToCl(`Issue connecting to SutenQuest.`,`Please reload the browser window`)
         log(`game.ts:21: Player search by ether address failed ${error} `);
     }
-
 }

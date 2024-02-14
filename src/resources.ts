@@ -1,5 +1,6 @@
 export default {
     sounds: {
+        coins: new AudioClip("sounds/coins.mp3"),
         backpack: new AudioClip("sounds/backpack.mp3"),
         levelup: new AudioClip("sounds/levelup.mp3"),
         abouttodie: new AudioClip("sounds/abouttodie.mp3"),

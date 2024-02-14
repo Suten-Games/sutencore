@@ -31,7 +31,7 @@ export function deathCheck(ui: UI, json: PlayerState, player: Player) {
                 `Make your way to the Duat.`,
                 `Find and speak with Anpu.`
             )
-            killPlayer(json, player, ui)
+            killPlayer(json, player)
         }
     } else {
         player.alive = true

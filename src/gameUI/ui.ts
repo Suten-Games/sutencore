@@ -25,6 +25,7 @@ export class UI {
     private charWindowHandler: CharWindowHandler
     private questwindow: QuestWindow;
     private questBook: QuestBook;
+    private sellItemsPage: UIImage;
         
 
     constructor() {
@@ -42,6 +43,16 @@ export class UI {
         this.warriorsTome = new WarriorsTome(this.gameCanvas, resources.interface.spellBook);
         this.roguesToolbelt = new RoguesToolbelt(this.gameCanvas, resources.interface.spellBook);
         this.spellScroll = new SpellScroll(this.gameCanvas, resources.interface.spellScroll);
+        this.sellItemsPage = new UIImage(this.gameCanvas, resources.interface.blueMerchantInterface);
+        this.sellItemsPage.hAlign = "left";
+        this.sellItemsPage.vAlign = "center";
+        this.sellItemsPage.width = "25%";
+        this.sellItemsPage.height = "84%";
+        this.sellItemsPage.positionY = "10.2%";
+        this.sellItemsPage.positionX = "12.5%";
+        this.sellItemsPage.sourceWidth = 877; //Old Style
+        this.sellItemsPage.sourceHeight = 1401; //Old Style
+        this.sellItemsPage.visible = false;
         //this.questBook = new QuestBook(this.gameCanvas, resources.interface.questBook, this.quest)
         //this.charWindowHandler = new CharWindowHandler(this.gameCanvas, resources.interface.characterButton)
 
@@ -94,6 +105,20 @@ export class UI {
 
     get qb() {
         return this.questBook
+    }
+
+    // get salespage(){
+    //     return this.sellItemsPage
+    // }
+
+    turnOffSales() {
+        log(`in ui.ts turnOffSales setting to invisible`)
+        this.sellItemsPage.visible = false;
+    }
+
+    turnOnSales() {
+        log(`in ui.ts turnOnSales setting to visible`)
+        this.sellItemsPage.visible = true;
     }
 
 }
