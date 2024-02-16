@@ -1,23 +1,24 @@
-import { UI } from "src/gameUI/ui";
-import { createDefaultPlayer } from "./createPlayer";
-import { registerPlayer } from "./registerPlayer";
-import { setupTrade } from "./setupTrade";
-import { WaitSystem } from "src/gameSystems/waitSystem";
+import { UI } from 'src/gameUI/ui'
+import { createDefaultPlayer } from './createPlayer'
+import { registerPlayer } from './registerPlayer'
+import { WaitSystem } from 'src/gameSystems/waitSystem'
 
 let ws: WaitSystem
 
 export function loadSutenQuest(ui: UI) {
-    executeTask(async () => {
-        let player = await createDefaultPlayer(ui)
-        await setupTrade(ui, player)
+    log(`debug: 1 Inside startGame`)
+
+    void executeTask(async () => {
+        const player = await createDefaultPlayer(ui)
         await registerPlayer(ui, player)
         ws = new WaitSystem()
-        engine.addSystem(ws);
-    });
+        engine.addSystem(ws)
+    })
 }
 
 export function unloadSystems() {
-    executeTask(async () => {
+    log('reloadGame.ts: trying to unload systems')
+    void executeTask(async () => {
         engine.removeSystem(ws)
     })
 }
