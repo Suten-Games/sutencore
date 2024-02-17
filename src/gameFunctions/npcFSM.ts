@@ -112,7 +112,7 @@ export class NpcFSM extends Entity {
         this._startPos = startPos;
         this._startRot = startRot;
 
-        log(`npcFSM.ts: ABout to add the pointer clicky for: ${this._npc.id}`)
+        //log(`npcFSM.ts: ABout to add the pointer clicky for: ${this._npc.id}`)
         this._npc.addComponentOrReplace(
             new OnPointerDown(
                 (e) => {
@@ -163,10 +163,12 @@ export class NpcFSM extends Entity {
                             tradeWindow.show(this._npc)
                         } else {
                             fetchQuest(this._npc, this._player).then(res => {
-                                //log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
+                                log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
+                                log(`This is the res: ${res}`)
                                 let chunks
                                 chunks = chunkSentence(res.dialogue, 7)
                                 if (res.status === 'NOT_STARTED') {
+                                    log(`in the not started block`)
                                     this.openQuestWindow(res.dialogue)
                                     writeChunks(chunks).then(() => {
                                         writeToCl(
@@ -188,18 +190,16 @@ export class NpcFSM extends Entity {
                                         );
                                     })
                                 } else if (res.status === 'IN_PROGRESS') {
-                                    log(`in the IN_PROGRESS STATUS`)
+                                    log(`in the IN_PROGRESS STATUS, id: ${res.id}`)
                                     checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
-                                        // chunks = chunkSentence(checkcompletionres.dialogue, 7)
-                                        // writeChunks(chunks)
                                         if (checkcompletionres.status === 'COMPLETED') {
+                                            log(`in the checkcompletion COMPLETED`)
                                             let foundone = false
                                             this._player.achievementcheck(checkcompletionres.xp, this._player.level)
                                             let desc = checkcompletionres.objectives[0].description
                                             const firstSentence = checkcompletionres.dialogue.match(/[^.!?]*[.!?]/)?.[0].trim();
                                             chunks = chunkSentence(firstSentence, 7)
                                             writeChunks(chunks)
-                                            //writeToCl(firstSentence)
                                             killbox.play();
                                             writeToCl(`You have gained ${checkcompletionres.xp} experience!`)
 
@@ -219,7 +219,6 @@ export class NpcFSM extends Entity {
                                                     }
                                                 }
                                             }
-                                            //log(`calling this.openQuestWindow 1`)
                                             this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
                                         }
                                     })
@@ -227,6 +226,7 @@ export class NpcFSM extends Entity {
                                     log(`in the PENDING STATUS`)
                                     checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
                                         if (checkcompletionres.status === 'COMPLETED') {
+                                            log(`in PENDING COMPLETED`)
                                             let foundone = false
                                             this._player.achievementcheck(checkcompletionres.xp, this._player.level)
                                             let desc = checkcompletionres.objectives[0].description
@@ -253,7 +253,7 @@ export class NpcFSM extends Entity {
                                             }
                                             this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
                                         } else {
-                                            //writeChunks(chunks)
+                                            log(`in the else else block`)
                                             log(`calling this.openQuestWindow 3`)
                                             this.openQuestWindow(res.dialogue, res.id, this._player.address)
                                         }
@@ -279,7 +279,6 @@ export class NpcFSM extends Entity {
                 }
             )
         );
-        //log(`npcFSM:ts - npcFSM is now added`)
     }
 
     openQuestWindow(val: string, questId: string | null = null, playerAddress: string | null = null) {
@@ -289,7 +288,6 @@ export class NpcFSM extends Entity {
     }
 
     performFactionCheckAndUpdateHoverText() {
-        log(`in performFactionCheckAndUpdateHoverText`)
         let factionValue = this.checkFaction();
         let hoverText = "Attack"; // Default
 
@@ -299,10 +297,8 @@ export class NpcFSM extends Entity {
             hoverText = "Hail";
         }
 
-        // Assuming this._npc is your entity with the OnPointerDown component
         const pointerDownComponent = this._npc.getComponent(OnPointerDown);
         if (pointerDownComponent) {
-            // Directly updating hoverText should work in Decentraland
             pointerDownComponent.hoverText = hoverText;
         }
     }
@@ -335,7 +331,7 @@ export class NpcFSM extends Entity {
         }
 
         if (this._npc.hasComponent(StartupTimeOut)) {
-            log("Don't update anything, lets START all the way up first")
+            //log("Don't update anything, lets START all the way up first")
             return
         } else {
             //log(`In the update loop for ${this._npc.name}`)
@@ -381,29 +377,20 @@ export class NpcFSM extends Entity {
                 startRot: this._startRot,
             };
 
-            //this.levelupcheck();
-
             if (state.anotherplayer) {
                 otherplayerattack(scene, this._combatLog)
             } else if (this._npc.mobclass == "merchant") {
-                // if (dist < 4) {
-                //     idle(scene, dt)
-                // } else {
                 working(scene, dt);
-                //}
             } else {
                 if (dist < 8) {
                     if (this.factionvalue < 0) {
                         attack(scene, this._combatLog);
-                        //log('npcFSM.ts:145 - attack (skipping for testing)')
                     } else {
                         idle(scene, dt)
                     }
                 } else if (state.trackplayer || dist < 30 && dist > 8 && this.factionvalue < 0) {
-                    //log(`npcFSM.ts:147 - chase ${dist}`)
                     chase(scene, dt, dist);
                 } else if (dist > 30) {
-                    //log(`npcFSM.ts:150 ${this._npc.id} - patrol ${dist}`)
                     patrol(scene, dt);
                 }
             }

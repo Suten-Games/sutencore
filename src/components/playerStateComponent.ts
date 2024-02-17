@@ -29,4 +29,8 @@ export class PlayerState {
     message:string;
     factions: any;
     searchingfor: any;
+    copper: number;
+    silver: number;
+    gold: number;
+    platinum: number;
 }

@@ -4,7 +4,7 @@ import { UI } from "src/gameUI/ui";
 import resources from "src/resources";
 
 export function loadPlayerItems(ui:UI,json:PlayerState ) {
-    log(`debug: 11 Inside loadPlayerItems`)
+    //log(`debug: 11 Inside loadPlayerItems`)
 
     var obj = Singleton.getInstance();
 

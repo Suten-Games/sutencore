@@ -16,6 +16,8 @@ import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
 import { QuestWindow } from "src/gameUI/questWindow";
 import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
+import { updateCurrency } from "src/gameFunctions/updateCurrency";
+import { writeToCl } from "src/gameFunctions/writeToCL";
 
 
 export class Item {
@@ -61,6 +63,7 @@ export class Item {
     private _isscroll;
     private _isclothing;
     private _scribedspell;
+    private _iscurrency;
 
     private originalOnClick: () => void;
 
@@ -75,6 +78,12 @@ export class Item {
         resources.sounds.backpack,
         false
     );
+
+    private coinssound = new SoundBox(
+        new Transform({ position: new Vector3(8, 0, 8) }),
+        resources.sounds.coins,
+        false 
+    )
     
     constructor(
         image: Texture,
@@ -83,7 +92,7 @@ export class Item {
         srch: number,
         desc: string,
         type: string | null = null,
-        price: number | null = null,
+        price: number | { copper: number, silver: number, gold: number, platinum: number },
         buybackprice: number | null = null,
         itemtype: string | null = null,
         spellshape: string | null = null,
@@ -97,7 +106,7 @@ export class Item {
     ) {
         let obj = Singleton.getInstance()
         this._canvas = obj.canvas;
-        log(`Setting this._image to ${JSON.stringify(image)}`)
+        //log(`Setting this._image to ${JSON.stringify(image)}`)
         this._image = image;
         this._slot = slot;
         this._type = type;
@@ -133,7 +142,7 @@ export class Item {
 
         this._desc = new UIText(this._canvas);
         if (desc) {
-            log(`Setting desc.value to ${desc}`)
+            //log(`Setting desc.value to ${desc}`)
             this._desc.value = desc
             this._potiontype = desc
         } else {
@@ -143,6 +152,8 @@ export class Item {
 
         if (price) {
             this._potionprice = price
+        } else {
+            this._potionprice = 1
         }
 
         if (buybackprice) {
@@ -204,6 +215,10 @@ export class Item {
             case "clothing":
                 this._isclothing = true;
                 break;
+            
+            case "currency":
+                this._iscurrency = true;
+                break;
 
             default:
                 break;
@@ -244,15 +259,23 @@ export class Item {
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.setItemForSale();
             });
-        } else if (this.isActionBar) {
-            log('--')
         } else if (this.isPurchase) {
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
             });
         } else if (this.isLootWindow) {
             this._lootimage.onClick = new OnPointerDown(() => {
-                this.sendToBackpack()
+                if(this._iscurrency) {
+                    let currencyobject: { copper: number, silver: number, gold: number, platinum: number }
+                    if (typeof this.potionprice === 'number') {
+                        currencyobject = { copper: 1, silver: 0, gold: 0, platinum: 0 }
+                    } else {
+                        currencyobject = this.potionprice
+                    }
+                    this.handleCurrencyItem(currencyobject);
+                } else {
+                    this.sendToBackpack()
+                }
             })
         } else if (this.isSpellBook) {
             let stuff = "stuff"
@@ -304,7 +327,6 @@ export class Item {
         } else if (this._image.src.split('/')[2] == 'rustyaxe.png') {
             this._player.weapon(resources.loot.rustyaxe, "Rusty Axe", this._actionBar, this._backPack, this, slot)
         } else if (this._image.src.split('/')[2] == "crackedstaff.png") {
-            //log(`cracked staff`)
             this._player.weapon(resources.loot.crackedstaff, "Cracked Staff", this._actionBar, this._backPack, this, slot)
         } 
     }
@@ -326,19 +348,8 @@ export class Item {
         spellAction(this, completespell)
     }
 
-    // Method to change onClick logic, e.g., for selling items
     public setOnClickForSelling(tradewindow:TradeWindow): void {
-        log(`called setOnClickForSelling `)
-
-        if(tradewindow) {
-            log(`we have a tradewinow`)
-        } else {
-            log(`somehow still no tradewindow`)
-        }
-
         this._lootimage.onClick = new OnPointerDown(() => {
-            log("Clicked an item in the actionbar. Item is now set for selling.");
-
             this.saleResetItem()
 
             const slotPosition1 = slotPicker(36);
@@ -348,8 +359,6 @@ export class Item {
                 log("Calling tradewindow.sell")
                 this._tradewindow.sell(this) 
             } else {
-                log("tradewindow is somehow not set")
-                log("setting it and calling sell")
                 tradewindow.sell(this)
             }
         });
@@ -400,32 +409,19 @@ export class Item {
     }
 
     public show() {
-        //log('item.ts:258 - Clicked Item SHOW, setting desc visible to true')
-        
         if (this.isLootWindow) {
-            //log('in item show, its a lootwindow')
             this._lootimage.visible = true;
             this._desc.visible = true;
-            // log(`the loot image: ${JSON.stringify(this._lootimage)}`)
-            // log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
-            // log(`the loot image positionX: ${this._lootimage.positionX}`)
         } else if (this.isQuestWindow) {
-            //log('in item show, its a questwindow, loot should be visible now')
             this._lootimage.visible = true;
             this._desc.visible = true;
-            // log(`the loot image: ${JSON.stringify(this._lootimage)}`)
-            // log(`the loot image source: ${JSON.stringify(this._lootimage.source)}`)
-            // log(`the loot image positionX: ${this._lootimage.positionX}`)
         } else if (this.isMerchant) {
-            //log('in item merchant show')
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this._backPack) {
-            //log('in backpack')
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else {
-            //log('setting desc to visible')
             this._lootimage.visible = true;
             this._desc.visible = true;
         }
@@ -569,11 +565,6 @@ export class Item {
         //log(`in item updateLoc method`)
         this._lootimage.visible = true;
 
-        //     if (this._player == undefined || !this._player.alive) {
-        //         //log('item.ts:354 - you cant heal if you are dead')
-        //         return
-        //     }
-
         this.setOriginalAction(slot);
     }
 
@@ -696,10 +687,6 @@ export class Item {
         this._activespellimage.positionX = slotPosition.x;
     }
 
-    // private setItemForPurchase() {
-
-    // }
-
     private setItemForSale() {
         log(`item.ts: setItemForSale() - In Set Item for Sale`)
         this._tradewindow?.purchase(this)
@@ -708,4 +695,43 @@ export class Item {
         this.setSlotProperties(slotPosition);
        
     }
+
+    private handleCurrencyItem(currency: { copper: number, silver: number, gold: number, platinum: number }) {
+        // Extract currency details
+        const { copper, silver, gold, platinum } = currency;
+
+        // Call the player controller to update the currency
+        updateCurrency(copper, silver, gold, platinum, this._player.address);
+
+        if (this._lootwindow) {
+            this._lootwindow.hidelootwindow();
+            this._lootwindow.looted = true;
+            this._npc?.hideOrc()
+        }
+
+        // Make the currency loot item disappear from the UI
+        this._lootimage.visible = false;
+        this._desc.visible = false;
+
+        // Optionally, play a sound or show a message to indicate currency has been added
+        this.showCurrencyAddedFeedback(copper, silver, gold, platinum);
+    }
+
+    // Method to provide feedback to the player about the currency added
+    private showCurrencyAddedFeedback(copper: number, silver: number, gold: number, platinum: number) {
+        let camera = Camera.instance;
+        this.coinssound.getComponent(Transform).position = camera.position;
+        this.coinssound.play();
+        // Show message (this is a placeholder, replace with your UI logic)
+        log(`Added copper: ${copper}, silver: ${silver}, gold: ${gold}, platinum: ${platinum} to the player.`);
+        if(copper > 0 && silver == 0 && gold == 0 && platinum == 0) {
+            writeToCl(`Looted ${copper} copper`)
+        } else if (copper > 0 && silver > 0 && gold == 0 && platinum == 0) {
+            writeToCl(`Looted ${silver} silver, ${copper} copper`) 
+        } else if (copper > 0 && silver > 0 && gold > 0 && platinum == 0) {
+            writeToCl(`Looted ${gold} gold, ${silver} silver, ${copper} copper`) 
+        } else {
+            writeToCl(`Looted copper: ${copper}, silver: ${silver}, gold: ${gold}, platinum: ${platinum}`)
+        }
+    } 
 }

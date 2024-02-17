@@ -5,7 +5,7 @@ import { getEthData } from './getEthData'
 import { writeToCl } from './writeToCL'
 
 export async function registerPlayer(ui: UI, player: Player) {
-    log(`debug: 4 Inside registerPlayer`)
+    //log(`debug: 4 Inside registerPlayer`)
 
     void executeTask(async () => {
         try {

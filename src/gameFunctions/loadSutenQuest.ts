@@ -6,7 +6,7 @@ import { WaitSystem } from 'src/gameSystems/waitSystem'
 let ws: WaitSystem
 
 export function loadSutenQuest(ui: UI) {
-    log(`debug: 1 Inside startGame`)
+    //log(`debug: 1 Inside startGame`)
 
     void executeTask(async () => {
         const player = await createDefaultPlayer(ui)

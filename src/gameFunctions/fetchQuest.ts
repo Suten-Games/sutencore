@@ -12,12 +12,9 @@ export async function fetchQuest(npc: Npc, player: Player) {
     try {
         let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
-        //log(`called ${apiUrl}/npc/${npc.id}/quests/${player.address}`)
         if (Array.isArray(json) && json.length > 0) {
-            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
 
@@ -28,6 +25,7 @@ export async function fetchQuest(npc: Npc, player: Player) {
 
 export async function checkQuestCompletion(questId:string, playerAddress:string) {
     let playerQuestCompleteUrl = apiUrl + "/playerquest/" + questId + '/complete'
+    
     const status = {
         "playerAddress":playerAddress
     }
@@ -43,12 +41,12 @@ export async function checkQuestCompletion(questId:string, playerAddress:string)
         let response = await fetch(playerQuestCompleteUrl, options);
         let json = await response.json();
         log('quest complete api response: ', json)
-        //log(`called ${playerQuestCompleteUrl}`)
+        log(`called ${playerQuestCompleteUrl}`)
+        log(`status ${JSON.stringify(status)}`)
+
         if (Array.isArray(json) && json.length > 0) {
-            //log(`passing json ${JSON.stringify(json[0])} to the npcFSM`);
             return json[0];
         } else { // Check if it's an object
-            //log(`passing json ${JSON.stringify(json)} to the npcFSM`);
             return json;
         }
     } catch (error) {

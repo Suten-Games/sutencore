@@ -9,7 +9,7 @@ const apiUrl = local
     : "https://sutenquestapi.azurewebsites.net/player";
 
 export async function newPlayer(ui: UI, lowerCaseAddress: string, player:Player) {
-    log('could not find player')
+    //log('could not find player')
     
     var obj = Singleton.getInstance();
 

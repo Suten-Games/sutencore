@@ -130,7 +130,8 @@ export default {
         bluePotion: new Texture("images/looticons/blueHealthPotion.png"),
         greenPotion: new Texture("images/looticons/greenHealthPotion.png"),
         mana: new Texture("images/looticons/mana.png"),
-        crackedstaff: new Texture("images/looticons/crackedstaff.png")
+        crackedstaff: new Texture("images/looticons/crackedstaff.png"),
+        coinbag: new Texture("images/looticons/coinbag.png")
     },
     interface: {
         mageScreen: new Texture("images/vali/MageCharacterScreen.png"),

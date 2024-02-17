@@ -32,6 +32,10 @@ export class Singleton {
     private _playerwisdom: number = 0;
     private _playercharisma: number = 0;
     private _playerarmor: number = 0;
+    private _playercopper: number = 0;
+    private _playersilver: number = 0;
+    private _playergold: number = 0;
+    private _playerplatinum: number = 0;
     private _weapon: string = "";
     private _playerspellbook: Array<Item> = [];
     private _playerswarriorstome: Array<Item> = [];
@@ -190,6 +194,38 @@ export class Singleton {
 
     get strength() {
         return this._playerstrength;
+    }
+
+    set copper(val) {
+        this._playercopper = val
+    }
+
+    get copper() {
+        return this._playercopper
+    }
+
+    set silver(val) {
+        this._playersilver = val
+    }
+
+    get silver() {
+        return this._playersilver
+    }
+
+    set gold(val) {
+        this._playergold = val
+    }
+
+    get gold() {
+        return this._playergold
+    }
+
+    set platinum(val) {
+        this._playerplatinum = val
+    }
+
+    get platinum() {
+        return this._playerplatinum
     }
 
     set level(val) {

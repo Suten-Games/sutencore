@@ -319,7 +319,7 @@ export function createNpc(element: any, path: any) {
 }
 
 export function createNpcFSM(npc: any, element: any) {
-    log(`wsConnection.ts: 322 -> calling new NpcFSM`)
+    //log(`wsConnection.ts: 322 -> calling new NpcFSM`)
     return new NpcFSM(
         npc,
         element.spawnloc,
@@ -475,7 +475,7 @@ export function handleGameMessage(msg: any) {
                     mob = createNpc(element, [])
                 }
                 if (mob) {
-                    log(`wsConnection.ts: adding createNpcFSM system`)
+                    //log(`wsConnection.ts: adding createNpcFSM system`)
                     engine.addSystem(createNpcFSM(mob, element));
                     mob.name = element.name;
                 }

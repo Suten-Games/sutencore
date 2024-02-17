@@ -3,7 +3,7 @@ import { Player } from 'src/gameObjects/player'
 import { Singleton } from 'src/gameObjects/playerDetail'
 
 export function populateObj(json: ObjState, player: Player) {
-    log(`debug: 10 Inside populateObj`)
+    //log(`debug: 10 Inside populateObj`)
 
     const obj = Singleton.getInstance()
 
@@ -17,5 +17,9 @@ export function populateObj(json: ObjState, player: Player) {
     obj.weapon = json.primaryweapon
     obj.player = player
     obj.playerhp = json.hp
+    obj.copper = json.copper || 0
+    obj.silver = json.silver || 0
+    obj.gold = json.gold || 0
+    obj.platinum = json.platinum || 0
 }
 

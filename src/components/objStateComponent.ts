@@ -10,4 +10,8 @@ export class ObjState {
     primaryweapon: string
     message: string
     hp: number
+    copper: number
+    silver: number
+    gold: number
+    platinum: number
 }

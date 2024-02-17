@@ -24,6 +24,10 @@ export class CharWindow {
     private _armor;
     private _wskill;
     private _damage;
+    private _copper;
+    private _silver;
+    private _gold;
+    private _platinum;
     private _loot: any;
     private _lootbig: any;
     private _ebutton: any;
@@ -205,6 +209,50 @@ export class CharWindow {
         this._damage.value = "Damage:";
         this._damage.visible = false;
 
+        this._copper = new UIText(canvas);
+        this._copper.fontSize = 10
+        this._copper.width = 120;
+        this._copper.height = 30;
+        this._copper.hAlign = "left";
+        this._copper.vAlign = "center";
+        this._copper.positionY = "-10.4%";
+        this._copper.positionX = "28%";
+        this._copper.value = "Copper:";
+        this._copper.visible = false;
+
+        this._silver = new UIText(canvas);
+        this._silver.fontSize = 10
+        this._silver.width = 120;
+        this._silver.height = 30;
+        this._silver.hAlign = "left";
+        this._silver.vAlign = "center";
+        this._silver.positionY = "-12.6%";
+        this._silver.positionX = "28%";
+        this._silver.value = "Copper:";
+        this._silver.visible = false;
+
+        this._gold = new UIText(canvas);
+        this._gold.fontSize = 10
+        this._gold.width = 120;
+        this._gold.height = 30;
+        this._gold.hAlign = "left";
+        this._gold.vAlign = "center";
+        this._gold.positionY = "-14.8%";
+        this._gold.positionX = "28%";
+        this._gold.value = "Copper:";
+        this._gold.visible = false;
+
+        this._platinum = new UIText(canvas);
+        this._platinum.fontSize = 10
+        this._platinum.width = 120;
+        this._platinum.height = 30;
+        this._platinum.hAlign = "left";
+        this._platinum.vAlign = "center";
+        this._platinum.positionY = "-17%";
+        this._platinum.positionX = "28%";
+        this._platinum.value = "Platinum:";
+        this._platinum.visible = false;
+
         this._weapontext = new UIText(canvas);
         this._weapontext.fontSize = 14;
         this._weapontext.width = 120;
@@ -243,6 +291,10 @@ export class CharWindow {
                 this._armor.visible = false;
                 this._wskill.visible = false;
                 this._damage.visible = false;
+                this._copper.visible = false;
+                this._silver.visible = false;
+                this._gold.visible = false;
+                this._platinum.visible = false;
                 log(`246: loot and lootbig.visible = falsee`)
                 this._loot.visible = false;
                 this._lootbig.visible = false;
@@ -393,6 +445,11 @@ export class CharWindow {
         this._charisma.value = `Charisma: ${obj.charisma}`;
         this._armor.value = `Armor: ${obj.armor}`;
 
+        this._copper.value = `Copper: ${obj.copper}`
+        this._silver.value = `Silver: ${obj.silver}`
+        this._gold.value = `Gold: ${obj.gold}`
+        this._platinum.value = `Platinum: ${obj.platinum}`
+
         this._loot.hAlign = "center";
         this._loot.vAlign = "bottom";
         this._loot.width = "2.5%";
@@ -453,6 +510,10 @@ export class CharWindow {
                 this._armor.visible = false;
                 this._wskill.visible = false;
                 this._damage.visible = false;
+                this._copper.visible = false;
+                this._silver.visible = false;
+                this._gold.visible = false;
+                this._platinum.visible = false;
                 log(`447: loot and lootbig.visible = false`)
                 this._loot.visible = false;
                 this._lootbig.visible = false;
@@ -506,7 +567,10 @@ export class CharWindow {
         this._armor.visible = !this._armor.visible;
         this._wskill.visible = !this._wskill.visible;
         this._damage.visible = !this._damage.visible;
-        //log(`504: loot and lootbig.visible = true`)
+        this._copper.visible = !this._copper.visible;
+        this._silver.visible = !this._silver.visible;
+        this._gold.visible = !this._gold.visible;
+        this._platinum.visible = !this._platinum.visible;
         this._loot.visible = !this._loot.visible;
         this._lootbig.visible = !this._lootbig.visible;
         this._weapontext.visible = !this._weapontext.visible;

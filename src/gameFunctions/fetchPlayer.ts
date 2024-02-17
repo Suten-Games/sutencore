@@ -7,7 +7,7 @@ import { writeToCl } from './writeToCL'
 const apiUrl = local ? 'http://localhost:8080/player' : 'https://sutenquestapi.azurewebsites.net/player'
 
 export async function fetchPlayer(lowerCaseAddress: string, ui: UI, player: Player) {
-    log(`debug: 6 Inside fetchPlayer`)
+    //log(`debug: 6 Inside fetchPlayer`)
 
     try {
         const response = await fetch(apiUrl + '/' + lowerCaseAddress)
