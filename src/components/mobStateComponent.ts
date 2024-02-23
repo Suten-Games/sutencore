@@ -2,6 +2,7 @@
 export class MobState {
     id: string;
     damage: number = 2;
+    abilitydamage: number = 0;
     faction: number = -100;
     battle: boolean = false;
     dead: boolean = false; //NEW

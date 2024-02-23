@@ -151,7 +151,8 @@ export class WarriorsTome {
                 //let slot = this.selectSlot()
                 //log('creating new item for warriorstome')
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.buybackprice, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
+                    element.price, element.buybackprice, element.itemtype, element.itemdetail, element.stats, element.weaponaction, 
+                    element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
                 )
                 //log('new warriorstome item is creating, setting slot')
                 this.setSlot(element.slot)
@@ -166,7 +167,8 @@ export class WarriorsTome {
                 let slot = this.selectSlot()
                 //log('creating new item for warriorstome')
                 let item = new Item(new Texture(element.image), slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.buybackprice, element.itemtype, element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
+                    element.price, element.buybackprice, element.itemtype, element.itemdetail, element.stats, element.weaponaction, 
+                    element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
                 )
                 //log('new warriorstome item is creating, setting slot')
                 this.setSlot(slot)
@@ -186,7 +188,7 @@ export class WarriorsTome {
         let slot = this.selectSlot()
 
         let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype,
-            5, 3, "spell", dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound, null, null, null, null)
+            5, 3, "spell", null,null,null, dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound, null, null, null, null)
 
         this.setSlot(slot)
 

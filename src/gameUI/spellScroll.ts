@@ -145,8 +145,8 @@ export class SpellScroll {
         this.currentScroll = scroll
 
         //log('debug spellname: ', spellname)
-
         let spell = getspell(spellname)
+
         if(spell) {
             this._spell = spell
             this._lootbig = new UIImage(this._canvas, spell.image)
@@ -158,7 +158,7 @@ export class SpellScroll {
             this._lootbig.positionX = "8%";
             this._lootbig.sourceWidth = 122;
             this._lootbig.sourceHeight = 120;
-            this._desc1.value = this._spell.desc;
+            this._desc1.value = `${this._spell.desc} | ${this._spell.class}`;
             //this._lootbig.visible = false;
             this.show()
         } else {
@@ -174,32 +174,69 @@ export class SpellScroll {
 
     private scribe() {
         let obj = Singleton.getInstance();
-        let spells = obj.sbook
+        // Assuming these are the spellbooks for different classes
+        let spells = obj.sbook;
+        let rogueabilities = obj.rtoolbelt;
+        let warriorabilities = obj.wtome;
 
-        const isSpellAlreadyScribed = spells.some((spell) => {
-            //log('spells ', spell.lootdesc())
-            return this._spell.name === spell.lootdesc();
-        });
+        // Splitting the class string into an array of classes that can use the spell
+        const spellClasses = this._spell.class.split(",").map(cls => cls.trim());
 
-        if (obj.playerclass !== "Magician") {
-            writeToCl(`You must be a spellcaster to scribe spells.`)
-            this.hide()
+        // Check if the player's class is one of the spell's classes
+        let canScribeSpell = false;
+        for (let i = 0; i < spellClasses.length; i++) {
+            if (spellClasses[i] === obj.playerclass) {
+                canScribeSpell = true;
+                break;
+            }
+        }
+
+        if (!canScribeSpell) {
+            writeToCl(`You do not have the right class to scribe this spell.`);
+            this.hide();
             return;
         }
+
+        // Determine which spellbook to use based on player's class
+        let currentSpellbook;
+        switch (obj.playerclass) {
+            case "Mage":
+                currentSpellbook = spells;
+                break;
+            case "Rogue":
+                currentSpellbook = rogueabilities;
+                break;
+            case "Warrior":
+                currentSpellbook = warriorabilities;
+                break;
+            default:
+                writeToCl(`Invalid player class.`);
+                this.hide();
+                return;
+        }
+
+        // Check if the spell is already scribed
+        const isSpellAlreadyScribed = currentSpellbook.some(spell => spell.lootdesc() === this._spell.name);
 
         if (isSpellAlreadyScribed) {
-            //log('Spell is already scribed, exiting')
-            //log(`player class: ${obj.playerclass}`)
-            
-            writeToCl(`This spell is already in your spellbook.`)
-            this.hide()
+            writeToCl(`This spell is already in your spellbook.`);
+            this.hide();
             return;
         }
 
-        obj.spellbook.scribeSpell(this._spell.name)
-        this.hide()
-        this.currentScroll.removeItem()
+        // Scribe the spell to the appropriate book
+        if (obj.playerclass === "Mage") {
+            obj.spellbook.scribeSpell(this._spell.name);
+        } else if (obj.playerclass === "Rogue") {
+            obj.roguestoolbelt.scribeSpell(this._spell.name);
+        } else if (obj.playerclass === "Warrior") {
+            obj.warriorstome.scribeSpell(this._spell.name);
+        }
+
+        this.hide();
+        this.currentScroll.removeItem();
     }
+
 
     public show() {
         this._bp.visible = true;

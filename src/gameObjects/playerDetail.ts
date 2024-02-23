@@ -15,6 +15,7 @@ import { UIBar } from "src/gameUI/uiBar";
 import { CornerLabel } from "src/gameUI/cornerLabel";
 import { WarriorsTome } from "src/gameUI/warriorsTome";
 import { RoguesToolbelt } from "src/gameUI/roguestoolbelt";
+import { CharWindow } from "src/gameUI/charWindow";
 
 //import { closeSocket } from "../gameFunctions/wsConnection";
 
@@ -42,6 +43,7 @@ export class Singleton {
     private _playersroguestoolbelt: Array<Item> = [];
     private _playerbackpack: Array<Item> = [];
     private _playeractionbar: Array<Item> = [];
+    private _playercharacter: Array<Item> = [];
     private _playeractivespells: Array<object> = [];
     private _playerquestlog: Array<object> = [];
     private _gameover: boolean = false;
@@ -66,10 +68,9 @@ export class Singleton {
     private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
-    //private _actionbarslots: (string | null)[] = new Array(9).map(() => null);
-    //private _backpackslots: (string | null)[] = new Array(16).map(() => null);
     private _actionbarslots: (string | null)[] = this.initializeArrayWithNulls(9);
     private _backpackslots: (string | null)[] = this.initializeArrayWithNulls(16);
+    private _characterslots: (string | null)[] = this.initializeArrayWithNulls(6);
 
 
     private _backPack: BackPack;
@@ -77,6 +78,7 @@ export class Singleton {
     private _spellBook: SpellBook;
     private _warriorsTome: WarriorsTome;
     private _roguesToolbelt: RoguesToolbelt;
+    private _characterWindow: CharWindow;
     private _combatLog: CombatLog
     private _player: Player;
     private _tradewindow: TradeWindow;
@@ -162,6 +164,14 @@ export class Singleton {
 
     get backpackslots() {
         return this._backpackslots;
+    }
+
+    set characterslots(val) {
+        this._characterslots = val;
+    }
+
+    get characterslots() {
+        return this._characterslots;
     }
 
     set gameover(val) {
@@ -340,6 +350,14 @@ export class Singleton {
         return this._roguesToolbelt;
     }
 
+    set characterwindow(val: CharWindow) {
+        this._characterWindow = val;
+    }
+
+    get characterwindow() {
+        return this._characterWindow;
+    }
+
     set player(val) {
         this._player = val
     }
@@ -444,6 +462,10 @@ export class Singleton {
         this._playeractionbar.push(val)
     }
 
+    playercharacter(val: any) {
+        this._playercharacter.push(val)
+    }
+
     playerspellbook(val: any) {
         this._playerspellbook.push(val)
     }
@@ -480,6 +502,10 @@ export class Singleton {
         return this._playeractionbar
     }
 
+    fetchcharacter() {
+        return this._playercharacter
+    }
+
     fetchbackpack() {
         return this._playerbackpack
     }
@@ -506,6 +532,10 @@ export class Singleton {
 
     get abar() {
         return this._playeractionbar 
+    }
+
+    get cwin() {
+        return this._playercharacter
     }
    
     set playerquestlog(val) {

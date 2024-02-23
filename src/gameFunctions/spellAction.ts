@@ -5,6 +5,7 @@ import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 import { openHeavens } from "src/gameSystems/precipitation";
 import { setTimeout } from "src/gameUtils/timeOut";
 import resources from "src/resources";
+import { writeToCl } from "./writeToCL";
 
 export function spellAction(spell:Item, completespell:any) {
     let ps: ParticleSystem
@@ -83,9 +84,20 @@ export function spellAction(spell:Item, completespell:any) {
                         deleteSpellIcon.visible = false;
                         //log(`spell.spelltype: ${spell.spelltype()}`)
                         //log(`completespell.spelltype ${completespell.spelltype}`)
+
+                        if (spell.isOnCooldown) {
+                            writeToCl("This spell is on cooldown.");
+                            return;
+                        }
+
                         if(completespell.spelltype === "Shield") {
                             ps.turnOn(shape, completespell.spellstart, completespell.spellend)
                             spell.activateSpell(completespell) 
+                        } else if (completespell.spelltype === "Bash") {
+                            //log(`You bash an NPC`)
+                            spell.activateAbility(completespell)
+                            // Set the spell on cooldown
+                            spell.setCooldown(completespell.recasttime); 
                         } else if (completespell.spelltype === "Defense") {
                             let origin = Camera.instance.feetPosition.clone();
                             let rotation = Camera.instance.rotation;

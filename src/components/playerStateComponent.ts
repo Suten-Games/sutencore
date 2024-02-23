@@ -5,6 +5,7 @@ export class PlayerState {
     id:any;
     backpack: any;
     actionbar: any;
+    character: any;
     questlog: any;
     spellbook: any;
     warriorstome: any;

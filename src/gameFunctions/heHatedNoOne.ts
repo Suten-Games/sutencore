@@ -23,6 +23,7 @@ export function heHatedNoOneThenICameAlong(mobstate: MobState) {
         //log("exists 1: ", exists);
         obj.localmobstate.splice(exists, 1, mobstate);
     } else {
+        log(`heHatedNoOne.ts: Adding ${mobstate.mobname} to localmobstate`)
         obj.localmobstate.push(mobstate);
     }
 }

@@ -25,8 +25,8 @@ export function addSpellClick(image:UIImage, name:string) {
             
             let newspell = new Item(
                 completespell.image, slot, completespell.srcw, completespell.srch, completespell.desc,
-                completespell.spelltype, completespell.price, completespell.buybackprice, completespell.itemtype, completespell.spellshape, completespell.spellstart,
-                completespell.spellend, completespell.sound,null,null, null, null
+                completespell.spelltype, completespell.price, completespell.buybackprice, completespell.itemtype, null,null,null, completespell.spellshape, completespell.spellstart,
+                completespell.spellend, completespell.sound,null,null,null,null
             );
             
             myactionbarcontents.push(newspell)
@@ -43,7 +43,7 @@ export function addSpellClick(image:UIImage, name:string) {
 function querySlot(): number {
     log('in the querySlot method');
     const obj = Singleton.getInstance();
-    let myactionbarcontents = obj.fetchactionbar()
+    //let myactionbarcontents = obj.fetchactionbar()
     //let found = 0
     for (let i = 1; i < 10; i++) {
         //log(` On loop: ${i} - Checking ${obj.actionbarslots[i]} against ${myactionbarcontents[i].itemtype}`)
@@ -54,14 +54,9 @@ function querySlot(): number {
             log(`Slot ${i} was filled, checking ${i + 1}`)
         }
     }
-    
     writeToCl(`The actionbar is full.`, `Remove items to scribe spells.`)
     writeToCl(`Discard, or Dbl Click to reveal trash icon.`)
     return 50
-    
-    //log(`in the querySlot method returning: ${found}`)
-    //return found
-
 }
 
 function setSlot(slot: number) {

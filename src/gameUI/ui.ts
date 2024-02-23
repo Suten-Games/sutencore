@@ -5,11 +5,13 @@ import { CombatLog } from "./combatLog";
 import { Khepra } from "./khepra";
 import { SpellBook } from "./spellBook";
 import { SpellScroll } from "./spellScroll";
-import { CharWindowHandler } from "./charWindowHandler";
+//import { CharWindowHandler } from "./charWindowHandler";
+
 import { QuestWindow } from "./questWindow";
 import { QuestBook } from "./questBook";
 import { WarriorsTome } from "./warriorsTome";
 import { RoguesToolbelt } from "./roguestoolbelt";
+import { CharWindow } from "./charWindow";
 
 export class UI {
     private static instance: UI;
@@ -22,7 +24,8 @@ export class UI {
     private warriorsTome: WarriorsTome
     private roguesToolbelt: RoguesToolbelt
     private spellScroll: SpellScroll
-    private charWindowHandler: CharWindowHandler
+    //private charWindowHandler: CharWindowHandler
+    private characterwindow: CharWindow
     private questwindow: QuestWindow;
     private questBook: QuestBook;
     private sellItemsPage: UIImage;
@@ -39,6 +42,7 @@ export class UI {
         this.backPack = new BackPack(this.gameCanvas, resources.interface.blueBackpack);
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
         this.questwindow = new QuestWindow(this.gameCanvas, resources.interface.questLog);
+        this.characterwindow = new CharWindow(this.gameCanvas, resources.interface.characterScreen, 'Adventurer');
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.warriorsTome = new WarriorsTome(this.gameCanvas, resources.interface.spellBook);
         this.roguesToolbelt = new RoguesToolbelt(this.gameCanvas, resources.interface.spellBook);
@@ -107,9 +111,9 @@ export class UI {
         return this.questBook
     }
 
-    // get salespage(){
-    //     return this.sellItemsPage
-    // }
+    get cw() {
+        return this.characterwindow
+    }
 
     turnOffSales() {
         log(`in ui.ts turnOffSales setting to invisible`)

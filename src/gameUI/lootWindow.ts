@@ -125,6 +125,9 @@ export class LootWindow extends Entity {
                 json.price,           //price
                 json.buybackprice,
                 json.itemtype,        //itemtype
+                json.itemdetail,
+                json.stats,
+                json.weaponaction,
                 json.spellshape,      //spellshape
                 json.spellstart,      //spellstart
                 json.spellend,        //spellend
@@ -146,6 +149,9 @@ export class LootWindow extends Entity {
                 50,
                 30,
                 "consumable",
+                null,
+                null,
+                null,
                 null,   //spellshape
                 null,   //spellstart
                 null,   //spellend
@@ -166,6 +172,9 @@ export class LootWindow extends Entity {
                 50,
                 2,
                 "consumable",
+                null,
+                null,
+                null,
                 null,   //spellshape
                 null,   //spellstart
                 null,   //spellend
@@ -231,7 +240,7 @@ export class LootWindow extends Entity {
             //log('lootWindow:243 - in lootWindow, we have an item, creating a new lootItem')
             //log(`lootWindow:244 - the item ${item}`)
             this._lootitem = new Item(new Texture("images/looticons/manavial.png"), 40, 122, 120, "Mana Vial", "consumable", 50, 1, "consumable",
-                null, null, null, null, null, this, null, null)
+                null, null, null, null,null,null, null, null, this, null, null)
             this._lootitem.show()
         } else {
             //log('lootWindow:249 in lootWindow we do not have an item so calling getLoot')

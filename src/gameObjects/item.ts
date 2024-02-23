@@ -15,9 +15,10 @@ import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
 import { QuestWindow } from "src/gameUI/questWindow";
-import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
+//import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
 import { updateCurrency } from "src/gameFunctions/updateCurrency";
 import { writeToCl } from "src/gameFunctions/writeToCL";
+import { updatePlayerStats } from "src/gameFunctions/updatePlayerStats";
 
 
 export class Item {
@@ -34,6 +35,7 @@ export class Item {
     private isActionBar: boolean;
     private isLootWindow: boolean;
     private isQuestWindow: boolean;
+    private isCharacterWindow: boolean;
     private isBackpack: boolean;
     private isPurchase: boolean;
     private isActiveSpell: boolean;
@@ -53,6 +55,9 @@ export class Item {
     private _lootwindow:LootWindow;
     private _questwindow:QuestWindow;
     private _itemtype;
+    private _itemdetail;
+    private _weaponaction;
+    private _stats;
 
     private _isquestloot;
     private _questlootclicked;
@@ -64,6 +69,7 @@ export class Item {
     private _isclothing;
     private _scribedspell;
     private _iscurrency;
+    isOnCooldown: boolean = false;
 
     private originalOnClick: () => void;
 
@@ -95,6 +101,9 @@ export class Item {
         price: number | { copper: number, silver: number, gold: number, platinum: number },
         buybackprice: number | null = null,
         itemtype: string | null = null,
+        itemdetail: string | null = null,
+        weaponaction: string | null = null,
+        stats: Record<string, number> | null = null,
         spellshape: string | null = null,
         spellstart: number | null = null,
         spellend: number | null = null,
@@ -111,10 +120,19 @@ export class Item {
         this._slot = slot;
         this._type = type;
         this._itemtype = itemtype;
+        this._itemdetail = itemdetail;
+        this._weaponaction = weaponaction;
         this._lootimage = new UIImage(this._canvas, this._image);
         this._lootimage.visible = false;
         this._activespellimage = new UIImage(this._canvas, this._image);
         this._activespellimage.visible = false;
+
+        if(stats) {
+            log(`item.constructor: Setting stats: ${stats}`)
+            this._stats = stats
+        } else {
+            log(`item.constructor: Stats didn't come through in the item constructor`)
+        }
 
         this.originalOnClick = () => { };
 
@@ -142,7 +160,6 @@ export class Item {
 
         this._desc = new UIText(this._canvas);
         if (desc) {
-            //log(`Setting desc.value to ${desc}`)
             this._desc.value = desc
             this._potiontype = desc
         } else {
@@ -227,7 +244,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
-        //log('item.ts still in constructor, calling slotPicker with slot: ', slot)
+        log('item.ts still in constructor, calling slotPicker with slot: ', slot)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -237,6 +254,7 @@ export class Item {
         this.isActiveSpell = slotposition.as
         this.isSpellBook = slotposition.sb
         this.isQuestWindow = slotposition.qw
+        this.isCharacterWindow = slotposition.cw
         
         this._lootimage.hAlign = slotposition.ha
         this._lootimage.vAlign = slotposition.va
@@ -259,6 +277,10 @@ export class Item {
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.setItemForSale();
             });
+        } else if (this.isCharacterWindow) {
+            log(`item.ts: This is character Window`)
+            // this._lootimage.visible = true;
+            this._desc.visible = false;
         } else if (this.isPurchase) {
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
@@ -284,7 +306,17 @@ export class Item {
             this._lootimage.onClick = new OnPointerDown(() => {
                 this.sendToBackpack()
             })
-        }
+        } 
+    }
+
+    setCooldown(duration: number) {
+        log(`Setting cooldown to: ${duration}`)
+        this.isOnCooldown = true;
+        setTimeout(duration, () => {
+            this.isOnCooldown = false;
+            // If you have a UI element that reflects the cooldown state, update it here as well.
+            // Example: this.updateCooldownUI(false);
+        });
     }
 
     private consumeAction = (slot: number) => {
@@ -336,11 +368,182 @@ export class Item {
     }
 
     private inspectClothing = () => {
-        trinketAction(this)
-        const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
-        Dbl click, then click on the trash icon to delete it from inventory.`
-        const chunks = chunkSentence(statement, 7)
-        writeChunks(chunks)
+        log(`Checking clothing type: ${this._itemdetail}`);
+        if(!this._itemdetail) { 
+            return 
+        }
+
+        const obj = Singleton.getInstance()
+        let myactionbarcontents = obj.fetchactionbar()
+        log(`item.ts: Original myactionbarcontents: `)
+        for (let item of myactionbarcontents) {
+            log(`item: ${item.lootdesc()} ${item.slot()}`)
+        }
+
+        // Mapping from clothing types to character window slots
+        const clothingToSlotMap: { [key: string]: number } = {
+            'Head': 80,
+            'Torso': 81,
+            'Boots': 82,
+            'Gloves': 83,
+            'Ring': 84,
+            'Trinket': 85
+        };
+
+        const originalslot = this.slot()
+
+        // Find the slot for this clothing type
+        const targetSlot = clothingToSlotMap[this._itemdetail];
+
+        if (targetSlot === undefined) {
+            log(`No slot found for ${this._itemdetail}.`);
+            return;
+        }
+
+        log(`Target slot for ${this._itemdetail}: ${targetSlot}`);
+
+        // Assuming function to check if slot is open
+        const isSlotOpen = this.checkCharacterSlot(targetSlot);
+
+        if (!isSlotOpen) {
+
+            // Set up, find out what should go where
+            log(`item.ts: Slot ${targetSlot} is not open. Swapping items or notifying player.`);
+            let playercharacter = obj.fetchcharacter()
+            log(`item.ts: playercharacter content: `)
+            for(let item of playercharacter) {
+                log(`item: ${item.lootdesc()} ${item.slot()}`)
+            }
+            log(`item.ts: playercharacter: ${playercharacter}`)
+            let existingitem = playercharacter[targetSlot - 80]
+            log(`item.ts: the existing item is: ${existingitem.lootdesc()}`)
+
+
+            // Now update the previously equipped item
+            log(`item.ts: Then I need to update the playercharacter array in the singleton so its accurate again`)
+            log(`item.ts: Slice out the existing item from playercharacter, and replace with the new one`)
+            // 1. Remove it from the playercharacter array
+            let i = playercharacter.map((x: { slot: () => any; }) => x.slot()).indexOf(targetSlot)
+            if (i !== -1) {
+                log(`item.ts: found the existing item index, removing it`)
+                playercharacter.splice(i, 1)
+            }
+            // 2. Change its slot to the replacement's slot
+            const existingItemsNewSlotPosition = slotPicker(originalslot)
+            existingitem.setSlotProperties(existingItemsNewSlotPosition)
+            existingitem.setslot = originalslot
+            // 3. Add it to the actionbar array
+            myactionbarcontents.push(existingitem)
+            existingitem.show()
+
+
+            // Now equip the new item
+            // 1. Remove it from the actionbar array
+            // myactionbarcontents.splice(targetSlot, 1)
+            let itemIndexToRemove = -1; // Default to -1 to indicate "not found"
+            for (let i = 0; i < myactionbarcontents.length; i++) {
+                if (myactionbarcontents[i].lootdesc() === this.lootdesc()) {
+                    itemIndexToRemove = i;
+                    break; // Stop the loop once you've found the item
+                }
+            }
+
+            if (itemIndexToRemove !== -1) {
+                myactionbarcontents.splice(itemIndexToRemove, 1); // Remove the item
+            }
+            
+            // 2. Change its slot to the charwindow slot
+            const slotPosition = slotPicker(targetSlot);
+            this.setSlotProperties(slotPosition); 
+            this.setslot = targetSlot
+            // 3. Add it to the playercharacter array
+            playercharacter.push(this)
+
+            //log(`item.ts: Then I need to push the last equipped item to the actionbar`)
+            log(`item.ts: myactionbarcontents: `)
+            for(let item of myactionbarcontents) {
+                log(`item: ${item.lootdesc()} ${item.slot()}`) 
+            }
+
+            log(`item.ts: final check of playercharacter content: `)
+            for (let item of playercharacter) {
+                log(`item: ${item.lootdesc()} ${item.slot()}`)
+            }
+
+            if (this._stats) {
+                log(`item.ts: this._stats: ${this._stats}`)
+            } else {
+                log(`item.ts: this._stats is not set`)
+            }
+            
+        } else {
+            // Slot is open, proceed to equip and adjust stats
+            const obj = Singleton.getInstance();
+            obj.characterslots[targetSlot - 80] = 'filled'; // Mark the slot as filled
+
+            // Change the items slot to character window
+            const slotPosition = slotPicker(targetSlot);
+            this.setSlotProperties(slotPosition);
+            this.setslot = targetSlot
+
+            // Define the stats boost provided by this clothing item
+            const statsBoost = {
+                // Example boosts, adjust according to your game's mechanics
+                'Strength': 2,
+                'Agility': 3,
+                // Add other stats as needed
+            };
+
+            if (this._stats) {
+                log(`item.ts: this._stats: ${this._stats}`)
+            } else {
+                log(`item.ts: this._stats is not set`)
+            }
+
+
+            // Apply stat boosts
+            updatePlayerStats(this._player, statsBoost);
+            log(`item.ts: Equipped ${this._itemdetail} and updated player stats.`);
+        }
+        
+        //trinketAction(this)
+        // const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
+        // Dbl click, then click on the trash icon to delete it from inventory.`
+        // const chunks = chunkSentence(statement, 7)
+        // writeChunks(chunks)
+    }
+
+    public checkCharacterSlot(slot: number): boolean {
+        const baseSlotNumber = 80; // The base number for slot numbering
+        const arrayIndex = slot - baseSlotNumber; // Convert slot number to array index
+
+        const obj = Singleton.getInstance();
+        log(`item.ts: Checking slot ${slot}, which corresponds to array index ${arrayIndex}`);
+
+        log(`item.ts: obj.characterslots: ${obj.characterslots}`)
+
+        // Check if the arrayIndex is within the bounds of the array
+        if (arrayIndex >= 0 && arrayIndex < obj.characterslots.length) {
+            // Return true if the slot at the index is 'filled', false otherwise
+            return obj.characterslots[arrayIndex] !== 'filled';
+        } else {
+            log(`item.ts: Slot number ${slot} is out of bounds`);
+            return false; // Return false or throw an error depending on your needs
+        }
+    }
+
+    public checkSlot(): number {
+        //log('STEP TWO: actionBar.ts: in the checkSlot method');
+        let obj = Singleton.getInstance();
+        log(`item.ts: checkSlot: ${obj.characterslots}`)
+        for (let i = 1; i < 10; i++) {
+            if (obj.characterslots[i] !== 'filled') {
+                //log(`actionBar.ts: checkSlot() all of the actionbar slots: ${obj.actionbarslots}`)
+                return i;
+            }
+        }
+
+        return 0;
     }
 
     private castSpell = () => {
@@ -399,7 +602,6 @@ export class Item {
         this._lootimage.onClick = new OnPointerDown(() => this.originalOnClick());
     }
 
-
     public image() {
         return this._image;
     }
@@ -420,11 +622,19 @@ export class Item {
             this._desc.visible = true;
         } else if (this._backPack) {
             this._lootimage.visible = true;
-            this._desc.visible = true;
+            this._desc.visible = false;
+        } else if (this._isclothing){
+            this._lootimage.visible = true; 
+            this._desc.visible = false;
         } else {
             this._lootimage.visible = true;
-            this._desc.visible = true;
+            this._desc.visible = false;
         }
+    }
+
+    public flip() {
+        this._lootimage.visible = !this.lootimage.visible
+        this._desc.visible = !this._desc.visible
     }
 
     public hide() {
@@ -463,7 +673,6 @@ export class Item {
             }
             return this._spellshape
         }
-
         return null
     }
 
@@ -528,8 +737,6 @@ export class Item {
     }
 
     public saleResetItem() {
-        //Don't want to make the item invisible, just want to reset its old slot
-
         if (this.slot() < 10) {
             this._actionBar.resetSlot(this._slot);
         } else {
@@ -538,8 +745,6 @@ export class Item {
     }
 
     public removeItem() {
-        //log('inside removeItem')
-        //log('slot ', this.slot())
         this._lootimage.visible = false;
         if(this.slot() < 10 ) {
             this._actionBar.resetSlot(this._slot);
@@ -549,7 +754,6 @@ export class Item {
     }
 
     public addSpellClick() {
-        //log('inside addSpellClick')
         this._lootimage.onClick = new OnPointerDown(
             (e) => {
                 log('Clicked in addSpellClick')
@@ -562,14 +766,42 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
-        //log(`in item updateLoc method`)
         this._lootimage.visible = true;
-
         this.setOriginalAction(slot);
     }
 
+    public activateAbility(spell: Ispell) {
+        log(`item.ts: activateAbility called, setting obj`)
+        let obj = Singleton.getInstance()
+        log(`item.ts: localmobstate: ${JSON.stringify(obj.localmobstate)}`)
+        const slot = 60;
+        const slotPosition = slotPicker(slot);
+        this.setActiveSpellImageProperties(slotPosition);
+        this._activespellimage.sourceWidth = this._lootimage.sourceWidth;
+        this._activespellimage.sourceHeight = this._lootimage.sourceHeight;
+        this._activespellimage.visible = true;
+
+        //let mob = null;
+        for (let i = 0; i < obj.localmobstate.length; i++) {
+            const mobState = obj.localmobstate[i];
+            if (mobState.battle && !mobState.mobdead) {
+                //log(`mobState: ${JSON.stringify(mobState)}`);
+                mobState.abilitydamage = 10
+                this._player.bash(spell.oncastmsg[0].line1, mobState.mobname, 10)
+                //log(`mobState after setting ability damage: ${JSON.stringify(mobState)}`)
+            }
+        }
+
+        log(`ok lets see the whole localmobstate at this time`)
+        log(obj.localmobstate)
+
+        setTimeout(spell.duration, () => {
+            this._activespellimage.visible = false;
+            //this._player.setShield(0, spell.ondropmsg[0].line1);
+        })
+    }
+
     public activateSpell(spell: Ispell) {
-        //log('item.ts:478 - inside activateSpell');
         const slot = 60;
         const slotPosition = slotPicker(slot);
         this.setActiveSpellImageProperties(slotPosition);
@@ -586,25 +818,16 @@ export class Item {
     }
 
     public sendToBackpack() {
-        //log(`STEP ONE: item.ts: Clicked on the Loot Item, now in sendToBackpack func`)
         let obj = Singleton.getInstance()
         let myactionbarcontents = obj.fetchactionbar()
         let mybackpackcontents = obj.fetchbackpack()
-        //let slot = this._actionBar.selectSlot(this);
         let slot = this._actionBar.checkSlot()
 
-        //log(`item.ts:476 - The actionBar checkSlot method thinks I should use: slot ${slot}`)
-
         if (slot === 0) {
-            //log(`Because its 0, Calling selectSlot on the backpack`)
-            //slot = this._backPack.selectSlot(this);
             slot = this._backPack.checkSlot()
-            //log(`item.ts:476 - The backpack checkSlot method thinks I should use: slot ${slot}`)
         }
 
-        //log(`STEP 3 - Processing the slot update`)
         if (slot === 50) {
-            //log(`STEP 4 - NO SPACE ANYWHERE`)
             this._player.bagsfull();
             this._desc.visible = false;
             this._lootimage.visible = false;
@@ -615,10 +838,7 @@ export class Item {
                 this.isBackpack = true
             }
             this.setSlotProperties(slotPosition);
-            //log(`slotPosition backpack: ${slotPosition.bp}`)
             if(this.isBackpack) {
-                //log(`STEP 4 - BACKPACK`)
-                //log(`item.ts: ts a backback`)
                 this._backPack.setSlot(slot)
                 this.updateLoc(slot)
                 let camera = Camera.instance
@@ -632,7 +852,6 @@ export class Item {
                     this._lootimage.visible = false;
                 }
             } else {
-                log(`STEP 4 - ACTIONBAR`)
                 this._actionBar.setSlot(slot)
                 this.updateLoc(slot)
                 myactionbarcontents.push(this)
@@ -648,10 +867,8 @@ export class Item {
             }
 
             if (this._questwindow) {
-                //this._questwindow.hide()
                 this._questwindow.hidequestwindow()
             }
-            
         }
     }
 
@@ -693,7 +910,6 @@ export class Item {
 
         const slotPosition = slotPicker(36);
         this.setSlotProperties(slotPosition);
-       
     }
 
     private handleCurrencyItem(currency: { copper: number, silver: number, gold: number, platinum: number }) {
@@ -723,7 +939,7 @@ export class Item {
         this.coinssound.getComponent(Transform).position = camera.position;
         this.coinssound.play();
         // Show message (this is a placeholder, replace with your UI logic)
-        log(`Added copper: ${copper}, silver: ${silver}, gold: ${gold}, platinum: ${platinum} to the player.`);
+        //log(`Added copper: ${copper}, silver: ${silver}, gold: ${gold}, platinum: ${platinum} to the player.`);
         if(copper > 0 && silver == 0 && gold == 0 && platinum == 0) {
             writeToCl(`Looted ${copper} copper`)
         } else if (copper > 0 && silver > 0 && gold == 0 && platinum == 0) {

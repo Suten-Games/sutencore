@@ -332,6 +332,11 @@ export class Player {
         this.hpBar.set(val);
     }
 
+    bash(text: string, name: string, damage: number) {
+        writeToCl(`${text} ${name} for ${damage} damage`)
+        log(`in player.ts bash`)
+    }
+
     setShield(val: number, text: string) {
         if (val > 0) {
             writeToCl(text)

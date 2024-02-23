@@ -334,10 +334,8 @@ export class NpcFSM extends Entity {
             //log("Don't update anything, lets START all the way up first")
             return
         } else {
-            //log(`In the update loop for ${this._npc.name}`)
             let state = this._npc.getComponent(MobState);
             this.transform = this._npc.getComponent(Transform);
-            //let dist = ydistance(thiso.transform.position, camera.position, this._npc);
 
             //log(`CAMERA: ${camera.position}`)
 

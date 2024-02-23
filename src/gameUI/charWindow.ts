@@ -39,6 +39,7 @@ export class CharWindow {
     private _backpack: any
     private _lootimage: any
     private _weapon: any
+    private _mycharacter: any;
 
     private equipsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
@@ -62,6 +63,8 @@ export class CharWindow {
         this._base.sourceWidth = 2160;
         this._base.sourceHeight = 2910;
         this._base.visible = false;
+
+        this._mycharacter = obj.fetchcharacter()
 
         this._discardbutton = new UIImage(this._canvas, resources.interface.discardButton)
         this._discardbutton.hAlign = "center"
@@ -276,6 +279,10 @@ export class CharWindow {
         this._closebutton.visible = false;
         this._closebutton.onClick = new OnPointerDown(
             (e) => {
+                this._mycharacter.forEach((gear: { hide: () => void; }) => {
+                    gear.hide()
+                })
+
                 this._base.visible = false;
                 this._open = false;
                 this._closebutton.visible = false;
@@ -313,11 +320,54 @@ export class CharWindow {
     }
 
     public show() {
+        log(`Calling CharWindow show()`)
         this._base.visible = true;
+        this.getcontents()
     }
 
     public hide() {
         this._base.visible = false;
+    }
+
+    public bootLoadCharWindow(data: any[]) {
+        log(`in bootLoadCharWindow`)
+        let stats = {}
+        data.forEach(element => {
+            if (element.slot) {
+                log(`Creating an item  for the charwindow`)
+                let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
+                    element.price, element.buybackprice, element.itemtype, element.itemdetail, element.weaponaction, element.stats, 
+                    element.spellshape, element.spellstart, element.spellend, element.sound, null, null, null, null
+                )
+                log(`Calling setSlot with: ${element.slot}`)
+                this.setSlot(element.slot)
+                log(`Calling item.setslot: ${element.slot}`)
+                item.setslot = element.slot
+                log(`calling updateLoc: ${element.slot}`)
+                item.updateLoc(element.slot)
+                log(`pushing item onto mycharacter: `)
+                this._mycharacter.push(item)
+                item.hide()
+            }
+        })
+    }
+
+    public setSlot(slot: number) {
+        const baseSlotNumber = 80; // Starting slot number
+        const arrayIndex = slot - baseSlotNumber; // Convert slot number to array index
+
+        const obj = Singleton.getInstance();
+        log(`in charwindow setSlot. obj.characterslots: ${obj.characterslots}`);
+        log(`in charwindow setSlot, setting slot ${slot} (array index ${arrayIndex}) to filled`);
+
+        // Check if the arrayIndex is within the bounds of the array
+        if (arrayIndex >= 0 && arrayIndex < obj.characterslots.length) {
+            obj.characterslots[arrayIndex] = 'filled';
+        } else {
+           log(`Slot number ${slot} is out of bounds`);
+        }
+        //obj.characterslots[slot] = 'filled';
+        log(`in charwindow setSlot. obj.characterslots is now: ${obj.characterslots}`)
     }
 
     public setCharLoot(weapon: any, weapontext: string, actionbar: ActionBar, backpack: BackPack, lootimage: Item, slot: number) {
@@ -468,7 +518,6 @@ export class CharWindow {
         //log(`401: lootbig.visible = false`)
         this._lootbig.visible = false;
 
-
         if (defaultText == 'Cracked Staff') {
             this._lootbig.sourceWidth = 122;
             this._lootbig.sourceHeight = 120;
@@ -480,7 +529,6 @@ export class CharWindow {
             this._lootbig.sourceWidth = 1219;
             this._lootbig.sourceHeight = 2154;
         }
-
     }
 
     private setupInteractions(charclass: string, weaponstring: string, slot: number, actionbar: ActionBar, backpack: BackPack, lootimage: Item) {
@@ -548,10 +596,46 @@ export class CharWindow {
         );
     }
 
+    public selectSlot(item: Item): number {
+        log(`in charWindow selectSlot`)
+        let obj = Singleton.getInstance()
+        const index = obj.characterslots.indexOf(null);
+        if (index !== -1) {
+            const slot = index + 80;
+            obj.characterslots[index] = 'filled';
+            item.updateLoc(slot);
+            this._mycharacter.push(item);
+            return slot;
+        }
+        return 50;
+    }
+
+    public checkCharacterSlot(slot: number): boolean {
+        const baseSlotNumber = 80; // The base number for slot numbering
+        const arrayIndex = slot - baseSlotNumber; // Convert slot number to array index
+
+        const obj = Singleton.getInstance();
+        log(`Checking slot ${slot}, which corresponds to array index ${arrayIndex}`);
+
+        // Check if the arrayIndex is within the bounds of the array
+        if (arrayIndex >= 0 && arrayIndex < obj.characterslots.length) {
+            // Return true if the slot at the index is 'filled', false otherwise
+            return obj.characterslots[arrayIndex] === 'filled';
+        } else {
+            log(`Slot number ${slot} is out of bounds`);
+            return false; // Return false or throw an error depending on your needs
+        }
+    }
+
+    private getcontents() {
+        this._mycharacter.forEach((gear: { show: () => void; }) => {
+            gear.show()
+        })
+    }
 
     public flip() {
-        //log('charWindow.ts:348 - in the charWindow flip')
-        //let obj = Singleton.getInstance();
+        //log(`in flip(), calling getcontents`)
+        this.getcontents()
         this._base.visible = !this._base.visible;
         this._open = !this._open;
         this._closebutton.visible = !this._closebutton.visible;
@@ -577,6 +661,5 @@ export class CharWindow {
 
         this._charbutton.visible = !this._charbutton.visible;
         this._discardbutton.visible = !this._discardbutton.visible;
-
     }
 }

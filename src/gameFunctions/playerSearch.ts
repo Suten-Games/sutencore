@@ -20,6 +20,7 @@ export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: 
         if (!playerdead) {
             populateObj(json, player)
             loadPlayerItems(ui, json)
+            log(`after loadPlayerItems, loading PlayerFactions Now`)
             loadPlayerFactions(player, json)
             void fetchPlayerQuests(player)
             void connectToServer(ui, json, player)

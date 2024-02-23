@@ -38,7 +38,6 @@ const amunsShielding:Ispell = {
     "srch": 120,
     "price":6,
     "buybackprice":2
-
 }
 
 const shieldbash: Ispell = {
@@ -50,12 +49,12 @@ const shieldbash: Ispell = {
     "blockable": false,
     "dispellable": false,
     "name": "Shield Bash",
-    "spelltype": "Shield",
+    "spelltype": "Bash",
     "skill": "Abjuration",
-    "recasttime": 3,
+    "recasttime": 4000,
     "range": 3,
     "size": 3,
-    "class": "Mage",
+    "class": "Warrior",
     "level": 1,
     "timeofdate": "any",
     "deletable": false,
@@ -64,10 +63,10 @@ const shieldbash: Ispell = {
     "targettype": "self",
     "desc": "Shield Bash",
     "levelmsg": [{ "line1": "msg 2" }],
-    "oncastmsg": [{ "line1": "You swing your shield" }],
+    "oncastmsg": [{ "line1": "You bash " }],
     "ondropmsg": [{ "line1": "Your shielding fades away" }],
-    "duration": 40000,
-    "image": new Texture("images/spells/explosion-magenta-1.png"),
+    "duration": 400,
+    "image": new Texture("images/abilities/shieldbash.png"),
     "itemtype": "spell",
     "spellshape": "BoxShape",
     "spellstart": 5,
@@ -77,7 +76,6 @@ const shieldbash: Ispell = {
     "srch": 120,
     "price": 6,
     "buybackprice":2
-
 }
 
 const minorShielding: Ispell = {

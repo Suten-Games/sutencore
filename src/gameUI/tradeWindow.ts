@@ -158,6 +158,9 @@ export class TradeWindow {
                     itemData.price, // Assuming price is part of itemData
                     itemData.buybackprice,
                     itemData.itemtype,
+                    itemData.itemdetail,
+                    itemData.stats,
+                    itemData.weaponaction,
                     null,
                     null,
                     null,

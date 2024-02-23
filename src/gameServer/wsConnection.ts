@@ -179,6 +179,15 @@ class pingSystem implements ISystem {
                         spellend: lootitem.spellend(), sound: lootitem.sound()
                     }
                 });
+                
+                let character = obj.cwin.map((lootitem) => {
+                    return {
+                        image: lootitem.image().src, slot: lootitem.slot(), srcw: lootitem.lootwidth(), srch: lootitem.lootheight(),
+                        desc: lootitem.lootdesc(), type: lootitem.spelltype(), price: lootitem.itemprice(), itemtype: lootitem.itemtype,
+                        spellshape: lootitem.spellshape(), spellstart: lootitem.spellstart(),
+                        spellend: lootitem.spellend(), sound: lootitem.sound()
+                    } 
+                })
 
                 let spellbook = obj.sbook.map((lootitem) => {
                     return {
@@ -207,9 +216,6 @@ class pingSystem implements ISystem {
                     }
                 })
 
-                //log(`wsConnection type: ${sutenBase}`)
-                //log(`PLAYER: ${JSON.stringify(obj.player)}`)
-
                 this.socket.send(
                     JSON.stringify({
                         event: "events",
@@ -219,6 +225,7 @@ class pingSystem implements ISystem {
                             address: obj.playeraddress,
                             backpack: backpack,
                             actionbar: actionbar,
+                            character: character,
                             spellbook: spellbook,
                             warriorstome: warriorstome,
                             roguestoolbelt: roguestoolbelt
@@ -248,7 +255,7 @@ class updateSystem implements ISystem {
             let obj = Singleton.getInstance();
             if (obj.localmobstate && obj.localmobstate.length > 0) {
                 //Only send a sync if there is something in localmobstate to send
-                log(`localmobstate: ${JSON.stringify(obj.localmobstate)}`)
+                log(`wsConnection.ts: localmobstate: ${JSON.stringify(obj.localmobstate)}`)
                 this.interval = updateInterval;
                 this.socket.send(
                     JSON.stringify({
@@ -265,6 +272,7 @@ class updateSystem implements ISystem {
                 if (obj.localmobstate.length > 0) {
                     let exists = obj.localmobstate.map(x => x.mobdead).indexOf(true)
                     if (exists > -1) {
+                        log(`wsConnection.ts - removing from localmobstate`)
                         obj.localmobstate.splice(exists, 1)
                     }
                 }
@@ -380,12 +388,14 @@ export function processNonGameoverMessage(msg: any, mobs: any) {
 export function handleLocalMobUpdates(msgItem: any, mobstate: any, obj: any) {
     //log(`handlLocalMobUpdates.ts:320 msgItem.mobded ${msgItem.mobdead} mobstate.mobdead: ${mobstate.mobdead}`)
     //log(`handlLocalMobUpdates.ts:320 msgItem.id ${msgItem.id} mobstate.mobdead: ${mobstate.id}`)
-    if (obj.localmobstate.length > 0) {
-        let exists = obj.localmobstate.map((x: { id: any; }) => x.id).indexOf(msgItem.id);
-        if (exists > -1) {
-            obj.localmobstate.splice(exists, 1);
-        }
-    }
+    //log(`commenting from handleLocalMobUpdates to test - 2/23/24`)
+    // if (obj.localmobstate.length > 0) {
+    //     let exists = obj.localmobstate.map((x: { id: any; }) => x.id).indexOf(msgItem.id);
+    //     if (exists > -1) {
+    //         log(`wsConnection handleLocalMobUpdates removing item from localmobstate`)
+    //         obj.localmobstate.splice(exists, 1);
+    //     }
+    // }
 
     if(msgItem.mobdead == false && mobstate.mobdead == true) {
         
@@ -428,6 +438,7 @@ export function handleOtherPlayerEngaged(msgItem: any, mobstate: any, mob: any) 
             .map((x) => x.id)
             .indexOf(mobid);
         if (exists > -1) {
+            log(`wsConnection.ts - removing from localmobstate: 440`)
             obj.localmobstate.splice(exists, 1, mobstate);
         } else {
             obj.localmobstate.push(mobstate);

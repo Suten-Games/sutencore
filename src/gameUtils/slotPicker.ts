@@ -5,6 +5,7 @@ export function slotPicker(slot: number) {
     let isPurchase: boolean = false;
     let isLootWindow: boolean = false;
     let isQuestWindow: boolean = false;
+    let isCharacterWindow: boolean = false;
     let isActiveSpell: boolean = false;
     let isSpellBook: boolean = false;
     let hAlign: string = "";
@@ -290,12 +291,41 @@ export function slotPicker(slot: number) {
             position = "as";
             positionX = "-2%";
             break;
-            //log('slotPicker.ts:226 - inside case 60');
         case 70:
             position = "qw";          //QuestWindow
             positionX = "-28.2%";
             positionY = "-16.5%";
             break;
+        case 80:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "32%";
+            break; 
+        case 81:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "21.9%";
+            break; 
+        case 82:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "12%";
+            break; 
+        case 83:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "1.9%";
+            break; 
+        case 84:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "-8%";
+            break; 
+        case 85:
+            position = "cw"
+            positionX = "15.8%";
+            positionY = "-17.6%";
+            break; 
     }
 
     switch (position) {
@@ -315,12 +345,9 @@ export function slotPicker(slot: number) {
             height = "5%";
             break;
         case "sb":
-            //log(`slotPicker.ts:304 - Inside sb (spellbook)`)
             isSpellBook = true;
             hAlign = "left"
             vAlign = "center";
-            //width = "4.8%";
-            //height = "7.8%";
             width = "2.5%";
             height = "7%";
             fontSize = 12;
@@ -337,7 +364,6 @@ export function slotPicker(slot: number) {
             height = "5%";
             break
         case "as":
-            //log('slotPicker.ts:248 - inside as block');
             isActiveSpell = true;
             hAlign = "right";
             vAlign = "center";
@@ -381,6 +407,18 @@ export function slotPicker(slot: number) {
             fontHAlign = "left";
             fontVAlign = "center";
             break;
+        case "cw":
+            isCharacterWindow = true;
+            hAlign = "left"
+            vAlign = "center";
+            width = "2.5%";
+            height = "7%";
+            fontSize = 12;
+            fontWidth = 120;
+            fontHeight = 30;
+            fontHAlign = "left";
+            fontVAlign = "center";
+            break;
 
         default:
             break;
@@ -388,7 +426,7 @@ export function slotPicker(slot: number) {
 
     return {
         "ab": isActionBar, "bp": isBackpack, "mc": isMerchant, "pc": isPurchase, "lw": isLootWindow, "qw": isQuestWindow,
-        "sb": isSpellBook, "as": isActiveSpell, "ha": hAlign, "h": height, "x": positionX, "y": positionY,
+        "sb": isSpellBook, "as": isActiveSpell, "cw": isCharacterWindow, "ha": hAlign, "h": height, "x": positionX, "y": positionY,
         "va": vAlign, "w": width, "fs": fontSize, "fw": fontWidth, "fh": fontHeight, "fha": fontHAlign,
         "fva": fontVAlign, "fy": fontPositionY, "fx": fontPositionX
     }

@@ -10,12 +10,5 @@ export function setHp(json: PlayerState, player: Player) {
     log(`setHp.ts: Setting obj.playerhp to ${json.maxhp}`)
     obj.playerhp = json.maxhp;
 
-    // if (json.percentage == 100 && json.hp == undefined) {
-    //     obj.playerhp = json.maxhp;
-    // } else {
-    //     var obj = Singleton.getInstance();
-    //     obj.playerhp = json.hp;
-    // }
-
     obj.player = player;
 }
