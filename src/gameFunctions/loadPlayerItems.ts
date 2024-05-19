@@ -14,7 +14,12 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
 
     let bp = [
         {"image": "images/looticons/blueHealthPotion.png", "slot": 10, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
-        {"image": "images/looticons/blueHealthPotion.png","slot": 11, "srcw": 1219,"srch": 2154, "desc": "Major Healing Potion","type": "potion", "itemtype": "consumable","spellshape": null, "spellstart": null,"spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 11, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 12, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 13, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 14, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 15, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
+        {"image": "images/looticons/blueHealthPotion.png", "slot": 16, "srcw": 1219, "srch": 2154, "desc": "Major Healing Potion", "type": "potion", "itemtype": "consumable", "spellshape": null, "spellstart": null, "spellend": null, "sound": null }, 
     ]
 
     let sb = [
@@ -28,27 +33,38 @@ export function loadPlayerItems(ui:UI,json:PlayerState ) {
     let cw = [
         { image: "images/looticons/fulminous-hood.png", slot: 80, srcw: 800, srch: 800, desc: "Fulminous Hood", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }, 
         { image: "images/looticons/fulminous-robe.png", slot: 81, srcw: 800, srch: 800, desc: "Fulminous Robe", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/looticons/fulminous-boots.png", slot: 82, srcw: 800, srch: 800, desc: "Fulminous Boots", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/fireball-sky-3.png", slot: 83, srcw: 122, srch: 120, desc: "Fire Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
-        { image: "images/spells/enchant-acid-3.png", slot: 84, srcw: 122, srch: 120, desc: "Acid Strike", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        { image: "images/looticons/fulminous-boots.png", slot: 82, srcw: 800, srch: 800, desc: "Fulminous Boots", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }
     ]
 
     let wt = [
-        { image: "images/spells/protect-red-3.png", slot: 51, srcw: 122, srch: 120, desc: "Shield Bash", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }, 
+        { image: "images/abilities/shieldbash.png", slot: 51, srcw: 1344, srch: 896, desc: "Shield Bash", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell }, 
     ]
 
     let actions = [
-        { image: 'images/looticons/adventurers-boots.png',slot:5,srcw:413,srch:452,desc:"Adventurers Boots",type:"server",price:20,buybackprice:10, itemtype:"clothing",itemdetail:"Boots", stats: {"agility":10}, weaponaction:null, spellshape:null, spellstart:null, spellend:null, sound:null, tradewindow:null, lootwindow:null, npc:null, questwindow:null},
-        { image: 'images/looticons/adventurers-garb.png', slot: 6, srcw: 561, srch: 612, desc: "Adventurers Garb", type: "server", price: 20, buybackprice: 10, itemtype: "clothing", itemdetail: "Torso", stats: { "charisma": 10 }, weaponaction: null, spellshape: null, spellstart: null, spellend: null, sound: null, tradewindow: null, lootwindow: null, npc: null, questwindow: null },
-        { image: "images/looticons/spellscroll.png", slot: 1, srcw: 122, srch: 120, desc: "Shield Bash", type: "abjuration", price: 10, itemtype: "scroll", spellshape: "BoxShape", spellstart: 20, spellend: 26, sound: resources.sounds.wardspell }, 
-        { image: "images/looticons/rustysword.png", slot: 2, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: "abjuration", price: 10, itemdetail:"1H Slashing",weaponaction:"slash",itemtype: "weapon", spellshape: "BoxShape", spellstart: 20, spellend: 26, sound: resources.sounds.wardspell }, 
+        { image: "images/spells/explosion-magenta-1.png", slot: 1, srcw: 122, srch: 120, desc: "Shield of Amun", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        // { image: "images/abilities/shieldbash.png", slot: 2, srcw: 1344, srch: 896, desc: "Shield Bash", type: "abjuration", price: 10, itemtype: "spell", spellshape: "SphereShape", spellstart: 5, spellend: 200, sound: resources.sounds.wardspell },
+        // {
+        //     image: 'images/looticons/adventurers-boots.png', slot: 3, srcw: 413, srch: 452, 
+        //     desc: "Adventurers Boots", 
+        //     type: "server", price: 20, buybackprice: 10,
+        //     itemtype: "clothing", itemdetail: "Boots", weaponaction: "slice", 
+        //     stats: {
+        //         "wisdom": 3,
+        //         "armor": 1
+        //     }, 
+        //     spellshape:null, spellstart:null, 
+        //     spellend:null, sound:null, tradewindow:null, lootwindow:null, 
+        //     npc:null, questwindow:null},
+        // { image: 'images/looticons/adventurers-garb.png', slot: 4, srcw: 561, srch: 612, desc: "Adventurers Garb", type: "server", price: 20, buybackprice: 10, itemtype: "clothing", itemdetail: "Torso", weaponaction: "slice", stats: { "charisma": 10 }, spellshape: null, spellstart: null, spellend: null, sound: null, tradewindow: null, lootwindow: null, npc: null, questwindow: null },
+        { image: "images/looticons/spellscroll.png", slot: 3, srcw: 122, srch: 120, desc: "Shield Bash", type: "abjuration", price: 10, itemtype: "scroll", spellshape: "BoxShape", spellstart: 20, spellend: 26, sound: resources.sounds.wardspell }, 
+        { image: "images/looticons/rustysword.png", slot: 4, srcw: 1219, srch: 2154, desc: "Rusty Sword", type: "abjuration", price: 10, itemdetail:"1H Slashing",weaponaction:"slash",itemtype: "weapon", spellshape: "BoxShape", spellstart: 20, spellend: 26, sound: resources.sounds.wardspell }, 
     ]
 
     // ui.bp.bootLoadBackPack(bp)
-    //ui.ab.bootLoadActionBar(actions)
+    // ui.ab.bootLoadActionBar(actions)
     // ui.sb.bootLoadSpellBook(sb)
-    // ui.wt.bootLoadWarriorsTome(wt)
-    // ui.cw.bootLoadCharWindow(cw)
+    //ui.wt.bootLoadWarriorsTome(wt)
+    //ui.cw.bootLoadCharWindow(cw)
     
     ui.bp.bootLoadBackPack(json.backpack);
     ui.ab.bootLoadActionBar(json.actionbar);

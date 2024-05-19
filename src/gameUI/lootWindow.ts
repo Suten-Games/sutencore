@@ -1,6 +1,6 @@
 import resources from "../resources";
 import { Item } from "../gameObjects/item";
-import { local } from "suten";
+import { apikey, local } from "suten";
 import { Npc } from "src/gameObjects/npc";
 import { Singleton } from "src/gameObjects/playerDetail";
 
@@ -89,13 +89,17 @@ export class LootWindow extends Entity {
         obj.lootwindows.push(this)
 
         let lootfetched = true;
-        //let looturl = server + mobtier + '/' + this._player.address
         let looturl = server + 'mob/' + mobtier + '/' + this._player.address + '/' + this._npc.id
 
-        //log(`RESPAWN: Calling looturl ${looturl}`)
-
         try {
-            let response = await fetch(looturl)
+            const response = await fetch(looturl, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'x-api-key': apikey
+                }
+            });
+            //let response = await fetch(looturl)
             json = await response.json();
             lootfetched = true
         } catch (error) {

@@ -1,6 +1,8 @@
-export var sutenBase = '100,100'; // Used to determine what to spawn here
+export var sutenBase = '15,15'; // Used to determine what to spawn here
 export var duatX = 1;
 export var duatZ = 1;
+
+export const apikey = "";
 
 export const lPlayer = "http://localhost:8080/player";
 export const sPlayer = "https://sutenquestapi.azurewebsites.net/player";

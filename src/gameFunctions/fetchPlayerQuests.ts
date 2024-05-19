@@ -1,5 +1,5 @@
 import { Player } from "src/gameObjects/player";
-import { local } from "suten";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080/playerquest/"
@@ -9,7 +9,14 @@ export async function fetchPlayerQuests(player:Player) {
     //log(`debug: 13 Inside fetchPlayerQuests`)
 
     try {
-        let response = await fetch(apiUrl + player.address);
+        const response = await fetch(apiUrl + player.address, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apikey
+            }
+        });
+        //let response = await fetch(apiUrl + player.address);
         let json = await response.json();
         //log(`in fetchPlayerQuests, the json is ${JSON.stringify(json)}`)
         let questIds = json.map((quest: PlayerQuest) => quest.questId._id);

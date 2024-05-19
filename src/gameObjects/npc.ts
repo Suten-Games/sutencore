@@ -12,6 +12,7 @@ import { BarStyles } from "src/gameUtils/types";
 import { LootWindow } from "src/gameUI/lootWindow";
 import { QuestWindow } from "src/gameUI/questWindow";
 import { CornerLabel } from "src/gameUI/cornerLabel";
+import { apikey } from "suten";
 //import { setTimeout } from "src/gameUtils/timeOut";
 
 export class Npc extends Entity {
@@ -34,6 +35,7 @@ export class Npc extends Entity {
     public hit2: AnimationState;
     public death1: AnimationState;
     public death2: AnimationState;
+    public sound: AudioClip;
     //private hpbar: UIBar;
     top = 350
     public hpbar: UIBar = new UIBar(this.percentage / 100, -30, this.top, Color4.Red(), BarStyles.ROUNDSILVER, .8)
@@ -440,8 +442,6 @@ export class Npc extends Entity {
     }
 
     heal(amount: number) {
-        //let url = this.npcUrl + "/" + this._id;
-
         if (amount > 0) {
             if (this.hp < this._maxhp) {
                 if (this.hp + amount < this._maxhp) {
@@ -492,6 +492,7 @@ export class Npc extends Entity {
         executeTask(async () => {
             const options = {
                 method: "DELETE",
+                'x-api-key': apikey
             };
 
             try {
@@ -533,13 +534,24 @@ export class Npc extends Entity {
         this.addComponent(shape);
         this.addComponent(new LifeItem())
         this.addComponent(new VictoryItem())
-        this.addComponent(
-            new Transform({
-                position: currentloc,
-                rotation: currentrot,
-                scale: boss ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1),
-            })
-        );
+        if (shape.src == "models/sandcat.glb") {
+            this.addComponent(
+                new Transform({
+                    position: currentloc,
+                    rotation: currentrot,
+                    scale: new Vector3(3, 3, 3)
+                }) 
+            )
+        } else {
+            this.addComponent(
+                new Transform({
+                    position: currentloc,
+                    rotation: currentrot,
+                    scale: boss ? new Vector3(2, 2, 2) : new Vector3(1, 1, 1),
+                })
+            );
+        }
+        
 
         this._maxhp = maxhp;
         this._portrait = portrait;
@@ -554,6 +566,8 @@ export class Npc extends Entity {
         this._currentgoal = currentgoal;
         this._patron = patron;
         this._faction = faction;
+
+        this.sound = sound
 
         this.addComponent(new AudioSource(sound));
         this.addComponent(new MobState());

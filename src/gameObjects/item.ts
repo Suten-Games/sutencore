@@ -15,10 +15,10 @@ import { LootWindow } from "src/gameUI/lootWindow";
 import { Npc } from "./npc";
 import { trinketAction } from "src/gameFunctions/trinketAction";
 import { QuestWindow } from "src/gameUI/questWindow";
-//import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
 import { updateCurrency } from "src/gameFunctions/updateCurrency";
 import { writeToCl } from "src/gameFunctions/writeToCL";
 import { updatePlayerStats } from "src/gameFunctions/updatePlayerStats";
+import { chunkSentence, writeChunks } from "src/gameFunctions/fetchQuest";
 
 
 export class Item {
@@ -76,19 +76,22 @@ export class Item {
     private potionsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.corkpop,
-        false
+        false,
+        200
     );
 
     private backpacksound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.backpack,
-        false
+        false,
+        200
     );
 
     private coinssound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.coins,
-        false 
+        false,
+        200 
     )
     
     constructor(
@@ -128,7 +131,7 @@ export class Item {
         this._activespellimage.visible = false;
 
         if(stats) {
-            log(`item.constructor: Setting stats: ${stats}`)
+            log(`item.constructor: Setting stats: ${JSON.stringify(stats)}`)
             this._stats = stats
         } else {
             log(`item.constructor: Stats didn't come through in the item constructor`)
@@ -174,7 +177,7 @@ export class Item {
         }
 
         if (buybackprice) {
-            log(`Set buybackprice: ${buybackprice}`)
+            //log(`${this.lootdesc()} Set buybackprice: ${buybackprice}`)
             this._buybackprice = buybackprice
         }
 
@@ -214,6 +217,7 @@ export class Item {
                 break;
 
             case "spell":
+                log(`This is a spell`)
                 this._isspell = true;
                 break;
 
@@ -222,6 +226,7 @@ export class Item {
                 break;
 
             case "scroll":
+                log(`This is a scroll`)
                 this._isscroll = true;
                 break;
 
@@ -244,7 +249,7 @@ export class Item {
         this._lootimage.sourceWidth = srcw;
         this._lootimage.sourceHeight = srch;
 
-        log('item.ts still in constructor, calling slotPicker with slot: ', slot)
+        log(`${this.lootdesc()} item.ts still in constructor, calling slotPicker with slot: ${slot}`)
         let slotposition = slotPicker(slot)
         this.isActionBar = slotposition.ab
         this.isBackpack = slotposition.bp
@@ -391,6 +396,23 @@ export class Item {
         };
 
         const originalslot = this.slot()
+        let chaslotted = false;
+
+        // Check if any value in clothingToSlotMap matches originalslot
+        for (const key in clothingToSlotMap) {
+            if (clothingToSlotMap[key] === originalslot) {
+                chaslotted = true;
+                break; // Exit the loop since we found a match
+            }
+        }
+
+        // If chaslotted is true, call sendToBack()
+        if (chaslotted) {
+            obj.characterslots[originalslot] = null;
+            this.sendToBackpack(); // Assuming sendToBack is a method you want to call
+            return
+        }
+
 
         // Find the slot for this clothing type
         const targetSlot = clothingToSlotMap[this._itemdetail];
@@ -434,6 +456,7 @@ export class Item {
             existingitem.setslot = originalslot
             // 3. Add it to the actionbar array
             myactionbarcontents.push(existingitem)
+            log(`item.ts line 454`)
             existingitem.show()
 
 
@@ -458,6 +481,9 @@ export class Item {
             this.setslot = targetSlot
             // 3. Add it to the playercharacter array
             playercharacter.push(this)
+            // 4. Set its visibility to false
+            // log(`calling hide on it`)
+            this.hide()
 
             //log(`item.ts: Then I need to push the last equipped item to the actionbar`)
             log(`item.ts: myactionbarcontents: `)
@@ -481,36 +507,35 @@ export class Item {
             const obj = Singleton.getInstance();
             obj.characterslots[targetSlot - 80] = 'filled'; // Mark the slot as filled
 
+            let playercharacter = obj.fetchcharacter()
+
             // Change the items slot to character window
             const slotPosition = slotPicker(targetSlot);
             this.setSlotProperties(slotPosition);
             this.setslot = targetSlot
 
-            // Define the stats boost provided by this clothing item
-            const statsBoost = {
-                // Example boosts, adjust according to your game's mechanics
-                'Strength': 2,
-                'Agility': 3,
-                // Add other stats as needed
-            };
-
             if (this._stats) {
-                log(`item.ts: this._stats: ${this._stats}`)
+                log(`item.ts: this._stats: ${JSON.stringify(this._stats)}`)
             } else {
                 log(`item.ts: this._stats is not set`)
             }
 
-
             // Apply stat boosts
-            updatePlayerStats(this._player, statsBoost);
+            updatePlayerStats(this._player, this._stats);
             log(`item.ts: Equipped ${this._itemdetail} and updated player stats.`);
+
+            playercharacter.push(this)
+
+            //log(`calling hide on the item`)
+            this.hide()
         }
         
         //trinketAction(this)
-        // const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. It can be safely deleted from your game inventory. Its either already present in your wallet, or on the way.
+        //const statement = `This is ${this.lootdesc()}, a SutenQuest Wearable NFT. Its either already present in your wallet, or on the way.`
+        writeToCl(`This is ${this.lootdesc()}, a SutenQuest Wearable NFT.`,`Its either already present in your wallet, or on the way.`)
         // Dbl click, then click on the trash icon to delete it from inventory.`
-        // const chunks = chunkSentence(statement, 7)
-        // writeChunks(chunks)
+        //const chunks = chunkSentence(statement, 7)
+        //writeChunks(chunks)
     }
 
     public checkCharacterSlot(slot: number): boolean {
@@ -611,33 +636,44 @@ export class Item {
     }
 
     public show() {
+        log(`item.ts - in show() 633`)
         if (this.isLootWindow) {
+            log(`item.ts: lootWindow`)
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this.isQuestWindow) {
+            log(`item.ts: questWindow`)
             this._lootimage.visible = true;
             this._desc.visible = true;
         } else if (this.isMerchant) {
+            log(`item.ts: merchantWindow`)
             this._lootimage.visible = true;
             this._desc.visible = true;
-        } else if (this._backPack) {
+        } else if (this.isBackpack) {
+            log(`item.ts:653 backPack`)
             this._lootimage.visible = true;
             this._desc.visible = false;
-        } else if (this._isclothing){
+        } else if (this.isCharacterWindow){
+            log(`item.ts: CharWindow - setting lootimage to true line 648`)
             this._lootimage.visible = true; 
             this._desc.visible = false;
         } else {
+            log(`item.ts: ELSE - setting ${this.lootdesc()} visible to true line 661`)
+            log(`item.ts:name ${JSON.stringify(this._lootimage.source)}`)
+            //log(`item.ts: ${this.}`)
             this._lootimage.visible = true;
             this._desc.visible = false;
         }
     }
 
     public flip() {
+        log(`item.ts - flip()`)
         this._lootimage.visible = !this.lootimage.visible
         this._desc.visible = !this._desc.visible
     }
 
     public hide() {
+        log(`in item.hide(): ${this._desc.value}`)
         this._lootimage.visible = false;
         this._desc.visible = false;
     }
@@ -766,6 +802,7 @@ export class Item {
     }
 
     public updateLoc(slot: number) {
+        log(`item.ts: updateLoc: 792 setting visible to true - ${this.lootdesc()}`)
         this._lootimage.visible = true;
         this.setOriginalAction(slot);
     }
@@ -856,6 +893,7 @@ export class Item {
                 this.updateLoc(slot)
                 myactionbarcontents.push(this)
                 this.isActionBar = true;
+                log(`item.ts 883 - setting lootimage to visible = true`)
                 this._lootimage.visible = true;
                 this._desc.visible = false;
             }

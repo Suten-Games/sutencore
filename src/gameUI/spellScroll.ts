@@ -156,8 +156,8 @@ export class SpellScroll {
             this._lootbig.height = "8%";
             this._lootbig.positionY = "95%";
             this._lootbig.positionX = "8%";
-            this._lootbig.sourceWidth = 122;
-            this._lootbig.sourceHeight = 120;
+            this._lootbig.sourceWidth = spell.srcw;
+            this._lootbig.sourceHeight = spell.srch;
             this._desc1.value = `${this._spell.desc} | ${this._spell.class}`;
             //this._lootbig.visible = false;
             this.show()
@@ -226,17 +226,19 @@ export class SpellScroll {
 
         // Scribe the spell to the appropriate book
         if (obj.playerclass === "Mage") {
+            log(`Scribing into Mage's Spellbook`)
             obj.spellbook.scribeSpell(this._spell.name);
         } else if (obj.playerclass === "Rogue") {
+            log(`Scribing into Rogue's Toolbelt`)
             obj.roguestoolbelt.scribeSpell(this._spell.name);
         } else if (obj.playerclass === "Warrior") {
+            log(`Scribing into Warrior's Tome`)
             obj.warriorstome.scribeSpell(this._spell.name);
         }
 
         this.hide();
         this.currentScroll.removeItem();
     }
-
 
     public show() {
         this._bp.visible = true;

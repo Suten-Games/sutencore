@@ -16,7 +16,6 @@ import { acceptQuest, checkQuestCompletion, chunkSentence, fetchQuest, writeChun
 import { UI } from "src/gameUI/ui";
 import { StartupTimeOut } from "src/components/startupTimer";
 import { createSoundBox } from "./createSoundBox";
-//import { setupTrade } from "./setupTrade";
 import { TradeWindow } from "src/gameUI/tradeWindow";
 import { working } from "./working";
 import { handleNpcInteraction } from "./handleNpcInteraction";
@@ -24,15 +23,16 @@ import { handleNpcInteraction } from "./handleNpcInteraction";
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.orclaugh,
-    false
+    false, 3600
 );
 
-const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false);
+const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false, 600);
 
 const levelupbox = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.levelup,
-    false
+    false,
+    2400
 );
 
 @Component("npcFSM")
@@ -164,31 +164,30 @@ export class NpcFSM extends Entity {
                         } else {
                             fetchQuest(this._npc, this._player).then(res => {
                                 log(`back from get quest call, this is the dialogue: ${res.dialogue}`)
-                                log(`This is the res: ${res}`)
                                 let chunks
                                 chunks = chunkSentence(res.dialogue, 7)
                                 if (res.status === 'NOT_STARTED') {
                                     log(`in the not started block`)
-                                    this.openQuestWindow(res.dialogue)
-                                    writeChunks(chunks).then(() => {
-                                        writeToCl(
-                                            "I accept!",
-                                            "",
-                                            "",
-                                            "",
-                                            () => {
-                                                log(`I accept clicked`)
-                                                acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
-                                                    log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
-                                                    log(`Setting the searchingfor results to: ${acceptres.searchingfor}`)
-                                                    this._player.searching = acceptres.searchingfor
-                                                    chunks = chunkSentence(acceptres.dialogue, 7)
-                                                    writeChunks(chunks)
-                                                    this.openQuestWindow(acceptres.dialogue)  // replace with actual function and arguments
-                                                })
-                                            }
-                                        );
-                                    })
+                                    this.openQuestGivingWindow(res.dialogue, res.id, this._player, this._npc.id)
+                                    // writeChunks(chunks).then(() => {
+                                    //     writeToCl(
+                                    //         "I accept!",
+                                    //         "",
+                                    //         "",
+                                    //         "",
+                                    //         () => {
+                                    //             log(`I accept clicked`)
+                                    //             acceptQuest(res.id, this._player, this._npc.id).then(acceptres => {
+                                    //                 log(`back from the accept quest call, this is the dialogue: ${acceptres.dialogue}`)
+                                    //                 log(`Setting the searchingfor results to: ${acceptres.searchingfor}`)
+                                    //                 this._player.searching = acceptres.searchingfor
+                                    //                 chunks = chunkSentence(acceptres.dialogue, 7)
+                                    //                 writeChunks(chunks)
+                                    //                 this.openQuestAcceptedWindow(acceptres.dialogue)
+                                    //             })
+                                    //         }
+                                    //     );
+                                    // })
                                 } else if (res.status === 'IN_PROGRESS') {
                                     log(`in the IN_PROGRESS STATUS, id: ${res.id}`)
                                     checkQuestCompletion(res.id, this._player.address).then(checkcompletionres => {
@@ -254,8 +253,7 @@ export class NpcFSM extends Entity {
                                             this.openQuestWindow(checkcompletionres.dialogue, res.id, this._player.address)
                                         } else {
                                             log(`in the else else block`)
-                                            log(`calling this.openQuestWindow 3`)
-                                            this.openQuestWindow(res.dialogue, res.id, this._player.address)
+                                            this.openQuestAcceptedWindow(res.dialogue)
                                         }
                                     })
                                 } else {
@@ -281,10 +279,19 @@ export class NpcFSM extends Entity {
         );
     }
 
+    openQuestGivingWindow(val: string, questId: string, player: Player, npcid: string) {
+        var ui = UI.getInstance();
+        ui.qg.openQuestGivingWindow(val, questId, player, npcid)
+    }
+
+    openQuestAcceptedWindow(val:string){
+        var ui = UI.getInstance();
+        ui.qa.openQuestAcceptedWindow(val);
+    }
+
     openQuestWindow(val: string, questId: string | null = null, playerAddress: string | null = null) {
         var ui = UI.getInstance();
         ui.ql.openQuestWindow(val, questId, playerAddress)
-
     }
 
     performFactionCheckAndUpdateHoverText() {
@@ -312,7 +319,7 @@ export class NpcFSM extends Entity {
             if (matchingFaction) {
                 this.factionvalue = matchingFaction.value
             } else {
-                this.factionvalue = 0
+                this.factionvalue = -1
             }
         } else {
             this.factionvalue = -1

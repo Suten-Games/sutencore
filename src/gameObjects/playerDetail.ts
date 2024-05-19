@@ -16,6 +16,7 @@ import { CornerLabel } from "src/gameUI/cornerLabel";
 import { WarriorsTome } from "src/gameUI/warriorsTome";
 import { RoguesToolbelt } from "src/gameUI/roguestoolbelt";
 import { CharWindow } from "src/gameUI/charWindow";
+import { setTimeout } from "src/gameUtils/timeOut";
 
 //import { closeSocket } from "../gameFunctions/wsConnection";
 
@@ -55,23 +56,14 @@ export class Singleton {
     private _levellabels: Array<CornerLabel> = [];
     private _balance: number = 0;
     private _manal1: number = 0
-    private _battlehymns: Array<SoundBox> = []
-    private soundbox1: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish1, false)
-    private soundbox2: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish2, false)
-    private soundbox3: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish3, false)
-    private soundbox4: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish4, false)
-    private soundbox5: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish5, false)
-    private soundbox6: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish6, false)
-    private soundbox7: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish7, false)
-    private soundbox8: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish8, false)
-    private soundbox9: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish9, false)
-    private soundbox10: SoundBox = new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false)
     private _canvas: UICanvas;
     private _actionbar: ActionBar;
     private _actionbarslots: (string | null)[] = this.initializeArrayWithNulls(9);
     private _backpackslots: (string | null)[] = this.initializeArrayWithNulls(16);
     private _characterslots: (string | null)[] = this.initializeArrayWithNulls(6);
 
+    private _battlehymns: SoundBox[];
+    private currentIndex: number = 0;
 
     private _backPack: BackPack;
     private _spellScroll: SpellScroll;
@@ -96,26 +88,21 @@ export class Singleton {
         this.member = 0;
         this._inDuat = false;
         this._balance = balance;
-        this.soundbox1.addComponent(new LifeItem())
-        this.soundbox2.addComponent(new LifeItem())
-        this.soundbox3.addComponent(new LifeItem())
-        this.soundbox4.addComponent(new LifeItem())
-        this.soundbox5.addComponent(new LifeItem())
-        this.soundbox6.addComponent(new LifeItem())
-        this.soundbox7.addComponent(new LifeItem())
-        this.soundbox8.addComponent(new LifeItem())
-        this.soundbox9.addComponent(new LifeItem())
-        this.soundbox10.addComponent(new LifeItem())
-        this._battlehymns.push(this.soundbox1)
-        this._battlehymns.push(this.soundbox2)
-        this._battlehymns.push(this.soundbox3)
-        this._battlehymns.push(this.soundbox4)
-        this._battlehymns.push(this.soundbox5)
-        this._battlehymns.push(this.soundbox6)
-        this._battlehymns.push(this.soundbox7)
-        this._battlehymns.push(this.soundbox8)
-        this._battlehymns.push(this.soundbox9)
-        this._battlehymns.push(this.soundbox10)
+
+        this._battlehymns = [
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish1, false, 152400),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish2, false, 153000),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish3, false, 135600),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish4, false, 135000),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish5, false, 122400),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish6, false, 150000),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish7, false, 198000),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish8, false, 145800),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish9, false, 133800),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.orkish10, false, 134400),
+            new SoundBox(new Transform({ position: new Vector3(32, 10, 14) }), resources.sounds.soundsofsaqqarra, false, 182400)
+        ];
+        this.playSong();
     }
 
     private initializeArrayWithNulls(size: number): (string | null)[] {
@@ -124,6 +111,20 @@ export class Singleton {
             array.push(null);
         }
         return array;
+    }
+
+    playSong() {
+        // Get the current song based on currentIndex
+        let currentSoundBox = this._battlehymns[this.currentIndex];
+
+        // Play the current sound
+        currentSoundBox.play();
+
+        // Increment the currentIndex to the next song or reset to 0 if it's the last song
+        this.currentIndex = (this.currentIndex + 1) % this._battlehymns.length;
+
+        // Schedule the next song to play after 180000 milliseconds (3 minutes)
+        setTimeout(180000, () => this.playSong());
     }
 
     set canvas(val) {
@@ -569,4 +570,23 @@ export class Singleton {
     }
 
     static lastHpBarPosition: number = 350;
+
+    updateSoundPositions() {
+        const playerPos = Camera.instance.position;
+        const angleStep = 360 / this._battlehymns.length;
+        let angle = 0;
+
+        for (const soundBox of this._battlehymns) {
+            const radians = (Math.PI / 180) * angle;
+            const offset = new Vector3(
+                8 * Math.cos(radians), // Horizontal offset
+                0, // Same vertical level as the player
+                8 * Math.sin(radians) // Depth offset
+            );
+
+            soundBox.updatePosition(playerPos.add(offset));
+            angle += angleStep;
+        }
+    }
+
 }

@@ -7,6 +7,7 @@ export default {
         goblinHit: new AudioClip("sounds/goblin_hit.mp3"),
         punch: new AudioClip("sounds/punch.mp3"),
         playerHit: new AudioClip("sounds/player_hit.mp3"),
+        defaultMobHit: new AudioClip("sounds/player_hit.mp3"),
         playerHit2: new AudioClip("sounds/player_hit2.mp3"),
         fighterhit: new AudioClip("sounds/fighterhit.mp3"),
         killping: new AudioClip("sounds/killping.mp3"),
@@ -26,11 +27,13 @@ export default {
         shopkeeper: new AudioClip("sounds/shopkeeper.mp3"),
         victory: new AudioClip("sounds/2015-08-18_-_Victory_-_David_Fesliyan.mp3"),
         sheathsword: new AudioClip("sounds/sheathsword.mp3"),
+        shieldbash: new AudioClip("sounds/shieldbash.mp3"),
         corkpop: new AudioClip("sounds/corkpop.mp3"),
         wardspell: new AudioClip("sounds/279103-Magic-Game-Protection-Ward-Buff.wav"),
         elementalspell: new AudioClip("sounds/407875-Elemental_-Good_Cast_Single_Protection-5.wav"),
         rainspell: new AudioClip("sounds/rain-06.mp3"),
-        snowspell: new AudioClip("sounds/snowstorm-01.mp3")
+        snowspell: new AudioClip("sounds/snowstorm-01.mp3"),
+        soundsofsaqqarra: new AudioClip("sounds/background_3min_saq.mp3")
     },
     animations: {
         riversWalkClip: new AnimationState("walking"),
@@ -38,6 +41,9 @@ export default {
         turnLClip: new AnimationState("turnLeft")
     },
     models: {
+        rockwall: new GLTFShape("models/solidwall.glb"),
+        rockwall1: new GLTFShape("models/solidwall1.glb"),
+        rocks: new GLTFShape("models/rocks.glb"),
         bigrocks: new GLTFShape("models/bigrocks.glb"),
         smallrocks: new GLTFShape("models/smallrocks.glb"),
         birchtree: new GLTFShape("models/birchtree.glb"),
@@ -74,7 +80,7 @@ export default {
         smokewavy: new GLTFShape("models/smoke_01_waving_glb.glb"),
         fist: new GLTFShape("models/fist_punching_glb.glb"),
         potionshop: new GLTFShape("models/shop_model_glb.glb"),
-        shoplight: new GLTFShape("models/shop_light.glb.glb"),
+        potionshoplight: new GLTFShape("models/shop_light.glb.glb"),
         duatlight: new GLTFShape("models/lantern.glb"),
         duatwall: new GLTFShape("models/blackwall.glb"),
         shopsmoke1: new GLTFShape("models/shop_smoke01_glb.glb"),
@@ -144,7 +150,9 @@ export default {
         blueLootWindow: new Texture("images/vali/BlueLootwindow.png"),
         blueMerchantInterface: new Texture("images/vali/BlueMerchantInterface.png"),
         khepra: new Texture("images/khepra.png"),
-        buybutton: new Texture("images/dialogs/buybutton.png"),
+        //buybutton: new Texture("images/dialogs/buybutton.png"),
+        buybutton: new Texture("images/buy_button.png"),
+        sellbutton: new Texture("images/sell_button.png"),
         connectbutton: new Texture("images/dialogs/metamask.png"),
         combatlog: new Texture("images/vali/CombatLog.png"),
         closebutton: new Texture("images/vali/CloseButton.png"),
@@ -160,6 +168,8 @@ export default {
         scrollUpBtn: new Texture("images/vali/cltop.png"),
         scrollDownBtn: new Texture("images/vali/clbottom.png"),
         questLog: new Texture("images/vali/QuestLogScreen.png"),
-        questBook: new Texture("images/vali/questbook.png")
+        questGiving: new Texture("images/vali/QuestLogScreen_giving.png"),
+        questBook: new Texture("images/vali/questbook.png"),
+        acceptButton: new Texture("images/accept_button.png")
     }
 }

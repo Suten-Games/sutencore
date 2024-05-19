@@ -25,7 +25,8 @@ export class BackPack {
     private backpacksound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.backpack,
-        false
+        false,
+        200
     );
 
     constructor(canvas: UICanvas, image: Texture) {
@@ -40,6 +41,7 @@ export class BackPack {
         this._bp.sourceWidth = 665;
         this._bp.sourceHeight = 951;
         this._bp.visible = false;
+        this._charwindow = new CharWindow(this._canvas, resources.interface.characterScreen, 'Adventurer');
         this._mybackpackcontents = obj.showbackpack()
         this._spellbookwindow = new SpellBook(this._canvas, resources.interface.spellBook)
         this._warriorstomewindow = new WarriorsTome(this._canvas, resources.interface.spellBook)
@@ -55,6 +57,7 @@ export class BackPack {
         this._charbutton.visible = false;
         this._charbutton.onClick = new OnPointerDown(
             (e) => {
+                log(`in backpack, calling charwindow.flip()`)
                 this._charwindow.flip()
                 this.hidebp()
             },
@@ -168,7 +171,7 @@ export class BackPack {
         data.forEach(element => {
             if (element.slot) {
                 let item = new Item(new Texture(element.image), element.slot, element.srcw, element.srch, element.desc, element.type,
-                    element.price, element.buybackprice, element.itemtype, element.itemdetail, element.stats, element.weaponaction, 
+                    element.price, element.buybackprice, element.itemtype, element.itemdetail, element.weaponaction, element.stats,
                     element.spellshape, element.spellstart, element.spellend, element.sound,null,null, null, null
                 )
                 this.setSlot(element.slot)

@@ -1,7 +1,7 @@
 import { Item } from "src/gameObjects/item";
 import { Npc } from "src/gameObjects/npc";
 import { Player } from "src/gameObjects/player";
-import { local } from "suten";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080"
@@ -12,6 +12,7 @@ export async function handleNpcInteraction(player: Player, npc: Npc) {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
+            'x-api-key': apikey
         },
     };
 

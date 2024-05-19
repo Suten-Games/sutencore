@@ -10,7 +10,7 @@ import { loadPlayerFactions } from './loadPlayerFactions'
 import { fetchPlayerQuests } from './fetchPlayerQuests'
 
 export async function playerSearch(json: PlayerState, ui: UI, lowerCaseAddress: string, player: Player) {
-    //log(`debug: 7 Inside playerSearch`)
+    log(`debug: 7 Inside playerSearch`)
 
     if (json.message === 'Could not find player by address') {
         newPlayer(ui, lowerCaseAddress, player)

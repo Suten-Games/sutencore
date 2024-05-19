@@ -1,5 +1,6 @@
 import { Singleton } from "src/gameObjects/playerDetail";
-import { local } from "suten";
+import { UI } from "src/gameUI/ui";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080"
@@ -21,6 +22,7 @@ export async function updateCurrency(copper: number, silver: number,
         body: JSON.stringify(copperGained),
         headers: {
             "Content-Type": "application/json",
+            'x-api-key': apikey
         },
     };
 
@@ -35,6 +37,12 @@ export async function updateCurrency(copper: number, silver: number,
         obj.silver = json.silver
         obj.gold = json.gold
         obj.platinum = json.platinum
+
+        log(`Now need to trigger a visual update in CharWindow`)
+        let ui = UI.getInstance()
+        let cw = ui.cw
+        log(`calling characterwindow.updateStats()`)
+        cw.updateStats(json)
 
     } catch (error) {
         log(`purchasedItem.ts:30: Add Merchant Inventory by name failed ${error} `);

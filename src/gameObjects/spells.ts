@@ -72,8 +72,8 @@ const shieldbash: Ispell = {
     "spellstart": 5,
     "spellend": 10,
     "sound": resources.sounds.wardspell,
-    "srcw": 122,
-    "srch": 120,
+    "srcw": 1344,
+    "srch": 896,
     "price": 6,
     "buybackprice":2
 }
@@ -324,8 +324,5 @@ export function getspells() {
 }
 
 export function getspell(val: string) {
-    //log('spells.ts:100 - inside get spell with spell val: ', val)
-    //log('allspells ', allspells)
-    //log('with parens ', allspells[val])
     return allspells[val]
 }

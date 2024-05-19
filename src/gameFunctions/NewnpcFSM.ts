@@ -22,15 +22,17 @@ import { working } from "./working";
 const npclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.orclaugh,
-    false
+    false,
+    800
 );
 
-const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false);
+const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false, 600);
 
 const levelupbox = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.levelup,
-    false
+    false,
+    800
 );
 
 @Component("npcFSM")

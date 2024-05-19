@@ -2,7 +2,7 @@ import { Player } from "src/gameObjects/player";
 import { Singleton } from "src/gameObjects/playerDetail";
 import { UI } from "src/gameUI/ui";
 import { writeToCl } from "./writeToCL";
-import { local } from "suten";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080/player"
@@ -45,7 +45,7 @@ export async function newPlayer(ui: UI, lowerCaseAddress: string, player:Player)
             },
             {
                 "name": "Human Amalgam",
-                "value": -1
+                "value": 1
             }
         ]
     };
@@ -55,6 +55,7 @@ export async function newPlayer(ui: UI, lowerCaseAddress: string, player:Player)
         body: JSON.stringify(newplayer),
         headers: {
             "Content-Type": "application/json",
+            'x-api-key': apikey
         },
     };
 

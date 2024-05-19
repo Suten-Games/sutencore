@@ -24,7 +24,8 @@ export function openHeavens(completespell:Ispell, sound: AudioClip) {
     const soundbox = new SoundBox(
         new Transform({ position: Camera.instance.feetPosition }),
         sound,
-        false
+        false,
+        800
     );
 
     soundbox.play()

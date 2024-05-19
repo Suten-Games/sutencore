@@ -5,20 +5,18 @@ import { writeToCl } from "./writeToCL";
 import { BossBattle } from "src/components/bossBattleComponent";
 import { SecondaryTimeOut } from "src/components/secondaryTimeOutComponent";
 import { Singleton } from "src/gameObjects/playerDetail";
-import { createSoundBox } from "./createSoundBox";
-import resources from "src/resources";
 import { SpawnTimeOut } from "src/components/spawnTimerComponent";
 import { Player } from "src/gameObjects/player";
-import { local } from "suten";
+import { apikey, local } from "suten";
+import { SoundManager } from "./soundManager";
+import resources from "src/resources";
 
 const apiUrl = local
     ? "http://localhost:8080/player/"
     : "https://sutenquestapi.azurewebsites.net/player/";
 
 
-const soundbox3 = createSoundBox(7, 0, 8, resources.sounds.playerHit2, false);
-const soundbox4 = createSoundBox(7, 0, 8, resources.sounds.playerHit, false);
-const killbox = createSoundBox(7, 0, 8, resources.sounds.killping, false);
+const soundManager = SoundManager.getInstance();
 const PUNCH_TIME = 2.2;
 const PAUSE = 2.2;
 const obj = Singleton.getInstance();
@@ -141,8 +139,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
             // }
 
             writeToCl(`You have slain an ${s.npc.mobname}`)
-
-            killbox.play();
+            soundManager.playKillSound();
 
             mob.addlootclick();
 
@@ -189,7 +186,8 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
                 mobstate.playerdead = false;
                 mobstate.timeout = true;
 
-                soundbox3.play();
+                log("Playing hit sound for mob hurt player"); 
+                soundManager.playPlayerHitSound();
                 s.player.damage(mobstate.damage);
 
                 if (mob.mobname == 'Orc Shaman') {
@@ -206,7 +204,13 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
         mob.mobhit()
 
         if (!s.npc.hasComponent(SecondaryTimeOut)) {
-            soundbox4.play();
+            log("Playing hit sound for mob has been hit"); 
+            //soundManager.playMobHitSound();
+            if (mob.sound) {
+                soundManager.playMobHitSound(mob.sound);
+            } else {
+                soundManager.playMobHitSound(resources.sounds.defaultMobHit);
+            }
             let nowloc = [
                 s.transform.position.x,
                 s.transform.position.y,
@@ -294,7 +298,7 @@ export function heHatesMeAndWeBattlin(mobstate: MobState, mob: Npc, s: SceneStat
 
                 writeToCl(`You have slain an ${s.npc.mobname}`)
 
-                killbox.play();
+                soundManager.playKillSound();
 
                 mob.addlootclick();
 
@@ -356,6 +360,7 @@ export function updateFaction(factionName: string, player: Player, change: numbe
         body: JSON.stringify(factions),
         headers: {
             "Content-Type": "application/json",
+            'x-api-key': apikey
         },
     };
 

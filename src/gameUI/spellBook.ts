@@ -187,7 +187,7 @@ export class SpellBook {
         let dbspell = getspell(spellname)
         let slot = this.selectSlot()
 
-        let spell = new Item(dbspell.image, slot, 122, 120, dbspell.desc, dbspell.targettype, 
+        let spell = new Item(dbspell.image, slot, dbspell.srch, dbspell.srcw, dbspell.desc, dbspell.targettype, 
         5, 3, "spell", null, null, null, dbspell.spellshape, dbspell.spellstart, dbspell.spellend, dbspell.sound,null,null, null, null)
 
         this.setSlot(slot)

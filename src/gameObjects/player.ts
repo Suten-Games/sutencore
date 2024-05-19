@@ -1,5 +1,5 @@
 import resources from "../resources";
-import { sAggro, sLevel, sPlayer } from "suten";
+import { apikey, sAggro, sLevel, sPlayer } from "suten";
 import { SoundBox } from "./soundBox";
 import { CombatLog } from "src/gameUI/combatLog";
 import { ActionBar } from "src/gameUI/actionBar";
@@ -16,11 +16,14 @@ import { OkPrompt } from "src/gameUI/okPrompt";
 import { LifeItem } from "src/components/lifeItemComponent";
 import { MobState } from "src/components/mobStateComponent";
 import { DeathScene } from "src/gameUI/loadDeathScape";
+import { movePlayerTo } from "@decentraland/RestrictedActions";
+import { ParticleSystem } from "src/gameSystems/ParticleSystem";
 
 const orclaugh = new SoundBox(
     new Transform({ position: new Vector3(7, 0, 8) }),
     resources.sounds.orclaugh,
-    false
+    false,
+    800
 );
 
 export class Player {
@@ -91,19 +94,22 @@ export class Player {
     private deathsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.playerdeath,
-        false
+        false,
+        800
     );
 
     private abouttodie = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.abouttodie,
-        true
+        true,
+        800
     );
 
     private levelupbox = new SoundBox(
         new Transform({ position: new Vector3(7, 0, 8) }),
         resources.sounds.levelup,
-        false
+        false,
+        800
     );
 
     constructor(
@@ -383,6 +389,7 @@ export class Player {
                 body: JSON.stringify(hpo),
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': apikey
                 },
             };
 
@@ -442,6 +449,7 @@ export class Player {
                 body: JSON.stringify(hpo),
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': apikey
                 },
             };
 
@@ -496,6 +504,7 @@ export class Player {
                 body: JSON.stringify(hpo),
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': apikey
                 },
             };
 
@@ -513,6 +522,7 @@ export class Player {
     }
 
     resurrect() {
+        log(`in player resurrect method`)
         let url = this.apiUrl + "/" + this.address;
         var obj = Singleton.getInstance();
 
@@ -526,6 +536,7 @@ export class Player {
                 body: JSON.stringify(hpo),
                 headers: {
                     "Content-Type": "application/json",
+                    'x-api-key': apikey
                 },
             };
 
@@ -533,6 +544,7 @@ export class Player {
                 fetch(url, options)
                     .then((res) => res.json())
                     .then((res) => {
+                        log(`after the api return. maxhp is: ${res.maxhp}`)
                         this.hp = res.maxhp;
                         obj.playerhp = res.maxhp;
                     });
@@ -575,6 +587,18 @@ export class Player {
                 openExternalURL(dclWorldUrl);
             },
             'Search',
+            true
+        )
+    }
+
+    showBabyPrompt(title: string, message: string) {
+        new OkPrompt(
+            'You have died. Anpu has judged you too young for the perils of the Duat.',
+            () => {
+                // const dclWorldUrl = 'https://play.decentraland.org/?NETWORK=mainnet&position=4%2C4&realm=duat.dcl.eth';
+                // openExternalURL(dclWorldUrl);
+            },
+            'Close',
             true
         )
     }
@@ -664,18 +688,40 @@ export class Player {
             });
             this.abouttodie.stop();
             this.deathsound.play();
-            this._combatLog.text = `You have died.`;
-            this._combatLog.text = `Make your way to the Duat.`;
-            this._combatLog.text = `Seek out Anpu.`;
-            obj.inDuat = true;
-            this.alive = false;
+            if(this.level < 5) {
+                const ps = new ParticleSystem(2, 2, new BoxShape(), resources.sounds.elementalspell)
+                engine.addSystem(ps)
+                const box = new BoxShape()
+                ps.turnOn(box, 3, 89)
 
-            this.unloadLife()
-            this.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");
+                writeToCl(` `)
+                writeToCl(`You have died.`)
+                writeToCl(`Anpu has deemed you too young for the Duat.`)
+                writeToCl(`You have been resurrected.`)
 
+                obj.player.resurrect()
+                void movePlayerTo({ x: 180, y: 100, z: 146 })
+                log(`Calling this.hpBar.set(1)`)
+                this.hpBar.set(1)
+                this.showBabyPrompt("Close Now", "You have died. Anpu has resurrected you");
+            } else {
+                this._combatLog.text = `You have died.`;
+                this._combatLog.text = `Make your way to the Duat.`;
+                this._combatLog.text = `Seek out Anpu.`;
+                obj.inDuat = true;
+                this.alive = false;
+
+                this.unloadLife()
+                this.showDuatPrompt("Search Now", "You have died. Seek Anpu in the Duat. Perhaps if you are worthy you may be reborn.");
+
+                let deathscene = new DeathScene()
+            }
+            
+
+            
             this.hidehpbar()
 
-            let deathscene = new DeathScene()
+            
         }
     }
 }

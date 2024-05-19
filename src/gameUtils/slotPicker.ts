@@ -232,6 +232,7 @@ export function slotPicker(slot: number) {
             fontPositionX = "30%";
             break;
         case 51:
+            log(`in case 51, setting position to sb`)
             position = "sb";
             positionY = "23.1%";
             positionX = "15.3%";
@@ -338,6 +339,7 @@ export function slotPicker(slot: number) {
             positionY = "1.9%";
             break;
         case "bp":
+            log(`Setting isBackpack to true`)
             isBackpack = true;
             hAlign = "right";
             vAlign = "center";
@@ -345,6 +347,7 @@ export function slotPicker(slot: number) {
             height = "5%";
             break;
         case "sb":
+            log(`Setting isSpellbook to true`)
             isSpellBook = true;
             hAlign = "left"
             vAlign = "center";

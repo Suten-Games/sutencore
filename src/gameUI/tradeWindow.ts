@@ -34,7 +34,8 @@ export class TradeWindow {
     private coinssound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.coins,
-        false
+        false,
+        200
     );
 
     constructor(canvas: UICanvas, image: any, actionBar: ActionBar, backPack: BackPack, player: Player, combatLog: CombatLog) {
@@ -111,23 +112,27 @@ export class TradeWindow {
         this._buypage.height = "5.3%";
         this._buypage.positionY = "-28.9%";
         this._buypage.positionX = "15.7%";
-        this._buypage.sourceWidth = 390;
-        this._buypage.sourceHeight = 170;
+        this._buypage.sourceWidth = 1314;
+        this._buypage.sourceHeight = 545;
+        //this._buypage.sourceWidth = 390;
+        //this._buypage.sourceHeight = 170;
         this._buypage.visible = false;
         this._buypage.onClick = new OnPointerDown(() => {
             log('clicked buypage')
             this.showbuypage()
         })
 
-        this._sellpage = new UIImage(this._canvas, resources.interface.buybutton);
+        this._sellpage = new UIImage(this._canvas, resources.interface.sellbutton);
         this._sellpage.hAlign = "left";
         this._sellpage.vAlign = "center";
         this._sellpage.width = "5%";
         this._sellpage.height = "5.3%";
         this._sellpage.positionY = "-28.9%";
         this._sellpage.positionX = "20.7%";
-        this._sellpage.sourceWidth = 390;
-        this._sellpage.sourceHeight = 170;
+        this._sellpage.sourceWidth = 1314;
+        this._sellpage.sourceHeight = 545;
+        //this._sellpage.sourceWidth = 390;
+        //this._sellpage.sourceHeight = 170;
         this._sellpage.visible = false;
         this._sellpage.onClick = new OnPointerDown(() => {
             log('clicked sellpage')

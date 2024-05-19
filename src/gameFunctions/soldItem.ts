@@ -1,6 +1,6 @@
 import { Item } from "src/gameObjects/item";
 import { Npc } from "src/gameObjects/npc";
-import { local } from "suten";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080"
@@ -19,6 +19,7 @@ export async function soldItem(npc: Npc, item: Item) {
         body: JSON.stringify(lootname),
         headers: {
             "Content-Type": "application/json",
+            'x-api-key': apikey
         },
     };
 

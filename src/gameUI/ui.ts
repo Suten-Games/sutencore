@@ -5,13 +5,13 @@ import { CombatLog } from "./combatLog";
 import { Khepra } from "./khepra";
 import { SpellBook } from "./spellBook";
 import { SpellScroll } from "./spellScroll";
-//import { CharWindowHandler } from "./charWindowHandler";
-
 import { QuestWindow } from "./questWindow";
 import { QuestBook } from "./questBook";
 import { WarriorsTome } from "./warriorsTome";
 import { RoguesToolbelt } from "./roguestoolbelt";
 import { CharWindow } from "./charWindow";
+import { QuestGivingWindow } from "./questGivingWindow";
+import { QuestAcceptedWindow } from "./questAcceptedWindow";
 
 export class UI {
     private static instance: UI;
@@ -24,9 +24,10 @@ export class UI {
     private warriorsTome: WarriorsTome
     private roguesToolbelt: RoguesToolbelt
     private spellScroll: SpellScroll
-    //private charWindowHandler: CharWindowHandler
     private characterwindow: CharWindow
     private questwindow: QuestWindow;
+    private questgivingwindow: QuestGivingWindow;
+    private questacceptedwindow: QuestAcceptedWindow;
     private questBook: QuestBook;
     private sellItemsPage: UIImage;
         
@@ -39,9 +40,12 @@ export class UI {
         this.gameCanvas = new UICanvas();
         this.combatLog = new CombatLog(this.gameCanvas);
         this.actionBar = new ActionBar(this.gameCanvas, resources.interface.blueActionBar);
+        //this.actionBar = new ActionBar(this.gameCanvas, new Texture("images/vali/ab.png"));
         this.backPack = new BackPack(this.gameCanvas, resources.interface.blueBackpack);
         this.khepra = new Khepra(this.gameCanvas, resources.interface.khepra, this.backPack);
         this.questwindow = new QuestWindow(this.gameCanvas, resources.interface.questLog);
+        this.questgivingwindow = new QuestGivingWindow(this.gameCanvas, resources.interface.questGiving);
+        this.questacceptedwindow = new QuestAcceptedWindow(this.gameCanvas, resources.interface.questGiving);
         this.characterwindow = new CharWindow(this.gameCanvas, resources.interface.characterScreen, 'Adventurer');
         this.spellBook = new SpellBook(this.gameCanvas, resources.interface.spellBook);
         this.warriorsTome = new WarriorsTome(this.gameCanvas, resources.interface.spellBook);
@@ -57,9 +61,6 @@ export class UI {
         this.sellItemsPage.sourceWidth = 877; //Old Style
         this.sellItemsPage.sourceHeight = 1401; //Old Style
         this.sellItemsPage.visible = false;
-        //this.questBook = new QuestBook(this.gameCanvas, resources.interface.questBook, this.quest)
-        //this.charWindowHandler = new CharWindowHandler(this.gameCanvas, resources.interface.characterButton)
-
     }
 
     static getInstance(): UI {
@@ -105,6 +106,14 @@ export class UI {
 
     get ql() {
         return this.questwindow;
+    }
+
+    get qg() {
+        return this.questgivingwindow;
+    }
+
+    get qa() {
+        return this.questacceptedwindow;
     }
 
     get qb() {

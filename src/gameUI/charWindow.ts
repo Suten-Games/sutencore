@@ -44,7 +44,8 @@ export class CharWindow {
     private equipsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.sheathsword,
-        false
+        false,
+        200
     );
 
     constructor(canvas: any, image: any, charclass: any) {
@@ -345,7 +346,7 @@ export class CharWindow {
                 item.setslot = element.slot
                 log(`calling updateLoc: ${element.slot}`)
                 item.updateLoc(element.slot)
-                log(`pushing item onto mycharacter: `)
+                log(`pushing item onto mycharacter: ${element.desc}`)
                 this._mycharacter.push(item)
                 item.hide()
             }
@@ -480,6 +481,21 @@ export class CharWindow {
         this.setupInteractions(charclass, weaponstring, slot, actionbar, backpack, lootimage);
     }
 
+    public updateStats(json:any) {
+        log('charWindow.ts - in updateStats')
+        
+        this._strength.value = `Strength: ${json.strength}`;
+        this._agility.value = `Agility: ${json.agility}`;
+        this._stamina.value = `Stamina: ${json.stamina}`;
+        this._wisdom.value = `Wisdom: ${json.wisdom}`;
+        this._charisma.value = `Charisma: ${json.charisma}`;
+        this._armor.value = `Armor: ${json.armor}`;
+        this._copper.value = `Copper: ${json.copper}`
+        this._silver.value = `Silver: ${json.silver}`
+        this._gold.value = `Gold: ${json.gold}`
+        this._platinum.value = `Platinum: ${json.platinum}`
+    }
+
     private setLootImages(canvas: any, weapontexture: Texture, defaultText: string, weapontext: string) {
         let obj = Singleton.getInstance();
         this._loot = new UIImage(canvas, weapontexture);
@@ -488,6 +504,7 @@ export class CharWindow {
 
         this._desc1.value = `Level ${obj.level} ${obj.playerclass}`;
         this._pname.value = `${obj.playername}`;
+        log(`charWindow.ts - in setLootImages, setting strength to ${obj.strength}`)
         this._strength.value = `Strength: ${obj.strength}`;
         this._agility.value = `Agility: ${obj.agility}`;
         this._stamina.value = `Stamina: ${obj.stamina}`;
@@ -627,39 +644,77 @@ export class CharWindow {
         }
     }
 
+    private hidecontents() {
+        let obj = Singleton.getInstance()
+        this._mycharacter = obj.fetchcharacter()
+        log(`in hidecontents`)
+        this._mycharacter.forEach((gear: Item) => {
+            //log(`found an item on the character`)
+            //log(`charWindow.ts:getcontents - calling hide on ${gear.lootdesc()}`)
+            gear.hide()
+        }) 
+    }
+
     private getcontents() {
-        this._mycharacter.forEach((gear: { show: () => void; }) => {
+        let obj = Singleton.getInstance()
+        this._mycharacter = obj.fetchcharacter()
+        log(`in getcontents`)
+        this._mycharacter.forEach((gear:Item) => {
+            log(`found an item on the character`)
+            log(`charWindow.ts:getcontents - calling show on ${gear.lootdesc()}`)
             gear.show()
         })
     }
 
     public flip() {
-        //log(`in flip(), calling getcontents`)
-        this.getcontents()
-        this._base.visible = !this._base.visible;
+        let obj = Singleton.getInstance()
+        this._desc1.value = `Level ${obj.level} ${obj.playerclass}`;
+        this._pname.value = `${obj.playername}`;
+        this._strength.value = `Strength: ${obj.strength}`;
+        this._agility.value = `Agility: ${obj.agility}`;
+        this._stamina.value = `Stamina: ${obj.stamina}`;
+        this._wisdom.value = `Wisdom: ${obj.wisdom}`;
+        this._charisma.value = `Charisma: ${obj.charisma}`;
+        this._armor.value = `Armor: ${obj.armor}`;
+        this._copper.value = `Copper: ${obj.copper}`
+        this._silver.value = `Silver: ${obj.silver}`
+        this._gold.value = `Gold: ${obj.gold}`
+        this._platinum.value = `Platinum: ${obj.platinum}`
         this._open = !this._open;
+
+        if(this._open) {
+            this.getcontents()
+        } else {
+            this.hidecontents()
+        }
+                        
+        this._base.visible = !this._base.visible;
+        
         this._closebutton.visible = !this._closebutton.visible;
         this._pname.visible = !this._pname.visible;
         this._desc1.visible = !this._desc1.visible;
         this._desc2.visible = !this._desc2.visible;
         this._desc3.visible = !this._desc3.visible;
-        this._strength.visible = !this._strength.visible;
-        this._agility.visible = !this._agility.visible;
-        this._stamina.visible = !this._stamina.visible;
-        this._wisdom.visible = !this._wisdom.visible;
-        this._charisma.visible = !this._charisma.visible;
-        this._armor.visible = !this._armor.visible;
+
         this._wskill.visible = !this._wskill.visible;
         this._damage.visible = !this._damage.visible;
         this._copper.visible = !this._copper.visible;
         this._silver.visible = !this._silver.visible;
         this._gold.visible = !this._gold.visible;
         this._platinum.visible = !this._platinum.visible;
+
+        this._strength.visible = !this._strength.visible;
+        this._agility.visible = !this._agility.visible;
+        this._stamina.visible = !this._stamina.visible;
+        this._wisdom.visible = !this._wisdom.visible;
+        this._charisma.visible = !this._charisma.visible;
+        this._armor.visible = !this._armor.visible;
+
         this._loot.visible = !this._loot.visible;
         this._lootbig.visible = !this._lootbig.visible;
         this._weapontext.visible = !this._weapontext.visible;
-
         this._charbutton.visible = !this._charbutton.visible;
         this._discardbutton.visible = !this._discardbutton.visible;
+        
     }
 }

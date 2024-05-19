@@ -20,7 +20,8 @@ let clicked = false;
 const victory = new SoundBox(
     new Transform({ position: new Vector3(25, 26, 31) }),
     resources.sounds.victory,
-    false
+    false,
+    210000
 );
 
 export enum dataType {
@@ -135,11 +136,17 @@ class pingSystem implements ISystem {
     timer: number = 0;
     npctimer: number = 0;
     socket: WebSocket;
+    camera = Camera.instance;
 
     update(dt: number): void {
         let obj = Singleton.getInstance();
         this.npctimer += dt;
         this.timer += dt;
+
+        //log(`pingSystem: Calling updateSoundPositions`)
+        obj.updateSoundPositions();
+
+        log(`CAMERA: ${this.camera.position}`)
 
         if (this.npctimer >= 20) {
             this.npctimer = 0;
@@ -466,7 +473,6 @@ export function handleGameMessage(msg: any) {
         } else {
             let mob;
             if(!element.mobdead) {
-                //log(`RESPAWN: The element being passed to createNPC ${JSON.stringify(element)}`)
                 if (element.path.length == 3) {
                     mob = createNpc(element, [
                         new Vector3(element.path[0][0], element.path[0][1], element.path[0][2]),
@@ -486,7 +492,6 @@ export function handleGameMessage(msg: any) {
                     mob = createNpc(element, [])
                 }
                 if (mob) {
-                    //log(`wsConnection.ts: adding createNpcFSM system`)
                     engine.addSystem(createNpcFSM(mob, element));
                     mob.name = element.name;
                 }

@@ -33,10 +33,8 @@ export class ActionBar {
             obj.actionbarslots[index] = 'filled';
             item.updateLoc(slot);
             this._myactionbarcontents.push(item);
-            //log(`actionBar.ts:selectSlot(): all of the actionbar slots: ${obj.actionbarslots}`)
             return slot;
         }
-        //log(`actionBar.ts:selectSlot(): all of the actionbar slots: ${obj.actionbarslots}`)
         return 0;
     }
 
@@ -44,33 +42,26 @@ export class ActionBar {
     public bootLoadActionBar(data: any[]) {
         const obj = Singleton.getInstance();
         data.forEach(element => {
-            //log('actionBar:45 - in bootLoadActionBar slot: ', element.slot)
+            log(`bootLoadActionBar element: ${JSON.stringify(element)}`)
             if (element.slot) {
                 let item = new Item(
-                    new Texture(element.image), element.slot, element.srcw, element.srch, element.desc,
-                    element.type, element.price, element.buybackprice, element.itemtype, element.itemdetail, element.stats, 
-                    element.weaponaction, 
+                    new Texture(element.image),  
+                    element.slot, element.srcw, element.srch, element.desc,
+                    element.type, element.price, element.buybackprice, element.itemtype, 
+                    element.itemdetail, element.weaponaction, element.stats, 
                     element.spellshape, element.spellstart,
-                    element.spellend, element.sound,null,null, null, null
+                    element.spellend, element.sound, 
+                    null, null, null, null
                 );
-
-                if (element.desc == "Cracked Staff" && element.itemtype == null) {
-                    element.itemtype = "weapon";
-                }
-
-                if (element.desc == "Rusty Dagger" && element.itemtype == null) {
-                    element.itemtype = "weapon";
-                }
-
-                if (element.desc == "Sand Beetle Husk" && element.itemtype == null) {
-                    element.itemtype = "questloot";
-                }
 
                 this.setSlot(element.slot);
                 item.setslot = element.slot;
                 item.updateLoc(element.slot);
 
+                //item.show()
+
                 if (element.slot == 10 || element.slot == 11 || element.slot == 12) {
+                    log(`in the wrong block of bootLoadActionBar.. investigate`)
                     this._mybackpackcontents.push(item)
                     item.hide()
                 } else {
@@ -86,14 +77,8 @@ export class ActionBar {
 
 
     public setSlot(slot: number) {
-        //log(`STEP 5 - setting the actionbar Slot`)
-        //log(`now in actionBar.ts:82 - setSlot() setting ${slot} to filled`)
-
         const obj = Singleton.getInstance();
         obj.actionbarslots[slot] = 'filled';
-
-        //log(`actionBar.ts: setSlot() - this slot ${slot} is now: ${obj.actionbarslots[slot]}`)
-        //log(`actionBar.ts: setSlot() - all of the actionbar slots (obj.actionbarslots): ${obj.actionbarslots}`)
     }
 
 
@@ -104,22 +89,16 @@ export class ActionBar {
         if (i !== -1) {
             this._myactionbarcontents.splice(i, 1);
         }
-        //log(`this slot ${slot} is now: ${obj.actionbarslots[slot]}`)
-        //log(`all of the actionbar slots: ${obj.actionbarslots}`)
     }
 
 
     public checkSlot(): number {
-        //log('STEP TWO: actionBar.ts: in the checkSlot method');
         let obj = Singleton.getInstance();
         for (let i = 1; i < 10; i++) {
             if (obj.actionbarslots[i] !== 'filled') {
-                //log(`actionBar.ts: checkSlot() all of the actionbar slots: ${obj.actionbarslots}`)
                 return i;
             }
         }
-
-        //log(`actionBar.ts: checkSlot() all of the actionbar slots: ${obj.actionbarslots}`)
         return 0;
     }
 

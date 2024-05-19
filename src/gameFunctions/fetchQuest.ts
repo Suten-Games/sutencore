@@ -1,5 +1,5 @@
 import { Player } from "src/gameObjects/player";
-import { local } from "suten";
+import { apikey, local } from "suten";
 import { writeToCl } from "./writeToCL";
 import { Npc } from "src/gameObjects/npc";
 import { setTimeout } from "src/gameUtils/timeOut";
@@ -10,7 +10,14 @@ const apiUrl = local
 
 export async function fetchQuest(npc: Npc, player: Player) {
     try {
-        let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
+        const response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apikey
+            }
+        });
+        //let response = await fetch(apiUrl + "/npc/" + npc.id + "/quests/" + player.address);
         let json = await response.json();
         if (Array.isArray(json) && json.length > 0) {
             return json[0];
@@ -33,7 +40,8 @@ export async function checkQuestCompletion(questId:string, playerAddress:string)
         method: "PATCH",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
+            'x-api-key': apikey
         }
     }
 
@@ -63,7 +71,8 @@ export async function getQuestReward(questId: string, playerAddress: string) {
         method: "PATCH",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type": "application/json"
+            "Content-Type": "application/json",
+            'x-api-key': apikey
         }
     }
     try {
@@ -98,7 +107,8 @@ export async function acceptQuest(quest: any, player: Player, npc:string) {
         method: "POST",
         body: JSON.stringify(status),
         headers: {
-            "Content-Type":"application/json"
+            "Content-Type":"application/json",
+            'x-api-key': apikey
         }
     }
 

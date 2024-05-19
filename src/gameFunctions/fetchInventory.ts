@@ -1,5 +1,5 @@
 import { Npc } from "src/gameObjects/npc";
-import { local } from "suten";
+import { apikey, local } from "suten";
 
 const apiUrl = local
     ? "http://localhost:8080"
@@ -7,7 +7,14 @@ const apiUrl = local
 
 export async function fetchInventory(npc: Npc) {
     try {
-        let response = await fetch(apiUrl + "/merchant/" + npc.id + "/items-for-sale");
+        const response = await fetch(apiUrl + "/merchant/" + npc.id + "/items-for-sale", {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'x-api-key': apikey
+            }
+        });
+        //let response = await fetch(apiUrl + "/merchant/" + npc.id + "/items-for-sale");
         let json = await response.json();
 
         return json;

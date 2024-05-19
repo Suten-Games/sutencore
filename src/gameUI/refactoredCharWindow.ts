@@ -47,7 +47,8 @@ export class CharWindow {
     private equipsound = new SoundBox(
         new Transform({ position: new Vector3(8, 0, 8) }),
         resources.sounds.sheathsword,
-        false
+        false,
+        200
     );
 
     constructor(canvas: any, image: any, charclass: any) {

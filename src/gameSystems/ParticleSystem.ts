@@ -18,7 +18,8 @@ export class ParticleSystem {
         this.soundbox = new SoundBox(
             new Transform({ position: Camera.instance.feetPosition }),
             sound,
-            false
+            false,
+            800
         );
     }
 
