@@ -1,6 +1,6 @@
 {
   "name": "@suten-games/sutencore",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "main": "index.js",
   "description": "SutenQuest Core Libraries",
   "scripts": {

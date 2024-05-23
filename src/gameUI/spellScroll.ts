@@ -14,11 +14,11 @@ export class SpellScroll {
     private _scribebutton;
     private _discardbutton;
     private _buytext;
-    private _lootbig:UIImage;
+    private _lootbig: UIImage;
     private _desc1;
     private _title;
     private _armor;
-    private _spell:Ispell;
+    private _spell: Ispell;
     private _spellbook: SpellBook;
     private currentScroll: Item
 
@@ -140,14 +140,14 @@ export class SpellScroll {
         return this._bp.visible;
     }
 
-    public setSpell(spellname:string, scroll:Item) {
+    public setSpell(spellname: string, scroll: Item) {
         //log('debug spellScroll.ts - Inside setSpell')
         this.currentScroll = scroll
 
         //log('debug spellname: ', spellname)
         let spell = getspell(spellname)
 
-        if(spell) {
+        if (spell) {
             this._spell = spell
             this._lootbig = new UIImage(this._canvas, spell.image)
             this._lootbig.hAlign = "center";
@@ -200,7 +200,7 @@ export class SpellScroll {
         // Determine which spellbook to use based on player's class
         let currentSpellbook;
         switch (obj.playerclass) {
-            case "Mage":
+            case "Magician":
                 currentSpellbook = spells;
                 break;
             case "Rogue":
@@ -225,8 +225,8 @@ export class SpellScroll {
         }
 
         // Scribe the spell to the appropriate book
-        if (obj.playerclass === "Mage") {
-            log(`Scribing into Mage's Spellbook`)
+        if (obj.playerclass === "Magician") {
+            log(`Scribing into Magician's Spellbook`)
             obj.spellbook.scribeSpell(this._spell.name);
         } else if (obj.playerclass === "Rogue") {
             log(`Scribing into Rogue's Toolbelt`)
@@ -248,7 +248,7 @@ export class SpellScroll {
         this._scribebutton.visible = true;
         this._discardbutton.visible = true;
         this._closebutton.visible = true;
-        this._buytext.visible = true    ;
+        this._buytext.visible = true;
     }
 
     public hide() {

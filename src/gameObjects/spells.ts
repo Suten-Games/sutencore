@@ -2,42 +2,42 @@ import { Ispell } from "src/components/spellComponent";
 import resources from "src/resources";
 
 
-const amunsShielding:Ispell = {
+const amunsShielding: Ispell = {
     "mana": 12,
     "casttime": 3,
     "fizzleadj": 2,
     "fizzletime": 1,
-    "location":"self",
-    "blockable":false,
-    "dispellable":false,
-    "name":"Amun's Shielding",
-    "spelltype":"Shield",
-    "skill":"Abjuration",
-    "recasttime":3,
-    "range":3,
-    "size":3,
-    "class":"Mage",
-    "level":1,
-    "timeofdate":"any",
-    "deletable":false,
-    "focusable":false,
-    "interruptable":false,
-    "targettype":"self",
+    "location": "self",
+    "blockable": false,
+    "dispellable": false,
+    "name": "Amun's Shielding",
+    "spelltype": "Shield",
+    "skill": "Abjuration",
+    "recasttime": 3,
+    "range": 3,
+    "size": 3,
+    "class": "Magician",
+    "level": 1,
+    "timeofdate": "any",
+    "deletable": false,
+    "focusable": false,
+    "interruptable": false,
+    "targettype": "self",
     "desc": "Shield of Amun",
-    "levelmsg":[{"line1":"msg 2"}],
-    "oncastmsg":[{"line1":"You feel armored"}],
-    "ondropmsg":[{"line1":"Your shielding fades away"}],
-    "duration":50000,
+    "levelmsg": [{ "line1": "msg 2" }],
+    "oncastmsg": [{ "line1": "You feel armored" }],
+    "ondropmsg": [{ "line1": "Your shielding fades away" }],
+    "duration": 50000,
     "image": new Texture("images/spells/explosion-magenta-1.png"),
-    "itemtype":"spell",
+    "itemtype": "spell",
     "spellshape": "SphereShape",
-    "spellstart":5,
-    "spellend":200,
-    "sound":resources.sounds.wardspell,
+    "spellstart": 5,
+    "spellend": 200,
+    "sound": resources.sounds.wardspell,
     "srcw": 122,
     "srch": 120,
-    "price":6,
-    "buybackprice":2
+    "price": 6,
+    "buybackprice": 2
 }
 
 const shieldbash: Ispell = {
@@ -75,7 +75,7 @@ const shieldbash: Ispell = {
     "srcw": 1344,
     "srch": 896,
     "price": 6,
-    "buybackprice":2
+    "buybackprice": 2
 }
 
 const minorShielding: Ispell = {
@@ -92,7 +92,7 @@ const minorShielding: Ispell = {
     "recasttime": 3,
     "range": 3,
     "size": 3,
-    "class": "Mage",
+    "class": "Magician",
     "level": 1,
     "timeofdate": "any",
     "deletable": false,
@@ -110,9 +110,9 @@ const minorShielding: Ispell = {
     "spellstart": 5,
     "spellend": 200,
     "sound": resources.sounds.wardspell,
-    "srcw":122,
-    "srch":120,
-    "price":5,
+    "srcw": 122,
+    "srch": 120,
+    "price": 5,
     "buybackprice": 2
 }
 
@@ -244,7 +244,7 @@ const blizzard: Ispell = {
     "recasttime": 3,
     "range": 3,
     "size": 3,
-    "class": "Mage",
+    "class": "Magician",
     "level": 4,
     "timeofdate": "any",
     "deletable": false,
@@ -282,7 +282,7 @@ const sprinkle: Ispell = {
     "recasttime": 3,
     "range": 3,
     "size": 3,
-    "class": "Mage",
+    "class": "Magician",
     "level": 3,
     "timeofdate": "any",
     "deletable": false,
