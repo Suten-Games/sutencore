@@ -1,14 +1,8 @@
 # suten
 # Suten Core NPM Module
 
-# Install colyseus.js:
+Install SutenCore into any Decentraland SDK 6 Scene to add the scene to the world of SutenQuest.
 
-## npm install --save colyseus.js
-## Add colyseus.js to your "bundleDependencies" in your package.json:
+Visit sutenquest.com to get an API key and start populating your scene with mobs, merchants, and quests!
 
-##  "bundleDependencies": [
-##    "colyseus.js"
-##  ]
 
-## npm install @dcl/ecs-scene-utils
-## npm install @suten-games/suten-npm
